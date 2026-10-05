@@ -3,95 +3,88 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ondrej Drengubiak | Softvérový vývojár</title>
-<meta name="description" content="Portfólio Ondreja Drengubiaka, študenta Inteligentných softvérových systémov na FIIT STU v Bratislave. Python, Java, C/C++, SQL a web development.">
-<meta name="theme-color" content="#1D3A33">
+<title>Bc. Ondrej Drengubiak | Softvérový vývojár</title>
+<meta name="description" content="Osobné portfólio Ondreja Drengubiaka - študenta FIIT STU v Bratislave. Vývoj v Python, Java, C/C++, SQL a WebDev.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Fira+Code:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script>
-// Apply saved/system theme and enable reveal animations before first paint (no flash)
 (function(){var d=document.documentElement,t;try{t=localStorage.getItem('theme')}catch(e){}
 if(!t)t=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';d.dataset.theme=t;d.classList.add('js')})();
 </script>
 <style>
-:root{--bg:#E9EEEA;--card:#F8FAF7;--accent:#1D3A33;--accent2:#2C5248;--on:#F8FAF7;--ink:#16221E;--muted:#56655F;--brass:#B8893A;--line:#C9D3CD;--key:#1D3A33;--key-ink:#F8FAF7;--key-mut:#B9CBC4;
---head:'Bricolage Grotesque',system-ui,sans-serif;--body:'IBM Plex Sans',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace}
-[data-theme=dark]{--bg:#0D1613;--card:#13211C;--accent:#8FD1B6;--accent2:#A9E0C9;--on:#0D1613;--ink:#E4EEE9;--muted:#93A8A0;--brass:#D9A84F;--line:#24372F;--key:#183029;--key-ink:#EAF3EF;--key-mut:#93B1A5}
+:root{
+  --bg:#E9EEEA;--card:#F8FAF7;--accent:#1D3A33;--accent2:#2C5248;--on:#F8FAF7;--ink:#16221E;--muted:#56655F;--brass:#B8893A;--line:#C9D3CD;--key:#1D3A33;--key-ink:#F8FAF7;--key-mut:#B9CBC4;
+  --head:'Bricolage Grotesque',system-ui,sans-serif;--body:'IBM Plex Sans',system-ui,sans-serif;--code:'Fira Code',monospace;
+}
+[data-theme=dark]{
+  --bg:#0D1613;--card:#13211C;--accent:#8FD1B6;--accent2:#A9E0C9;--on:#0D1613;--ink:#E4EEE9;--muted:#93A8A0;--brass:#D9A84F;--line:#24372F;--key:#183029;--key-ink:#EAF3EF;--key-mut:#93B1A5;
+}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;scroll-padding-top:70px}
-body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.65;font-size:17px;-webkit-font-smoothing:antialiased;transition:background .4s,color .4s;overflow-x:hidden}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.65;font-size:17px;-webkit-font-smoothing:antialiased;transition:background .4s,color .4s}
 a{color:inherit}
 :focus-visible{outline:3px solid var(--brass);outline-offset:3px;border-radius:4px}
 .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
-#bar{position:fixed;top:0;left:0;height:3px;width:100%;background:linear-gradient(90deg,var(--brass),var(--accent));transform:scaleX(0);transform-origin:left;z-index:30}
-#cursor-glow{position:fixed;pointer-events:none;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--brass) 12%,transparent),transparent 70%);transform:translate(-50%,-50%);z-index:1;transition:opacity .4s;opacity:0;will-change:transform}
-@media (hover:hover) and (pointer:fine){#cursor-glow{opacity:1}}
+#bar{position:fixed;top:0;left:0;height:3px;width:100%;background:var(--brass);transform:scaleX(0);transform-origin:left;z-index:30}
 
+/* Header & Nav */
 nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;gap:14px}
-.logo{font-family:var(--head);font-weight:800;font-size:1.1rem;text-decoration:none;color:var(--accent);white-space:nowrap;display:flex;align-items:center;gap:8px}
-.logo::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--brass);box-shadow:0 0 0 4px color-mix(in srgb,var(--brass) 25%,transparent);animation:pulse 2s ease-in-out infinite}
-@keyframes pulse{50%{box-shadow:0 0 0 8px color-mix(in srgb,var(--brass) 0%,transparent)}}
+.logo{font-family:var(--head);font-weight:800;font-size:1.15rem;text-decoration:none;color:var(--accent);white-space:nowrap;display:flex;align-items:center;gap:8px}
+.status-dot{width:9px;height:9px;background:#10B981;border-radius:50%;box-shadow:0 0 0 0 rgba(16,185,129,0.7);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,0.7)}70%{box-shadow:0 0 0 8px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
+
 .links{display:flex;gap:20px;font-size:.93rem;font-weight:500;overflow-x:auto;scrollbar-width:none}
 .links a{text-decoration:none;color:var(--muted);white-space:nowrap;padding:4px 0;border-bottom:2px solid transparent;transition:color .2s,border-color .2s}
 .links a:hover,.links a.on{color:var(--accent);border-color:var(--brass)}
-.tools{display:flex;gap:8px}
-.tools button{font:600 .85rem var(--body);min-width:40px;height:36px;border-radius:8px;border:1.5px solid var(--line);background:var(--card);color:var(--accent);cursor:pointer;transition:transform .2s,border-color .2s}
+.tools{display:flex;gap:8px;align-items:center}
+.tools button{font:600 .85rem var(--body);min-width:38px;height:36px;padding:0 8px;border-radius:8px;border:1.5px solid var(--line);background:var(--card);color:var(--accent);cursor:pointer;transition:transform .2s,border-color .2s}
 .tools button:hover{border-color:var(--accent);transform:translateY(-2px)}
-#theme{font-size:1.05rem}
-.kbd-hint{font:500 .72rem var(--mono);color:var(--muted);padding:0 6px;border:1px solid var(--line);border-radius:4px;background:var(--card);margin-left:2px;display:none}
-@media(min-width:1100px){.kbd-hint{display:inline-block}}
+#term-toggle{font-family:var(--code);font-weight:700}
 
+/* Hero Section */
 .hero{padding:76px 0 84px;position:relative;overflow:hidden}
-.hero::before{content:"";position:absolute;width:520px;height:520px;right:-140px;top:-160px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--brass) 28%,transparent),transparent 68%);animation:float 9s ease-in-out infinite;pointer-events:none;z-index:0}
-.hero::after{content:"";position:absolute;width:380px;height:380px;left:-120px;bottom:-120px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--accent) 14%,transparent),transparent 68%);animation:float 11s ease-in-out infinite reverse;pointer-events:none;z-index:0}
+.hero::before{content:"";position:absolute;width:520px;height:520px;right:-140px;top:-160px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--brass) 28%,transparent),transparent 68%);animation:float 9s ease-in-out infinite;pointer-events:none}
 @keyframes float{50%{transform:translate(-30px,40px) scale(1.08)}}
-.hero .wrap{display:grid;grid-template-columns:1.25fr .75fr;gap:56px;align-items:center;position:relative;z-index:2}
+.hero .wrap{display:grid;grid-template-columns:1.25fr .75fr;gap:56px;align-items:center;position:relative}
 h1{font-family:var(--head);font-weight:800;font-size:clamp(2.4rem,5.6vw,4.2rem);line-height:1.05;letter-spacing:-.025em;color:var(--accent)}
-h1 .grad{background:linear-gradient(120deg,var(--accent),var(--brass));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .up{opacity:0;transform:translateY(22px);animation:up .8s cubic-bezier(.2,.8,.2,1) forwards}
 @keyframes up{to{opacity:1;transform:none}}
-.lead{margin-top:22px;max-width:56ch;font-size:1.1rem}
+.lead{margin-top:22px;max-width:56ch;font-size:1.08rem}
 .typed{margin-top:20px;font-family:var(--head);font-weight:700;font-size:1.25rem;color:var(--muted);min-height:1.8em}
 .typed b{color:var(--brass)}
 .caret{display:inline-block;width:2px;height:1.1em;background:var(--brass);margin-left:3px;vertical-align:-3px;animation:blink 1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
 .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
-.btn{display:inline-block;padding:13px 22px;border-radius:8px;font:600 .97rem var(--body);text-decoration:none;border:2px solid var(--accent);cursor:pointer;transition:transform .2s,background .2s,color .2s;background:none;color:var(--accent)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:8px;font:600 .97rem var(--body);text-decoration:none;border:2px solid var(--accent);cursor:pointer;transition:transform .2s,background .2s,color .2s;background:none;color:var(--accent)}
 .btn:hover{transform:translateY(-3px)}
 .btn.primary{background:var(--accent);color:var(--on)}
 .btn.primary:hover{background:var(--accent2);border-color:var(--accent2)}
 
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:36px;max-width:520px}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;transition:transform .3s,border-color .3s}
-.stat:hover{transform:translateY(-4px);border-color:var(--brass)}
-.stat b{display:block;font-family:var(--head);font-weight:800;font-size:1.8rem;color:var(--brass);line-height:1;letter-spacing:-.02em}
-.stat span{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600;margin-top:4px;display:block}
-
-.keycard{background:var(--key);color:var(--key-ink);border-radius:18px;padding:28px;position:relative;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) rotate(2.2deg);transition:transform .25s ease-out;box-shadow:0 24px 48px -20px rgba(0,0,0,.55);animation:drop 1s cubic-bezier(.2,.8,.2,1) .3s backwards;z-index:2}
+/* Keycard Component */
+.keycard{background:var(--key);color:var(--key-ink);border-radius:18px;padding:28px;position:relative;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) rotate(2.2deg);transition:transform .25s ease-out;box-shadow:0 24px 48px -20px rgba(0,0,0,.55);animation:drop 1s cubic-bezier(.2,.8,.2,1) .3s backwards}
 .keycard::before{content:"";position:absolute;top:16px;left:50%;width:54px;height:9px;margin-left:-27px;border-radius:9px;background:var(--bg)}
 .keycard::after{content:"";position:absolute;inset:0;border-radius:18px;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.14) 50%,transparent 65%);background-size:250% 100%;background-position:var(--sh,120%) 0;pointer-events:none}
 @keyframes drop{from{opacity:0;transform:translateY(-60px) rotate(-8deg)}}
-.room{margin-top:20px;font-family:var(--head);font-weight:800;font-size:4.2rem;line-height:1;color:var(--brass);letter-spacing:-.03em}
+.room{margin-top:20px;font-family:var(--head);font-weight:800;font-size:4rem;line-height:1;color:var(--brass);letter-spacing:-.03em}
 .room-label{font-size:.85rem;color:var(--key-mut);margin-top:4px}
-.clock{margin-top:10px;font:500 .82rem var(--mono);color:var(--key-mut);letter-spacing:.03em}
-.clock b{color:var(--brass)}
 .keycard dl{margin-top:22px;border-top:1px solid rgba(255,255,255,.2)}
-.keycard dl div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.12);font-size:.93rem}
+.keycard dl div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.12);font-size:.9rem}
 .keycard dt{color:var(--key-mut)}.keycard dd{font-weight:600;text-align:right}
 
-section{padding:72px 0;border-top:1px solid var(--line);position:relative}
+/* Sections Global */
+section{padding:72px 0;border-top:1px solid var(--line)}
 .sec-head,.about,.tl-item{display:grid;grid-template-columns:240px 1fr;gap:40px}
 .sec-head{margin-bottom:36px}
-h2{font-family:var(--head);font-weight:800;font-size:2rem;letter-spacing:-.02em;color:var(--accent);line-height:1.15;position:relative}
-h2::before{content:"";display:block;width:36px;height:3px;background:var(--brass);border-radius:2px;margin-bottom:10px}
+h2{font-family:var(--head);font-weight:800;font-size:2rem;letter-spacing:-.02em;color:var(--accent);line-height:1.15}
 .sec-head p{color:var(--muted);max-width:60ch;padding-top:6px}
 h3{font-family:var(--head);font-weight:700;font-size:1.25rem;color:var(--accent);line-height:1.25}
 .about p{max-width:64ch}.about p+p{margin-top:16px}
 .rv{transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
 .js .rv{opacity:0;transform:translateY(24px)}.js .rv.in{opacity:1;transform:none}
 
+/* Projects */
 .projects{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
 .project{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px;display:flex;flex-direction:column;gap:12px;min-height:220px;transition:transform .3s,border-color .3s}
 .project:hover{transform:translateY(-5px);border-color:var(--brass)}
@@ -106,381 +99,612 @@ h3{font-family:var(--head);font-weight:700;font-size:1.25rem;color:var(--accent)
 .project p{color:var(--muted);font-size:.97rem}
 .feat{margin:4px 0 4px 18px;max-width:68ch;font-size:.97rem}.feat li{margin-bottom:4px}
 .stack{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
-.stack span{font-size:.8rem;background:var(--bg);border:1px solid var(--line);padding:2px 10px;border-radius:99px;color:var(--accent)}
-.plinks{display:flex;gap:10px;flex-wrap:wrap;font-weight:600;font-size:.93rem}
-.plinks a{background:var(--accent);color:var(--on);padding:9px 18px;border-radius:8px;text-decoration:none;border:2px solid var(--accent);transition:transform .2s}
+.stack span{font-size:.8rem;background:var(--bg);border:1px solid var(--line);padding:2px 10px;border-radius:99px;color:var(--accent);font-weight:500}
+.plinks{display:flex;gap:10px;flex-wrap:wrap;font-weight:600;font-size:.93rem;margin-top:8px}
+.plinks a{background:var(--accent);color:var(--on);padding:9px 18px;border-radius:8px;text-decoration:none;border:2px solid var(--accent);transition:transform .2s,background .2s}
 .plinks a:nth-child(n+2){background:transparent;color:var(--accent)}
 .plinks a:hover{transform:translateY(-2px)}
-.soon .plinks a{background:none;color:var(--muted);border:none;padding:0;text-decoration:underline;text-underline-offset:4px}
 
-.skills{display:grid;grid-template-columns:repeat(2,1fr);gap:0 40px}
-.skill-row{display:grid;grid-template-columns:170px 1fr;gap:16px;padding:16px 0;border-bottom:1px solid var(--line);position:relative}
-.skill-row::after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:100%;background:var(--brass);transform:scaleX(0);transform-origin:left;transition:transform .8s .2s}
-.rv.in .skill-row::after,.skill-row.in::after{transform:scaleX(1)}
-.skill-row strong{font-family:var(--head);color:var(--accent)}
-.sub{margin:36px 0 12px;font:700 1.05rem var(--head);color:var(--muted)}
-.sub:first-of-type{margin-top:0}
-.tl-item{padding:22px 0;border-bottom:1px solid var(--line)}.tl-item:first-child{padding-top:0}
-.when{font-weight:600;color:var(--brass);font-family:var(--mono);font-size:.88rem}
-.tl-item h3+p{margin-top:2px;color:var(--muted);font-size:.95rem}
-.tl-item ul{margin:12px 0 0 18px;max-width:64ch}.tl-item li{margin-bottom:5px}
+/* Interactive Skill Filters */
+.skill-filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.filter-btn{padding:6px 14px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--muted);font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s}
+.filter-btn:hover,.filter-btn.active{background:var(--accent);color:var(--on);border-color:var(--accent)}
 
+.skills-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.skill-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;transition:all .3s ease}
+.skill-card.hidden{display:none}
+.skill-card h4{font-family:var(--head);color:var(--accent);margin-bottom:8px;font-size:1.05rem;display:flex;justify-content:space-between;align-items:center}
+.skill-tags{display:flex;flex-wrap:wrap;gap:6px}
+.skill-tags span{font-size:.82rem;padding:3px 10px;border-radius:6px;background:var(--bg);color:var(--ink);border:1px solid var(--line)}
+
+/* Timeline & Tabs */
+.tab-controls{display:flex;gap:12px;margin-bottom:30px;border-bottom:1px solid var(--line);padding-bottom:12px;overflow-x:auto}
+.tab-btn{background:none;border:none;font-family:var(--head);font-weight:700;font-size:1.1rem;color:var(--muted);cursor:pointer;padding:6px 12px;border-radius:6px;transition:all .2s;white-space:nowrap}
+.tab-btn:hover,.tab-btn.active{color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent)}
+
+.tl-content{display:none}
+.tl-content.active{display:block}
+.tl-item{padding:24px 0;border-bottom:1px solid var(--line)}
+.tl-item:first-child{padding-top:0}
+.tl-item:last-child{border-bottom:none}
+.when{font-weight:600;color:var(--brass);font-family:var(--code);font-size:.9rem}
+.tl-item h3+p{margin-top:2px;color:var(--muted);font-size:.95rem;font-weight:500}
+.tl-item ul{margin:12px 0 0 18px;max-width:66ch;font-size:.96rem}.tl-item li{margin-bottom:6px}
+
+/* Contact Section */
 .contact{background:var(--key);color:var(--key-ink);border-top:none}
-.contact h2{color:var(--key-ink)}.contact h2::before{background:var(--brass)}
-.contact .sec-head p{color:var(--key-mut)}
-.contact-list{display:grid;gap:14px;font-size:1.1rem}
-.contact-list span{display:inline-block;min-width:110px;color:var(--key-mut);font-size:.9rem}
-.contact-list a{text-decoration-color:var(--brass);text-underline-offset:5px}
-.copy{margin-left:10px;font:600 .8rem var(--body);padding:4px 12px;border-radius:99px;border:1.5px solid var(--key-mut);background:none;color:var(--key-ink);cursor:pointer;transition:background .2s,transform .2s}
-.copy:hover{background:rgba(255,255,255,.12);transform:scale(1.05)}
+.contact h2{color:var(--key-ink)}.contact .sec-head p{color:var(--key-mut)}
+.contact-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);padding:30px;border-radius:16px;display:grid;gap:20px}
+.contact-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.contact-row:last-child{border-bottom:none;padding-bottom:0}
+.contact-label{color:var(--key-mut);font-size:.9rem;min-width:120px;font-weight:500}
+.contact-val{font-size:1.05rem;font-weight:600}
+.contact-val a{text-decoration-color:var(--brass);text-underline-offset:5px}
+.copy-btn{font:600 .8rem var(--body);padding:5px 14px;border-radius:99px;border:1.5px solid var(--key-mut);background:none;color:var(--key-ink);cursor:pointer;transition:all .2s;margin-left:10px}
+.copy-btn:hover{background:rgba(255,255,255,.15);border-color:var(--key-ink)}
+
+/* Interactive Terminal Drawer */
+#terminal-modal{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(5px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
+#terminal-modal.open{opacity:1;pointer-events:auto}
+.terminal-window{width:100%;max-width:700px;background:#0d1117;border:1px solid #30363d;border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,0.5);overflow:hidden;font-family:var(--code);color:#c9d1d9}
+.terminal-head{background:#161b22;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #30363d}
+.term-dots{display:flex;gap:6px}
+.term-dot{width:12px;height:12px;border-radius:50%}
+.term-dot.r{background:#ff5f56}.term-dot.y{background:#ffbd2e}.term-dot.g{background:#27c93f}
+.term-title{font-size:.8rem;color:#8b949e}
+.terminal-body{padding:18px;height:320px;overflow-y:auto;font-size:.9rem;display:flex;flex-direction:column;gap:10px}
+.term-out{white-space:pre-wrap;line-height:1.4}
+.term-input-line{display:flex;align-items:center;gap:8px}
+.term-prompt{color:#58a6ff;font-weight:600}
+#term-input{background:none;border:none;color:#f0f6fc;font-family:var(--code);font-size:.9rem;width:100%;outline:none}
+
+/* Footer & Extras */
 footer{background:var(--key);color:var(--key-mut);font-size:.85rem;padding-bottom:32px}
 footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-footer a{text-decoration:none;cursor:pointer}
-#toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,30px);background:var(--accent);color:var(--on);padding:10px 20px;border-radius:99px;font-weight:600;font-size:.9rem;opacity:0;pointer-events:none;transition:.35s;z-index:60;box-shadow:0 10px 30px -8px rgba(0,0,0,.4)}
+#toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,30px);background:var(--accent);color:var(--on);padding:10px 22px;border-radius:99px;font-weight:600;font-size:.9rem;opacity:0;pointer-events:none;transition:.35s;z-index:40;box-shadow:0 10px 25px rgba(0,0,0,0.2)}
 #toast.show{opacity:1;transform:translate(-50%,0)}
-#top-btn{position:fixed;right:20px;bottom:24px;width:44px;height:44px;border-radius:50%;border:none;background:var(--accent);color:var(--on);font-size:1.2rem;cursor:pointer;opacity:0;transform:scale(.6);transition:.3s;z-index:20;box-shadow:0 8px 24px -6px rgba(0,0,0,.35)}
+#top-btn{position:fixed;right:20px;bottom:24px;width:44px;height:44px;border-radius:50%;border:none;background:var(--accent);color:var(--on);font-size:1.2rem;cursor:pointer;opacity:0;transform:scale(.6);transition:.3s;z-index:20;display:flex;align-items:center;justify-content:center}
 #top-btn.show{opacity:1;transform:none}
-
-/* Command palette */
-#cmdk{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);z-index:100;display:none;align-items:flex-start;justify-content:center;padding-top:14vh;animation:fadeIn .15s}
-#cmdk.show{display:flex}
-@keyframes fadeIn{from{opacity:0}}
-.cmdk-box{width:min(560px,92vw);background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 30px 60px -20px rgba(0,0,0,.6);overflow:hidden;animation:slideDown .2s cubic-bezier(.2,.8,.2,1)}
-@keyframes slideDown{from{transform:translateY(-20px);opacity:0}}
-.cmdk-box input{width:100%;padding:18px 22px;font:500 1.05rem var(--body);background:none;border:none;color:var(--ink);outline:none;border-bottom:1px solid var(--line)}
-.cmdk-box input::placeholder{color:var(--muted)}
-.cmdk-list{max-height:340px;overflow-y:auto;padding:8px}
-.cmdk-item{padding:11px 16px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:12px;font-size:.97rem;transition:background .15s}
-.cmdk-item:hover,.cmdk-item.sel{background:var(--bg)}
-.cmdk-item .ico{color:var(--brass);font-weight:700;width:18px;text-align:center}
-.cmdk-item small{margin-left:auto;color:var(--muted);font:500 .78rem var(--mono)}
 
 @media (max-width:820px){
   .hero .wrap,.sec-head,.about,.tl-item{grid-template-columns:1fr;gap:20px}
-  .hero{padding:48px 0}.keycard{max-width:340px}
-  .projects,.skills{grid-template-columns:1fr}
-  .skill-row{grid-template-columns:1fr;gap:2px}
+  .hero{padding:48px 0}.keycard{max-width:100%}
+  .projects,.skills-grid{grid-template-columns:1fr}
   .links{display:none}section{padding:56px 0}
-  .stats{grid-template-columns:repeat(3,1fr);gap:10px}
-  .stat b{font-size:1.4rem}
 }
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.js .rv,.up{opacity:1;transform:none}html{scroll-behavior:auto}#cursor-glow{display:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.js .rv,.up{opacity:1;transform:none}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
 <div id="bar"></div>
-<div id="cursor-glow"></div>
+
 <nav aria-label="Hlavná navigácia"><div class="wrap">
-  <a class="logo" href="#top">Ondrej Drengubiak</a>
+  <a class="logo" href="#top">
+    <span class="status-dot" title="K dispozícii pre vývojárske prácu / brigádu"></span>
+    Ondrej Drengubiak
+  </a>
   <div class="links">
-    <a href="#about" data-i18n="n_about"></a><a href="#projects" data-i18n="n_projects"></a><a href="#skills" data-i18n="n_skills"></a><a href="#background" data-i18n="n_bg"></a><a href="#contact" data-i18n="n_contact"></a>
+    <a href="#about" data-i18n="n_about">O mne</a>
+    <a href="#projects" data-i18n="n_projects">Projekty</a>
+    <a href="#skills" data-i18n="n_skills">Zručnosti</a>
+    <a href="#background" data-i18n="n_bg">Prax a štúdium</a>
+    <a href="#contact" data-i18n="n_contact">Kontakt</a>
   </div>
   <div class="tools">
-    <button id="lang" type="button" aria-label="Zmeniť jazyk">SK</button>
+    <button id="term-toggle" type="button" aria-label="Otvoriť terminál" title="Otvoriť vývojársky terminál">&gt;_</button>
+    <button id="lang" type="button" aria-label="Zmeniť jazyk">EN</button>
     <button id="theme" type="button" aria-label="Prepnúť tmavý režim">☾</button>
-    <span class="kbd-hint">⌘K</span>
   </div>
 </div></nav>
 
 <header class="hero" id="top"><div class="wrap">
   <div>
-    <h1 class="up"><span data-i18n="h1_a"></span> <span class="grad" data-i18n="h1_b"></span> <span data-i18n="h1_c"></span></h1>
-    <p class="lead up" style="animation-delay:.15s" data-i18n="lead"></p>
-    <p class="typed up" style="animation-delay:.3s"><span data-i18n="typed_pre"></span> <b id="typed"></b><span class="caret"></span></p>
+    <h1 class="up" data-i18n="h1">Softvérový vývojár, ktorý rieši problémy za pochodu.</h1>
+    <p class="lead up" style="animation-delay:.15s" data-i18n="lead">
+      Študujem Inteligentné softvérové systémy na FIIT STU v Bratislave. Vyvíjam v Pythone, Jave a C/C++, aktívne pracujem s databázami aj webovými technológiami. Už viac ako 3 roky vediem hotelovú recepciu, vďaka čomu skvelo zvládam stresové situácie, komunikáciu a prácu s dátami pod tlakom.
+    </p>
+    <p class="typed up" style="animation-delay:.3s">
+      <span id="typed-pre" data-i18n="typed_pre">Pracujem s</span> <b id="typed"></b><span class="caret"></span>
+    </p>
     <div class="cta up" style="animation-delay:.45s">
-      <a class="btn primary" href="#projects" data-i18n="b_proj"></a>
-      <a class="btn" href="mailto:ondrej.drengubiak1@gmail.com" data-i18n="b_mail"></a>
-    </div>
-    <div class="stats up" style="animation-delay:.6s">
-      <div class="stat"><b data-count="4">0</b><span data-i18n="st1"></span></div>
-      <div class="stat"><b data-count="5">0</b><span data-i18n="st2"></span></div>
-      <div class="stat"><b data-count="3">0</b><span data-i18n="st3"></span></div>
+      <a class="btn primary" href="#projects" data-i18n="b_proj">Pozrieť projekty</a>
+      <a class="btn" href="mailto:ondrej.drengubiak1@gmail.com" data-i18n="b_mail">Napísať e-mail</a>
     </div>
   </div>
-  <aside class="keycard" id="card" aria-label="Rýchle fakty">
+
+  <aside class="keycard" id="card" aria-label="Rýchly prehľad">
     <div class="room">2026</div>
-    <div class="room-label" data-i18n="k_label"></div>
-    <div class="clock" id="clock"></div>
+    <div class="room-label" data-i18n="k_label">Inžinierske štúdium (Ing.)</div>
     <dl>
-      <div><dt data-i18n="k_uni"></dt><dd>FIIT STU</dd></div>
-      <div><dt data-i18n="k_study"></dt><dd data-i18n="k_study_v"></dd></div>
-      <div><dt data-i18n="k_based"></dt><dd data-i18n="k_based_v"></dd></div>
-      <div><dt data-i18n="k_lang"></dt><dd data-i18n="k_lang_v"></dd></div>
-      <div><dt data-i18n="k_look"></dt><dd data-i18n="k_look_v"></dd></div>
-      <div><dt data-i18n="k_drive"></dt><dd>B</dd></div>
+      <div><dt data-i18n="k_uni">Univerzita</dt><dd>FIIT STU Bratislava</dd></div>
+      <div><dt data-i18n="k_study">Odbor</dt><dd data-i18n="k_study_v">Inteligentné softvérové systémy</dd></div>
+      <div><dt data-i18n="k_based">Lokalita</dt><dd>Bratislava / Zvolen</dd></div>
+      <div><dt data-i18n="k_lang">Jazyky</dt><dd data-i18n="k_lang_v">SK (Native), EN (C1), DE (A2)</dd></div>
+      <div><dt data-i18n="k_drive">Vodičský preukaz</dt><dd>Skupina B</dd></div>
+      <div><dt data-i18n="k_look">Hľadám</dt><dd data-i18n="k_look_v">Brigádu / Part-time dev</dd></div>
     </dl>
   </aside>
 </div></header>
 
 <main>
 <section id="about"><div class="wrap about rv">
-  <h2 data-i18n="a_h"></h2>
-  <div><p data-i18n="a_p1"></p><p data-i18n="a_p2"></p><p data-i18n="a_p3"></p></div>
+  <h2 data-i18n="a_h">O mne</h2>
+  <div>
+    <p data-i18n="a_p1">
+      V júni 2026 som úspešne ukončil bakalárske štúdium informatívy na Fakulte informatiky a informačných technológií STU v Bratislave a od septembra pokracujem na inžinierskom stupni v špecializácii Inteligentné softvérové systémy. Základy IT a sietí som získal už na Strednej priemyselnej škole Jozefa Murgaša v Banskej Bystrici.
+    </p>
+    <p data-i18n="a_p2">
+      Od júla 2022 pôsobím ako hotelový recepčný vo Franko-Real, s.r.o. vo Zvolene. Táto práca mi dala neoceniteľnú prax v precíznosti, analytickom myslení pri dennom zúčtovaní tržieb a fakturácii, ako aj v zvládaní krízových situácií s hosťami. Kombinácia silného technického zázemia a schopnosti efektívne komunikovať mi umožňuje prinášať reálnu hodnotu do vývojárskych tímov.
+    </p>
+  </div>
 </div></section>
 
 <section id="projects"><div class="wrap">
-  <div class="sec-head rv"><h2 data-i18n="p_h"></h2><p data-i18n="p_sub"></p></div>
+  <div class="sec-head rv">
+    <h2 data-i18n="p_h">Projekty</h2>
+    <p data-i18n="p_sub">Výber akademických a osobných projektov s priamym odkazom na zdrojové kódy a živé ukážky.</p>
+  </div>
   <div class="projects">
     <article class="project featured rv">
-      <span class="tag" data-i18n="p_tag"></span>
+      <span class="tag" data-i18n="p_tag">Bakalárska práca · Webová aplikácia</span>
       <h3>Patterna</h3>
-      <p data-i18n="p_desc"></p>
-      <ul class="feat"><li data-i18n="p_f1"></li><li data-i18n="p_f2"></li><li data-i18n="p_f3"></li><li data-i18n="p_f4"></li></ul>
-      <div class="stack"><span>JavaScript</span><span>TensorFlow.js</span><span>D3.js</span><span>Tailwind CSS</span><span>MDP</span><span>NLP</span><span>jsPDF</span><span>JSZip</span></div>
+      <p data-i18n="p_desc">Webová aplikácia na generovanie optimalizovaných postupností návrhových vzorov. Využíva algoritmy spracovania prirodzeného jazyka (TF-IDF a Universal Sentence Encoder) na meranie podobnosti a Markovove rozhodovacie procesy (MDP) s nastaviteľnými odmenami pre výpočet cesty medzi štartovacím a cieľovým vzorom.</p>
+      <ul class="feat">
+        <li data-i18n="p_f1">Interaktívny vizualizačný graf vzťahov (D3.js) a matica podobnosti v reálnom čase.</li>
+        <li data-i18n="p_f2">Vlastné nastavenia: pevný štart/cieľ, sentiment odmeny a bonusy za referencie.</li>
+        <li data-i18n="p_f3">Kompletná správa postupností pomocou drag-and-drop, exporty do TXT, PDF, CSV, PNG aj ZIP archive.</li>
+        <li data-i18n="p_f4">Plne responsívne rozhranie v slovenčine a angličtine, tmavý režim, nasadené na Verceli.</li>
+      </ul>
+      <div class="stack">
+        <span>JavaScript</span><span>TensorFlow.js</span><span>D3.js</span><span>Tailwind CSS</span><span>MDP</span><span>NLP</span><span>jsPDF</span><span>JSZip</span>
+      </div>
       <div class="plinks">
-        <a href="https://patterna-project-github-io.vercel.app" target="_blank" rel="noopener" data-i18n="p_live"></a>
-        <a href="https://github.com/patterna-project/patterna-project.github.io" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://www.overleaf.com/read/czbdxjrnbfqz" target="_blank" rel="noopener" data-i18n="p_guide"></a>
+        <a href="https://patterna-project-github-io.vercel.app" target="_blank" rel="noopener" data-i18n="p_live">Živá aplikácia</a>
+        <a href="https://github.com/patterna-project/patterna-project.github.io" target="_blank" rel="noopener">GitHub Kód</a>
+        <a href="https://www.overleaf.com/read/czbdxjrnbfqz" target="_blank" rel="noopener" data-i18n="p_guide">Dokumentácia</a>
         <a href="https://tally.so/r/Y5rWkB" target="_blank" rel="noopener">Feedback</a>
       </div>
     </article>
-    <article class="project soon rv"><span class="tag"><span data-i18n="ph_tag"></span> 2</span><h3 data-i18n="ph_t"></h3><p data-i18n="ph_d"></p><div class="stack"><span>Tech</span><span>Tech</span></div><div class="plinks"><a href="#">GitHub</a></div></article>
-    <article class="project soon rv"><span class="tag"><span data-i18n="ph_tag"></span> 3</span><h3 data-i18n="ph_t"></h3><p data-i18n="ph_d"></p><div class="stack"><span>Tech</span><span>Tech</span></div><div class="plinks"><a href="#">GitHub</a></div></article>
-    <article class="project soon rv"><span class="tag"><span data-i18n="ph_tag"></span> 4</span><h3 data-i18n="ph_t"></h3><p data-i18n="ph_d"></p><div class="stack"><span>Tech</span><span>Tech</span></div><div class="plinks"><a href="#">GitHub</a></div></article>
-    <article class="project soon rv"><span class="tag"><span data-i18n="ph_tag"></span> 5</span><h3 data-i18n="ph_t"></h3><p data-i18n="ph_d"></p><div class="stack"><span>Tech</span><span>Tech</span></div><div class="plinks"><a href="#">GitHub</a></div></article>
+
+    <article class="project soon rv">
+      <span class="tag"><span data-i18n="ph_tag">Projekt</span> 2</span>
+      <h3 data-i18n="ph_t">Systém pre spracovanie dát</h3>
+      <p data-i18n="ph_d">Backendový modul v Pythone a SQL zameraný na efektívnu analýzu a spracovanie rozsiahlych datasetov.</p>
+      <div class="stack"><span>Python</span><span>SQL</span><span>Git</span></div>
+      <div class="plinks"><a href="https://github.com/Ondrejstuba" target="_blank" rel="noopener">GitHub</a></div>
+    </article>
+
+    <article class="project soon rv">
+      <span class="tag"><span data-i18n="ph_tag">Projekt</span> 3</span>
+      <h3 data-i18n="ph_t">Sieťový Analyzer &amp; Utility</h3>
+      <p data-i18n="ph_d">Aplikácia v C/C++ využívajúca znalosti zo štúdia Cisco CCNA na monitorovanie a simuláciu sieťovej komunikácie.</p>
+      <div class="stack"><span>C++</span><span>Cisco CCNA</span><span>Networking</span></div>
+      <div class="plinks"><a href="https://github.com/Ondrejstuba" target="_blank" rel="noopener">GitHub</a></div>
+    </article>
   </div>
 </div></section>
 
 <section id="skills"><div class="wrap">
-  <div class="sec-head rv"><h2 data-i18n="s_h"></h2><p data-i18n="s_sub"></p></div>
-  <div class="skills rv">
-    <div class="skill-row"><strong data-i18n="s1"></strong><span>C, C++, Java, Python, R</span></div>
-    <div class="skill-row"><strong>Web</strong><span>HTML, CSS, JavaScript, PHP</span></div>
-    <div class="skill-row"><strong data-i18n="s3"></strong><span>SQL, MS Access</span></div>
-    <div class="skill-row"><strong data-i18n="s4"></strong><span data-i18n="s4_v"></span></div>
-    <div class="skill-row"><strong data-i18n="s5"></strong><span>Cisco CCNA v7, IT Essentials</span></div>
-    <div class="skill-row"><strong data-i18n="s7"></strong><span>Linux (základy)</span></div>
-    <div class="skill-row"><strong data-i18n="s6"></strong><span data-i18n="s6_v"></span></div>
-    <div class="skill-row"><strong data-i18n="s8"></strong><span data-i18n="s8_v"></span></div>
+  <div class="sec-head rv">
+    <h2 data-i18n="s_h">Zručnosti &amp; Technológie</h2>
+    <p data-i18n="s_sub">Prehľad mojich technických znalostí a nástrojov s možnosťou filtrovania.</p>
+  </div>
+
+  <div class="skill-filters rv">
+    <button class="filter-btn active" data-filter="all" data-i18n="sf_all">Všetko</button>
+    <button class="filter-btn" data-filter="prog" data-i18n="sf_prog">Programovanie</button>
+    <button class="filter-btn" data-filter="web" data-i18n="sf_web">WebDev</button>
+    <button class="filter-btn" data-filter="db" data-i18n="sf_db">Databázy &amp; OS</button>
+    <button class="filter-btn" data-filter="net" data-i18n="sf_net">Siete &amp; Nástroje</button>
+  </div>
+
+  <div class="skills-grid rv">
+    <div class="skill-card" data-cat="prog">
+      <h4><span data-i18n="sk_lang">Programovacie jazyky</span> <span>Pokročilý</span></h4>
+      <div class="skill-tags"><span>Python</span><span>Java</span><span>C</span><span>C++</span><span>R</span></div>
+    </div>
+    <div class="skill-card" data-cat="web">
+      <h4><span>Web Development</span> <span>Pokročilý</span></h4>
+      <div class="skill-tags"><span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>PHP</span></div>
+    </div>
+    <div class="skill-card" data-cat="db">
+      <h4><span data-i18n="sk_db">Databázové systémy</span> <span>Mierne pokročilý</span></h4>
+      <div class="skill-tags"><span>SQL</span><span>MS Access</span><span>Relačný dizajn</span></div>
+    </div>
+    <div class="skill-card" data-cat="db">
+      <h4><span data-i18n="sk_os">Operačné systémy &amp; Nástroje</span> <span>Pokročilý / Základy</span></h4>
+      <div class="skill-tags"><span>Linux OS (Základy)</span><span>Git</span><span>MS Office</span><span>Open Office</span></div>
+    </div>
+    <div class="skill-card" data-cat="net">
+      <h4><span data-i18n="sk_net">Sieťové technológie</span> <span>Certifikované</span></h4>
+      <div class="skill-tags"><span>Cisco CCNA v7 (1–3)</span><span>Routing &amp; Switching</span><span>IT Essentials</span></div>
+    </div>
+    <div class="skill-card" data-cat="prog">
+      <h4><span data-i18n="sk_other">Jazyky &amp; Vodičský preukaz</span> <span>C1 / A2 / B</span></h4>
+      <div class="skill-tags"><span>Angličtina (C1)</span><span>Nemčina (A2)</span><span>Slovenčina (Materinský)</span><span>Vodičský preukaz: Sk. B</span></div>
+    </div>
   </div>
 </div></section>
 
 <section id="background"><div class="wrap">
-  <div class="sec-head rv"><h2 data-i18n="bg_h"></h2><p data-i18n="bg_sub"></p></div>
-  <h3 class="sub rv" data-i18n="bg_work"></h3>
-  <div class="tl-item rv"><div class="when" data-i18n="w_date"></div><div>
-    <h3 data-i18n="w_title"></h3><p data-i18n="w_company"></p>
-    <p style="margin-top:12px;max-width:64ch" data-i18n="w_intro"></p>
-    <ul>
-      <li data-i18n="w1"></li>
-      <li data-i18n="w2"></li>
-      <li data-i18n="w3"></li>
-      <li data-i18n="w4"></li>
-      <li data-i18n="w5"></li>
-      <li data-i18n="w6"></li>
-      <li data-i18n="w7"></li>
-    </ul>
-  </div></div>
-  <h3 class="sub rv" data-i18n="bg_edu"></h3>
-  <div class="tl-item rv"><div class="when" data-i18n="e1_d"></div><div><h3 data-i18n="e1_t"></h3><p data-i18n="e_fiit"></p></div></div>
-  <div class="tl-item rv"><div class="when" data-i18n="e2_d"></div><div><h3 data-i18n="e2_t"></h3><p data-i18n="e_fiit"></p></div></div>
-  <div class="tl-item rv"><div class="when" data-i18n="e3_d"></div><div><h3 data-i18n="e3_t"></h3><p>SPŠ Jozefa Murgaša, Banská Bystrica</p></div></div>
-  <h3 class="sub rv" data-i18n="bg_course"></h3>
-  <div class="tl-item rv"><div class="when">Cisco Networking Academy</div><div><h3>CCNA v7 (1 to 3)</h3><p data-i18n="cc_d"></p></div></div>
-  <div class="tl-item rv"><div class="when">Cisco Networking Academy</div><div><h3>IT Essentials</h3><p data-i18n="cc_d2"></p></div></div>
+  <div class="sec-head rv">
+    <h2 data-i18n="bg_h">Prax a štúdium</h2>
+    <p data-i18n="bg_sub">Interaktívny časový prehľad mojich pracovných skúseností, vzdelania a získaných certifikátov.</p>
+  </div>
+
+  <div class="tab-controls rv">
+    <button class="tab-btn active" data-tab="work" data-i18n="tb_work">Pracovné skúsenosti</button>
+    <button class="tab-btn" data-tab="edu" data-i18n="tb_edu">Vzdelanie</button>
+    <button class="tab-btn" data-tab="certs" data-i18n="tb_certs">Kurzy a certifikáty</button>
+  </div>
+
+  <!-- Tab Pracovné skúsenosti -->
+  <div class="tl-content active" id="tab-work">
+    <div class="tl-item rv">
+      <div class="when">07/2022 – Doteraz</div>
+      <div>
+        <h3 data-i18n="w_title">Hotelový recepčný</h3>
+        <p>Franko-Real, s.r.o. — Zvolen, Slovenská republika</p>
+        <ul>
+          <li data-i18n="w1_desc"><strong>Správa rezervácií a komunikácia:</strong> Prvý kontakt s hosťami, kompletné vybavovanie rezervácií, telefonická a e-mailová komunikácia v slovenskom a anglickom jazyku.</li>
+          <li data-i18n="w2_desc"><strong>Finančné zúčtovanie &amp; Uzávierky:</strong> Práca v špecializovanom rezervačnom systéme, spracovanie platieb, denné a mesačné uzávierky, zúčtovanie ubytovania a celkových denných tržieb.</li>
+          <li data-i18n="w3_desc"><strong>Administratíva a analytika:</strong> Vystavovanie faktúr, príprava podkladov pre štatistiky, evidencia inventáru, prvotné spracovanie podkladov pre mzdy.</li>
+          <li data-i18n="w4_desc"><strong>Riešenie problémov (Problem Solving):</strong> Operatívne riešenie nečakaných situácií a požiadaviek hostí priamo počas pobytu, plná zodpovednosť za plynulý a bezchybný chod recepcie.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Vzdelanie -->
+  <div class="tl-content" id="tab-edu">
+    <div class="tl-item">
+      <div class="when">09/2026 – Doteraz</div>
+      <div>
+        <h3 data-i18n="e1_title">Inteligentné softvérové systémy (Ing.)</h3>
+        <p>Fakulta informatiky a informačných technológií STU v Bratislave</p>
+        <ul>
+          <li data-i18n="e1_desc">Inžinierske štúdium zamerné na pokročilý vývoj softvéru, architektúry a inteligentné systémy.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="when">09/2023 – 06/2026</div>
+      <div>
+        <h3 data-i18n="e2_title">Informatika (Bc.)</h3>
+        <p>Fakulta informatiky a informačných technológií STU v Bratislave</p>
+        <ul>
+          <li data-i18n="e2_desc">Úspešne ukončené bakalárske štúdium štátnou skúškou a obhajobou bakalárskej práce Patterna.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="when">09/2018 – 06/2022</div>
+      <div>
+        <h3 data-i18n="e3_title">Informačné a sieťové technológie (Maturita)</h3>
+        <p>Stredná priemyselná škola Jozefa Murgaša, Banská Bystrica</p>
+        <ul>
+          <li data-i18n="e3_desc">Odborné stredoškolské vzdelanie zamerané na sieťové architektúry, hardvér a základy programovania.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Certifikáty -->
+  <div class="tl-content" id="tab-certs">
+    <div class="tl-item">
+      <div class="when">CISCO Networking Academy</div>
+      <div>
+        <h3>CCNAv7 (Semestre 1–3)</h3>
+        <p>Routing, Switching, Wireless Essentials, Enterprise Networking &amp; Security</p>
+        <ul>
+          <li><strong>Semester 1:</strong> Routing and Switching: Introduction to Networks</li>
+          <li><strong>Semester 2:</strong> Switching, Routing, and Wireless Essentials</li>
+          <li><strong>Semester 3:</strong> Enterprise Networking, Security, and Automation</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="when">CISCO Networking Academy</div>
+      <div>
+        <h3>IT Essentials</h3>
+        <p>Hardware, Software and Network Troubleshooting</p>
+      </div>
+    </div>
+  </div>
+
 </div></section>
 
 <section class="contact" id="contact"><div class="wrap">
-  <div class="sec-head rv"><h2 data-i18n="c_h"></h2><p data-i18n="c_p"></p></div>
-  <div class="contact-list rv">
-    <div><span data-i18n="c_email"></span><a href="mailto:ondrej.drengubiak1@gmail.com">ondrej.drengubiak1@gmail.com</a><button class="copy" data-copy="ondrej.drengubiak1@gmail.com" type="button" data-i18n="c_copy"></button></div>
-    <div><span data-i18n="c_loc"></span><span data-i18n="c_loc_v"></span></div>
-    <div><span>GitHub</span><a href="https://github.com/Ondrejstuba" target="_blank" rel="noopener">github.com/Ondrejstuba</a><button class="copy" data-copy="https://github.com/Ondrejstuba" type="button" data-i18n="c_copy"></button></div>
+  <div class="sec-head rv">
+    <h2 data-i18n="c_h">Kontaktujte ma</h2>
+    <p data-i18n="c_p">Hľadám vývojársku brigádu alebo part-time pozíciu (Bratislava / Zvolen / Remote). Neváhajte ma kontaktovať e-mailom.</p>
+  </div>
+  <div class="contact-card rv">
+    <div class="contact-row">
+      <span class="contact-label" data-i18n="c_email">E-mail:</span>
+      <div class="contact-val">
+        <a href="mailto:ondrej.drengubiak1@gmail.com">ondrej.drengubiak1@gmail.com</a>
+        <button class="copy-btn" id="copy" type="button" data-i18n="c_copy">Kopírovať e-mail</button>
+      </div>
+    </div>
+    <div class="contact-row">
+      <span class="contact-label" data-i18n="c_loc">Lokalita:</span>
+      <div class="contact-val">Bratislava / Zvolen, Slovenská republika</div>
+    </div>
+    <div class="contact-row">
+      <span class="contact-label">GitHub:</span>
+      <div class="contact-val">
+        <a href="https://github.com/Ondrejstuba" target="_blank" rel="noopener">github.com/Ondrejstuba</a>
+      </div>
+    </div>
   </div>
 </div></section>
 </main>
 
-<footer><div class="wrap"><span>© 2026 Ondrej Drengubiak</span><a id="to-top" href="#top" data-i18n="f_top"></a></div></footer>
-<div id="toast" role="status"></div>
-<button id="top-btn" type="button" aria-label="Späť nahor">↑</button>
+<footer><div class="wrap">
+  <span>© 2026 Bc. Ondrej Drengubiak · Bratislava / Zvolen</span>
+  <a id="to-top" href="#top" data-i18n="f_top">Späť nahor ↑</a>
+</div></footer>
 
-<!-- Command palette -->
-<div id="cmdk" role="dialog" aria-modal="true" aria-label="Rýchla navigácia">
-  <div class="cmdk-box">
-    <input id="cmdk-input" type="text" placeholder="Skoč na sekciu… (napíš 'projekty', 'skills', …)" autocomplete="off">
-    <div class="cmdk-list" id="cmdk-list"></div>
+<!-- Interactive Terminal Modal -->
+<div id="terminal-modal" role="dialog" aria-label="Interaktívny terminál">
+  <div class="terminal-window">
+    <div class="terminal-head">
+      <div class="term-dots">
+        <span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span>
+      </div>
+      <span class="term-title">ondrej@portfolio:~ (bash)</span>
+      <span style="width:30px"></span>
+    </div>
+    <div class="terminal-body" id="term-body">
+      <div class="term-out">Vítajte v CLI termináli Ondreja Drengubiaka!
+Zadajte <span style="color:#58a6ff">help</span> pre zoznam dostupných príkazov.</div>
+    </div>
+    <div style="padding:12px 18px; background:#161b22; border-top:1px solid #30363d">
+      <div class="term-input-line">
+        <span class="term-prompt">guest@drengubiak:~$</span>
+        <input type="text" id="term-input" autocomplete="off" spellcheck="false" placeholder="píšte príkaz sem...">
+      </div>
+    </div>
   </div>
 </div>
 
+<div id="toast" role="status"></div>
+<button id="top-btn" type="button" aria-label="Späť nahor">↑</button>
+
 <script>
-const T={
-sk:{
-n_about:'O mne',n_projects:'Projekty',n_skills:'Zručnosti',n_bg:'Prax a štúdium',n_contact:'Kontakt',
-h1_a:'Softvérový vývojár, ktorý',h1_b:'rieši problémy',h1_c:'za pochodu.',
-lead:'Študujem Inteligentné softvérové systémy na FIIT STU v Bratislave. Programujem v Pythone, Jave a C/C++ a popri štúdiu už štvrtým rokom pracujem na hotelovej recepcii — viem teda, aké je to, keď sa ľudia musia spoľahnúť na fungujúci systém.',
-typed_pre:'Pracujem s',b_proj:'Pozrieť projekty',b_mail:'Napísať e-mail',
-st1:'roky praxe',st2:'program. jazykov',st3:'jazyky',
-k_label:'Momentálne ubytovaný na',k_uni:'Univerzita',k_study:'Štúdium',k_study_v:'Inteligentné softvérové systémy',k_based:'Bydlisko',k_based_v:'Bratislava / Zvolen',k_lang:'Jazyky',k_lang_v:'AJ C1, NJ A2',k_look:'Hľadám',k_look_v:'Brigádu vývojára',k_drive:'Vodičský preukaz',
-a_h:'O mne',
-a_p1:'V júni 2026 som dokončil bakalárske štúdium informatiky na Fakulte informatiky a informačných technológií STU v Bratislave a v septembri som nastúpil na inžinierske štúdium v odbore Inteligentné softvérové systémy. Predtým som študoval informačné a sieťové technológie na Strednej priemyselnej škole Jozefa Murgaša v Banskej Bystrici a absolvoval som kurzy Cisco CCNA v7 a IT Essentials.',
-a_p2:'Od júla 2022 pracujem na hotelovej recepcii v spoločnosti Franko-Real, s.r.o. vo Zvolene. Som prvý kontakt s hosťami, starám sa o rezervácie, zúčtovanie ubytovania a denných tržieb, fakturáciu, prípravu štatistík, denné a mesačné uzávierky, riešenie problémov počas pobytu hostí, inventarizáciu a prvotné spracovanie miezd. Táto práca ma naučila zachovať pokoj aj v hektických situáciách, jasne komunikovať s ľuďmi a dbať na detaily.',
-a_p3:'Rovnaké návyky — pokoj, presnosť a zodpovednosť — chcem preniesť aj do softvérového vývoja. Baví ma riešiť reálne problémy, učiť sa nové technológie a písať kód, ktorý má zmysel.',
-p_h:'Projekty',p_sub:'Výber školských a osobných projektov. Pri každom je odkaz na kód na GitHube.',
-p_tag:'Bakalárska práca · Webová aplikácia',
-p_desc:'Webová aplikácia, ktorá generuje optimálne postupnosti vzorov. Meria podobnosť popisov vzorov (TF-IDF alebo Universal Sentence Encoder) a potom pomocou Markovovho rozhodovacieho procesu s nastaviteľnými odmenami zostaví cestu od štartovacieho vzoru k cieľovému.',
-p_f1:'Matica podobnosti, štatistiky a interaktívny graf vzťahov medzi vzormi',p_f2:'Pevný štart a cieľ, bonus za odkazy a úprava odmien podľa sentimentu',p_f3:'Presúvanie myšou, export do TXT, PDF, CSV, PNG alebo ZIP',p_f4:'Slovenské a anglické rozhranie, tmavý režim, nasadené na Verceli',
-p_live:'Spustiť aplikáciu',p_guide:'Príručka',ph_tag:'Projekt',ph_t:'Čoskoro',ph_d:'Krátky popis: čo to robí, aký problém to rieši a čo si vytvoril.',
-s_h:'Zručnosti',s_sub:'Nástroje a technológie, s ktorými pracujem, rozdelené podľa oblastí.',s1:'Programovacie jazyky',s3:'Databázy',s4:'Nástroje',s4_v:'Git, Microsoft Office, Open Office',s5:'Siete',s7:'Operačné systémy',s6:'Hovorené jazyky',s6_v:'Angličtina C1, nemčina A2, slovenčina materinský',s8:'Vodičský preukaz',s8_v:'Skupina B',
-bg_h:'Prax a štúdium',bg_sub:'Kde som študoval a pracoval.',bg_work:'Pracovné skúsenosti',bg_edu:'Vzdelanie',bg_course:'Kurzy a certifikáty',
-w_date:'Júl 2022 – súčasnosť',w_title:'Hotelový recepčný',w_company:'Franko-Real, s.r.o., Zvolen, Slovenská republika',
-w_intro:'Ako hotelový recepčný som prvým kontaktom s hosťami a zároveň človekom, ktorý drží chod recepcie pohromade. Denne komunikujem s hosťami, riešim rezervácie, účtovníctvo aj krízové situácie — od stratených kľúčov až po sťažnosti na izbu.',
-w1:'Prvý kontakt s hosťami a komunikácia ohľadom rezervácií — osobne, telefonicky aj e-mailom.',
-w2:'Práca v rezervačnom systéme: vytváranie, úprava a rušenie rezervácií, správa obsadenosti.',
-w3:'Zúčtovanie ubytovania a denných tržieb, fakturácia, spracovanie platieb kartou aj v hotovosti.',
-w4:'Príprava štatistík o obsadenosti a tržbách, denné a mesačné uzávierky.',
-w5:'Riešenie problémov počas pobytu hostí — reklamácie, zmeny izieb, špeciálne požiadavky.',
-w6:'Inventarizácia, administratíva a prvotné spracovanie miezd.',
-w7:'Zabezpečenie plynulého chodu recepcie vrátane koordinácie s ostatnými úsekmi hotela.',
-e1_d:'Sep 2026 – súčasnosť',e1_t:'Inteligentné softvérové systémy (Ing.)',e_fiit:'FIIT, Slovenská technická univerzita v Bratislave',
-e2_d:'Sep 2023 – Jún 2026',e2_t:'Informatika (Bc.)',e3_d:'Sep 2018 – Jún 2022',e3_t:'Informačné a sieťové technológie (2561 M)',
-cc_d:'Semester 1: Routing and Switching: Introduction to Networks · Semester 2: Switching, Routing, and Wireless Essentials · Semester 3: Enterprise Networking, Security, and Automation.',
-cc_d2:'Základy hardvéru, operačných systémov, sietí a bezpečnosti.',
-c_h:'Kontakt',c_p:'Hľadám brigádu alebo trainee pozíciu vývojára, kde sa môžem učiť a prispievať. Napíšte mi e-mail.',c_email:'E-mail',c_loc:'Lokalita',c_loc_v:'Bratislava / Zvolen, Slovensko',c_copy:'Kopírovať',c_copied:'Skopírované!',f_top:'Hore',
-ph:'Hľadať…',ph_empty:'Nič sa nenašlo',sk_to:'Skoč na'}
-,
-en:{
-n_about:'About',n_projects:'Projects',n_skills:'Skills',n_bg:'Background',n_contact:'Contact',
-h1_a:'Software developer who',h1_b:'solves problems',h1_c:'in real time.',
-lead:"I'm a Master's student of Intelligent Software Systems at FIIT STU in Bratislava. I write code in Python, Java and C/C++, and alongside my studies I've been working at a hotel front desk for four years — so I know what it's like when people depend on a system working.",
-typed_pre:'I work with',b_proj:'See my projects',b_mail:'Email me',
-st1:'years of experience',st2:'programming languages',st3:'languages',
-k_label:'Currently checked in at',k_uni:'University',k_study:'Study',k_study_v:'Intelligent Software Systems',k_based:'Based in',k_based_v:'Bratislava / Zvolen',k_lang:'Languages',k_lang_v:'EN C1, DE A2',k_look:'Looking for',k_look_v:'Part-time dev role',k_drive:"Driver's licence",
-a_h:'About me',
-a_p1:"I finished my Bachelor's degree in Informatics at the Faculty of Informatics and Information Technologies (STU Bratislava) in June 2026 and started the Engineering degree in September, majoring in Intelligent Software Systems. Before that I studied information and network technologies at Jozef Murgaš Secondary Technical School in Banská Bystrica and completed Cisco CCNA v7 and IT Essentials courses.",
-a_p2:"Since July 2022 I've worked at a hotel reception at Franko-Real, s.r.o. in Zvolen. I'm the first point of contact for guests, I handle reservations, settle accommodation and daily revenue, issue invoices, prepare statistics, close each day and month, solve problems during guest stays, take inventory and do first-stage payroll processing. This job taught me to stay calm even in hectic situations, communicate clearly and care about details.",
-a_p3:'I want to bring the same habits — calm, precision and responsibility — into software development. I enjoy solving real problems, learning new technologies and writing code that matters.',
-p_h:'Projects',p_sub:'A selection of university and personal projects. Each one links to its code on GitHub.',
-p_tag:"Bachelor's thesis · Web application",
-p_desc:'A web application that generates optimal sequences of patterns. It measures how similar pattern descriptions are (TF-IDF or Universal Sentence Encoder) and then uses a Markov Decision Process with configurable rewards to build a path from a start pattern to a goal pattern.',
-p_f1:'Similarity matrix, statistics and an interactive force-directed graph of pattern relationships',p_f2:'Forced start and goal, reference bonus and sentiment-based reward adjustments',p_f3:'Drag and drop reordering, export to TXT, PDF, CSV, PNG or ZIP',p_f4:'Slovak and English interface, dark mode, deployed on Vercel',
-p_live:'Live app',p_guide:'Guide',ph_tag:'Project',ph_t:'Coming soon',ph_d:'Short description: what it does, what problem it solves and what you built.',
-s_h:'Skills',s_sub:'Tools and technologies I work with, grouped by area.',s1:'Programming languages',s3:'Databases',s4:'Tools',s4_v:'Git, Microsoft Office, Open Office',s5:'Networking',s7:'Operating systems',s6:'Spoken languages',s6_v:'English C1, German A2, Slovak native',s8:"Driver's licence",s8_v:'Category B',
-bg_h:'Background',bg_sub:"Where I've studied and worked.",bg_work:'Work experience',bg_edu:'Education',bg_course:'Courses & certificates',
-w_date:'July 2022 – present',w_title:'Hotel receptionist',w_company:'Franko-Real, s.r.o., Zvolen, Slovakia',
-w_intro:'As a hotel receptionist I am the first point of contact for guests and the person who holds the front desk together. Every day I communicate with guests, handle reservations, accounting and crisis situations — from lost keys to room complaints.',
-w1:'First point of contact for guests and reservation communication — in person, by phone and by email.',
-w2:'Working in the reservation system: creating, editing and cancelling reservations, managing occupancy.',
-w3:'Settling accommodation and daily revenue, invoicing, processing card and cash payments.',
-w4:'Preparing statistics on occupancy and revenue, daily and monthly closings.',
-w5:'Solving problems during guest stays — complaints, room changes, special requests.',
-w6:'Inventory, administration and first-stage payroll processing.',
-w7:'Keeping the front desk running smoothly, including coordination with other hotel departments.',
-e1_d:'Sep 2026 – present',e1_t:'Intelligent Software Systems (Engineering degree)',e_fiit:'FIIT, Slovak University of Technology, Bratislava',
-e2_d:'Sep 2023 – Jun 2026',e2_t:'Informatics (Bc.)',e3_d:'Sep 2018 – Jun 2022',e3_t:'Information and network technologies (2561 M)',
-cc_d:'Semester 1: Routing and Switching: Introduction to Networks · Semester 2: Switching, Routing, and Wireless Essentials · Semester 3: Enterprise Networking, Security, and Automation.',
-cc_d2:'Fundamentals of hardware, operating systems, networks and security.',
-c_h:'Get in touch',c_p:"I'm looking for a part-time developer or trainee role where I can learn and contribute. Write me an email.",c_email:'Email',c_loc:'Location',c_loc_v:'Bratislava / Zvolen, Slovakia',c_copy:'Copy',c_copied:'Copied!',f_top:'Back to top',
-ph:'Search…',ph_empty:'Nothing found',sk_to:'Jump to'}};
-
-const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],root=document.documentElement;
-const save=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},load=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
-let lang=load('lang')||'sk';if(!T[lang])lang='sk';
-let words=[];
-
-function setLang(l){lang=l;save('lang',l);root.lang=l;
-  $$('[data-i18n]').forEach(e=>e.textContent=T[l][e.dataset.i18n]);
-  $('#lang').textContent=l==='en'?'SK':'EN';$('#lang').setAttribute('aria-label',l==='en'?'Prepnúť do slovenčiny':'Switch to English');
-  document.title=l==='en'?'Ondrej Drengubiak | Software Developer':'Ondrej Drengubiak | Softvérový vývojár';
-  words=l==='en'?['Python','Java','C / C++','SQL & databases','Web development']:['Python','Java','C / C++','SQL a databázy','Web development'];
-  $('#cmdk-input').placeholder=T[l].ph;
-  buildCmdk();}
-function setTheme(t){root.dataset.theme=t;save('theme',t);$('#theme').textContent=t==='dark'?'☀':'☾'}
-$('#lang').onclick=()=>setLang(lang==='en'?'sk':'en');
-$('#theme').onclick=()=>setTheme(root.dataset.theme==='dark'?'light':'dark');
-setTheme(root.dataset.theme);setLang(lang);
-
-// typewriter
-const el=$('#typed');let wi=0,ci=0,del=false;
-(function tick(){const w=words[wi]||'';ci+=del?-1:1;el.textContent=w.slice(0,ci);let d=del?45:85;
-  if(!del&&ci===w.length){del=true;d=1400}else if(del&&ci===0){del=false;wi=(wi+1)%words.length;d=300}setTimeout(tick,d)})();
-
-// live clock (Bratislava)
-function clock(){try{const t=new Date().toLocaleTimeString('sk-SK',{timeZone:'Europe/Bratislava',hour:'2-digit',minute:'2-digit',second:'2-digit'});$('#clock').innerHTML='<b>'+t+'</b> · Bratislava';}catch(e){$('#clock').textContent=new Date().toLocaleTimeString();}}
-clock();setInterval(clock,1000);
-
-// animated counters
-const cntIO=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target,to=+el.dataset.count;let n=0;const step=Math.max(1,Math.ceil(to/40));(function inc(){n=Math.min(to,n+step);el.textContent=n+(to>=5?'+':'');if(n<to)requestAnimationFrame(inc)})();cntIO.unobserve(el)}),{threshold:.5});
-$$('[data-count]').forEach(e=>cntIO.observe(e));
-
-// scroll: progress bar, back-to-top, active nav link
-const bar=$('#bar'),tb=$('#top-btn'),secs=$$('main section'),navA=$$('.links a');
-function onScroll(){const h=root.scrollHeight-innerHeight;bar.style.transform='scaleX('+(h>0?scrollY/h:0)+')';tb.classList.toggle('show',scrollY>600);
-  let cur='';secs.forEach(s=>{if(s.getBoundingClientRect().top<innerHeight*.4)cur=s.id});navA.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+cur))}
-addEventListener('scroll',onScroll,{passive:true});onScroll();
-tb.onclick=()=>scrollTo({top:0,behavior:'smooth'});
-
-// reveal on scroll
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
-$$('.rv').forEach(e=>io.observe(e));
-
-// cursor glow
-const glow=$('#cursor-glow');let gx=innerWidth/2,gy=innerHeight/2,cx=gx,cy=gy;
-addEventListener('mousemove',e=>{gx=e.clientX;gy=e.clientY},{passive:true});
-(function loop(){cx+=(gx-cx)*.12;cy+=(gy-cy)*.12;glow.style.transform=`translate(${cx}px,${cy}px) translate(-50%,-50%)`;requestAnimationFrame(loop)})();
-
-// key card 3D tilt + shine, project spotlight
-const card=$('#card');
-if(matchMedia('(hover:hover)').matches){
-  card.addEventListener('mousemove',e=>{const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
-    card.style.setProperty('--ry',x*14+'deg');card.style.setProperty('--rx',-y*14+'deg');card.style.setProperty('--sh',(120-(x+.5)*140)+'%')});
-  card.addEventListener('mouseleave',()=>{card.style.setProperty('--rx','0deg');card.style.setProperty('--ry','0deg');card.style.setProperty('--sh','120%')});
-  $$('.project').forEach(p=>p.addEventListener('mousemove',e=>{const r=p.getBoundingClientRect();p.style.setProperty('--mx',e.clientX-r.left+'px');p.style.setProperty('--my',e.clientY-r.top+'px')}));
-}
-
-// toast + confetti
-const toast=$('#toast');
-function showToast(msg){toast.textContent=msg;toast.classList.add('show');clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.classList.remove('show'),1800)}
-function confetti(){
-  const colors=['#B8893A','#1D3A33','#8FD1B6','#D9A84F','#2C5248'];
-  for(let i=0;i<40;i++){
-    const p=document.createElement('div');
-    p.style.cssText='position:fixed;left:50%;top:50%;width:8px;height:8px;border-radius:2px;pointer-events:none;z-index:70;opacity:1';
-    p.style.background=colors[i%colors.length];
-    document.body.appendChild(p);
-    const ang=Math.random()*Math.PI*2, v=80+Math.random()*220;
-    const dx=Math.cos(ang)*v, dy=Math.sin(ang)*v-120;
-    p.animate([{transform:'translate(-50%,-50%) rotate(0deg)',opacity:1},{transform:`translate(${dx}px,${dy+300}px) rotate(${720+Math.random()*720}deg)`,opacity:0}],{duration:1100+Math.random()*500,easing:'cubic-bezier(.2,.7,.4,1)'}).onfinish=()=>p.remove();
+// Translation Dictionary
+const T = {
+  sk: {
+    n_about:'O mne', n_projects:'Projekty', n_skills:'Zručnosti', n_bg:'Prax a štúdium', n_contact:'Kontakt',
+    h1:'Softvérový vývojár, ktorý rieši problémy za pochodu.',
+    lead:'Študujem Inteligentné softvérové systémy na FIIT STU v Bratislave. Vyvíjam v Pythone, Jave a C/C++, aktívne pracujem s databázami aj webovými technológiami. Už viac ako 3 roky vediem hotelovú recepciu, vďaka čomu skvelo zvládam stresové situácie, komunikáciu a prácu s dátami pod tlakom.',
+    typed_pre:'Pracujem s', b_proj:'Pozrieť projekty', b_mail:'Napísať e-mail',
+    k_label:'Inžinierske štúdium (Ing.)', k_uni:'Univerzita', k_study:'Odbor', k_study_v:'Inteligentné softvérové systémy', k_based:'Lokalita', k_lang:'Jazyky', k_lang_v:'SK (Native), EN (C1), DE (A2)', k_drive:'Vodičský preukaz', k_look:'Hľadám', k_look_v:'Brigádu / Part-time dev',
+    a_h:'O mne',
+    a_p1:'V júni 2026 som úspešne ukončil bakalárske štúdium informatiky na Fakulte informatiky a informačných technológií STU v Bratislave a od septembra pokračujem na inžinierskom stupni v špecializácii Inteligentné softvérové systémy. Základy IT a sietí som získal už na Strednej priemyselnej škole Jozefa Murgaša v Banskej Bystrici.',
+    a_p2:'Od júla 2022 pôsobím ako hotelový recepčný vo Franko-Real, s.r.o. vo Zvolene. Táto práca mi dala neoceniteľnú prax v precíznosti, analytickom myslení pri dennom zúčtovaní tržieb a fakturácii, ako aj v zvládaní krízových situácií s hosťami. Kombinácia silného technického zázemia a schopnosti efektívne komunikovať mi umožňuje prinášať reálnu hodnotu do vývojárskych tímov.',
+    p_h:'Projekty', p_sub:'Výber akademických a osobných projektov s priamym odkazom na zdrojové kódy a živé ukážky.',
+    p_tag:'Bakalárska práca · Webová aplikácia',
+    p_desc:'Webová aplikácia na generovanie optimalizovaných postupností návrhových vzorov. Využíva algoritmy spracovania prirodzeného jazyka (TF-IDF a Universal Sentence Encoder) na meranie podobnosti a Markovove rozhodovacie procesy (MDP) s nastaviteľnými odmenami pre výpočet cesty medzi štartovacím a cieľovým vzorom.',
+    p_f1:'Interaktívny vizualizačný graf vzťahov (D3.js) a matica podobnosti v reálnom čase.',
+    p_f2:'Vlastné nastavenia: pevný štart/cieľ, sentiment odmeny a bonusy za referencie.',
+    p_f3:'Kompletná správa postupností pomocou drag-and-drop, exporty do TXT, PDF, CSV, PNG aj ZIP archívu.',
+    p_f4:'Plne responsívne rozhranie v slovenčine a angličtine, tmavý režim, nasadené na Verceli.',
+    p_live:'Živá aplikácia', p_guide:'Dokumentácia', ph_tag:'Projekt', ph_t:'Pripravuje sa', ph_d:'Rozpracovaný projekt zameraný na praktické IT riešenie.',
+    s_h:'Zručnosti & Technológie', s_sub:'Prehľad mojich technických znalostí a nástrojov s možnosťou filtrovania.',
+    sf_all:'Všetko', sf_prog:'Programovanie', sf_web:'WebDev', sf_db:'Databázy & OS', sf_net:'Siete & Nástroje',
+    sk_lang:'Programovacie jazyky', sk_db:'Databázové systémy', sk_os:'Operačné systémy & Nástroje', sk_net:'Sieťové technológie', sk_other:'Jazyky & Vodičský preukaz',
+    bg_h:'Prax a štúdium', bg_sub:'Interaktívny časový prehľad mojich pracovných skúseností, vzdelania a získaných certifikátov.',
+    tb_work:'Pracovné skúsenosti', tb_edu:'Vzdelanie', tb_certs:'Kurzy a certifikáty',
+    w_title:'Hotelový recepčný',
+    w1_desc:'<strong>Správa rezervácií a komunikácia:</strong> Prvý kontakt s hosťami, kompletné vybavovanie rezervácií, telefonická a e-mailová komunikácia v slovenskom a anglickom jazyku.',
+    w2_desc:'<strong>Finančné zúčtovanie & Uzávierky:</strong> Práca v špecializovanom rezervačnom systéme, spracovanie platieb, denné a mesačné uzávierky, zúčtovanie ubytovania a celkových denných tržieb.',
+    w3_desc:'<strong>Administratíva a analytika:</strong> Vystavovanie faktúr, príprava podkladov pre štatistiky, evidencia inventáru, prvotné spracovanie podkladov pre mzdy.',
+    w4_desc:'<strong>Riešenie problémov (Problem Solving):</strong> Operatívne riešenie nečakaných situácií a požiadaviek hostí priamo počas pobytu, plná zodpovednosť za plynulý a bezchybný chod recepcie.',
+    e1_title:'Inteligentné softvérové systémy (Ing.)', e1_desc:'Inžinierske štúdium zamerné na pokročilý vývoj softvéru, architektúry a inteligentné systémy.',
+    e2_title:'Informatika (Bc.)', e2_desc:'Úspešne ukončené bakalárske štúdium štátnou skúškou a obhajobou bakalárskej práce Patterna.',
+    e3_title:'Informačné a sieťové technológie (Maturita)', e3_desc:'Odborné stredoškolské vzdelanie zamerané na sieťové architektúry, hardvér a základy programovania.',
+    c_h:'Kontaktujte ma', c_p:'Hľadám vývojársku brigádu alebo part-time pozíciu (Bratislava / Zvolen / Remote). Neváhajte ma kontaktovať e-mailom.',
+    c_email:'E-mail:', c_loc:'Lokalita:', c_copy:'Kopírovať e-mail', c_copied:'E-mail bol skopírovaný!', f_top:'Späť nahor ↑'
+  },
+  en: {
+    n_about:'About', n_projects:'Projects', n_skills:'Skills', n_bg:'Experience & Edu', n_contact:'Contact',
+    h1:'Software developer who solves problems in real time.',
+    lead:'I am a Master’s student of Intelligent Software Systems at FIIT STU in Bratislava. I build applications in Python, Java, and C/C++, actively working with databases and web technologies. Managing a hotel front desk for over 3 years taught me to excel under pressure, handle complex data, and communicate clearly.',
+    typed_pre:'I work with', b_proj:'View Projects', b_mail:'Send Email',
+    k_label:'Master Degree (Ing.)', k_uni:'University', k_study:'Major', k_study_v:'Intelligent Software Systems', k_based:'Location', k_lang:'Languages', k_lang_v:'SK (Native), EN (C1), DE (A2)', k_drive:'Drivers License', k_look:'Looking for', k_look_v:'Part-time / Dev Role',
+    a_h:'About Me',
+    a_p1:'In June 2026, I completed my Bachelor’s degree in Informatics at FIIT STU in Bratislava and continued into the Master’s program specializing in Intelligent Software Systems. I built my initial technical and networking background at SPŠ Jozefa Murgaša high school.',
+    a_p2:'Since July 2022, I have worked as a hotel receptionist at Franko-Real, s.r.o. in Zvolen. This role gave me strong attention to detail, analytical skills through daily financial settlements, and effective problem-solving under pressure. Combining a strong technical background with high soft skills allows me to deliver immediate value to development teams.',
+    p_h:'Projects', p_sub:'A selection of my university and personal projects with direct links to code and live demos.',
+    p_tag:'Bachelor Thesis · Web Application',
+    p_desc:'A web application generating optimal sequences of design patterns. It measures similarity between pattern descriptions using NLP (TF-IDF & Universal Sentence Encoder) and employs Markov Decision Processes (MDP) to find optimal paths.',
+    p_f1:'Interactive force-directed graph (D3.js) and real-time similarity matrix.',
+    p_f2:'Custom rules: forced start/goal, sentiment reward adjustments, reference bonuses.',
+    p_f3:'Drag-and-drop sequence reordering, exports to TXT, PDF, CSV, PNG, and ZIP archives.',
+    p_f4:'Slovak/English UI, dark mode, fully deployed on Vercel.',
+    p_live:'Live Demo', p_guide:'Documentation', ph_tag:'Project', ph_t:'In Development', ph_d:'Upcoming software project focused on real-world IT solutions.',
+    s_h:'Skills & Technologies', s_sub:'Interactive overview of my technical toolset with category filtering.',
+    sf_all:'All', sf_prog:'Programming', sf_web:'WebDev', sf_db:'Databases & OS', sf_net:'Networking & Tools',
+    sk_lang:'Programming Languages', sk_db:'Database Systems', sk_os:'Operating Systems & Tools', sk_net:'Networking Technologies', sk_other:'Languages & Driving',
+    bg_h:'Experience & Education', bg_sub:'An interactive timeline of my work experience, education, and Cisco certifications.',
+    tb_work:'Work Experience', tb_edu:'Education', tb_certs:'Courses & Certifications',
+    w_title:'Hotel Receptionist',
+    w1_desc:'<strong>Reservations & Guest Relations:</strong> First point of contact, complete booking management, telephone and email communication in Slovak and English.',
+    w2_desc:'<strong>Financial Settlement & Closures:</strong> Handling reservation system transactions, payment processing, daily/monthly accounting closures, and revenue balancing.',
+    w3_desc:'<strong>Administration & Analytics:</strong> Invoicing, statistics preparation, inventory audits, and primary payroll data processing.',
+    w4_desc:'<strong>Problem Solving:</strong> Managing on-the-spot guest requests and unexpected situations, ensuring seamless 24/7 reception operations.',
+    e1_title:'Intelligent Software Systems (Ing. / M.Sc.)', e1_desc:'Master studies focused on advanced software engineering, system architecture, and AI concepts.',
+    e2_title:'Informatics (Bc. / B.Sc.)', e2_desc:'Bachelor degree successfully finished with state exams and thesis defense of Patterna.',
+    e3_title:'Information & Network Technologies', e3_desc:'High school degree focused on network architecture, hardware, and core programming.',
+    c_h:'Get In Touch', c_p:'I am looking for a part-time developer or trainee position (Bratislava / Zvolen / Remote). Feel free to email me.',
+    c_email:'Email:', c_loc:'Location:', c_copy:'Copy Email', c_copied:'Email copied to clipboard!', f_top:'Back to top ↑'
   }
+};
+
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)], root = document.documentElement;
+const save = (k,v) => { try{ localStorage.setItem(k,v) }catch(e){} };
+const load = k => { try{ return localStorage.getItem(k) }catch(e){ return null } };
+
+let lang = load('lang') || 'sk';
+if(!T[lang]) lang = 'sk';
+
+function setLang(l) {
+  lang = l; save('lang', l); root.lang = l;
+  $$('[data-i18n]').forEach(e => {
+    const key = e.dataset.i18n;
+    if(T[l][key]) e.innerHTML = T[l][key];
+  });
+  $('#lang').textContent = l === 'sk' ? 'EN' : 'SK';
+  document.title = l === 'sk' ? 'Bc. Ondrej Drengubiak | Softvérový vývojár' : 'Bc. Ondrej Drengubiak | Software Developer';
 }
 
-// copy buttons
-$$('.copy').forEach(b=>b.onclick=async()=>{
-  const txt=b.dataset.copy||'ondrej.drengubiak1@gmail.com';
-  try{await navigator.clipboard.writeText(txt);showToast(T[lang].c_copied);confetti()}catch(e){}
+function setTheme(t) {
+  root.dataset.theme = t; save('theme', t);
+  $('#theme').textContent = t === 'dark' ? '☀' : '☾';
+}
+
+$('#lang').onclick = () => setLang(lang === 'sk' ? 'en' : 'sk');
+$('#theme').onclick = () => setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
+setLang(lang); setTheme(root.dataset.theme || 'light');
+
+// Multilingual Typewriter Effect
+const wordList = {
+  sk: ['Python', 'Java', 'C / C++', 'SQL & Databázami', 'WebDev (HTML/CSS/JS/PHP)', 'Cisco Sietami'],
+  en: ['Python', 'Java', 'C / C++', 'SQL & Databases', 'WebDev (HTML/CSS/JS/PHP)', 'Cisco Networking']
+};
+let wi = 0, ci = 0, del = false;
+function tick() {
+  const words = wordList[lang] || wordList.sk;
+  const w = words[wi % words.length];
+  ci += del ? -1 : 1;
+  $('#typed').textContent = w.slice(0, ci);
+  let d = del ? 40 : 80;
+  if(!del && ci === w.length) { del = true; d = 1500; }
+  else if(del && ci === 0) { del = false; wi++; d = 300; }
+  setTimeout(tick, d);
+}
+tick();
+
+// Scroll Progress, Back-To-Top & Active Links
+const bar = $('#bar'), tb = $('#top-btn'), secs = $$('main section'), navA = $$('.links a');
+function onScroll() {
+  const h = root.scrollHeight - innerHeight;
+  bar.style.transform = 'scaleX(' + (h > 0 ? scrollY / h : 0) + ')';
+  tb.classList.toggle('show', scrollY > 500);
+  let cur = '';
+  secs.forEach(s => { if(s.getBoundingClientRect().top < innerHeight * .4) cur = s.id; });
+  navA.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + cur));
+}
+addEventListener('scroll', onScroll, {passive: true}); onScroll();
+tb.onclick = () => scrollTo({top: 0, behavior: 'smooth'});
+
+// Scroll Animations
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if(e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+}), {threshold: .12});
+$$('.rv').forEach(e => io.observe(e));
+
+// 3D Tilt for Keycard
+const card = $('#card');
+if(matchMedia('(hover:hover)').matches) {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect(), x = (e.clientX - r.left)/r.width - .5, y = (e.clientY - r.top)/r.height - .5;
+    card.style.setProperty('--ry', x * 14 + 'deg');
+    card.style.setProperty('--rx', -y * 14 + 'deg');
+    card.style.setProperty('--sh', (120 - (x + .5) * 140) + '%');
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.setProperty('--rx', '0deg'); card.style.setProperty('--ry', '0deg'); card.style.setProperty('--sh', '120%');
+  });
+  $$('.project').forEach(p => p.addEventListener('mousemove', e => {
+    const r = p.getBoundingClientRect();
+    p.style.setProperty('--mx', e.clientX - r.left + 'px');
+    p.style.setProperty('--my', e.clientY - r.top + 'px');
+  }));
+}
+
+// Copy Email Functionality
+const toast = $('#toast');
+$('#copy').onclick = async () => {
+  try {
+    await navigator.clipboard.writeText('ondrej.drengubiak1@gmail.com');
+    toast.textContent = T[lang].c_copied || 'Skopírované!';
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  } catch(e) {}
+};
+
+// Skill Filter
+$$('.filter-btn').forEach(btn => {
+  btn.onclick = () => {
+    $$('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    $$('.skill-card').forEach(card => {
+      if(filter === 'all' || card.dataset.cat === filter) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+  };
 });
 
-// command palette
-const cmdk=$('#cmdk'),cmdkInput=$('#cmdk-input'),cmdkList=$('#cmdk-list');
-const SECTIONS=[{id:'about',key:'n_about'},{id:'projects',key:'n_projects'},{id:'skills',key:'n_skills'},{id:'background',key:'n_bg'},{id:'contact',key:'n_contact'}];
-let selIdx=0;
-function buildCmdk(){
-  const q=(cmdkInput.value||'').toLowerCase().trim();
-  const items=SECTIONS.map(s=>({label:T[lang][s.key],sub:'#'+s.id,id:s.id}))
-    .filter(i=>!q||i.label.toLowerCase().includes(q)||i.sub.includes(q));
-  if(!items.length){cmdkList.innerHTML='<div class="cmdk-item" style="color:var(--muted)">'+T[lang].ph_empty+'</div>';return}
-  cmdkList.innerHTML=items.map((it,i)=>`<div class="cmdk-item${i===selIdx?' sel':''}" data-id="${it.id}"><span class="ico">→</span><span>${it.label}</span><small>${it.sub}</small></div>`).join('');
-  cmdkList.querySelectorAll('.cmdk-item').forEach(el=>el.onclick=()=>{location.hash='#'+el.dataset.id;closeCmdk()});
-}
-function openCmdk(){cmdk.classList.add('show');cmdkInput.value='';selIdx=0;buildCmdk();setTimeout(()=>cmdkInput.focus(),50)}
-function closeCmdk(){cmdk.classList.remove('show')}
-addEventListener('keydown',e=>{
-  // Ctrl/Cmd+K or "/" -> palette
-  if((e.key==='k'||e.key==='K')&&(e.ctrlKey||e.metaKey)){e.preventDefault();cmdk.classList.contains('show')?closeCmdk():openCmdk();return}
-  if(e.key==='/'&&!cmdk.classList.contains('show')&&document.activeElement.tagName!=='INPUT'&&document.activeElement.tagName!=='TEXTAREA'){e.preventDefault();openCmdk();return}
-  // shortcuts
-  if(document.activeElement.tagName==='INPUT'||document.activeElement.tagName==='TEXTAREA')return;
-  if(e.key==='t'||e.key==='T'){setTheme(root.dataset.theme==='dark'?'light':'dark')}
-  if(e.key==='l'||e.key==='L'){setLang(lang==='en'?'sk':'en')}
-  if(e.key==='Escape'){closeCmdk()}
-  if(cmdk.classList.contains('show')){
-    const items=cmdkList.querySelectorAll('.cmdk-item[data-id]');
-    if(e.key==='ArrowDown'){e.preventDefault();selIdx=Math.min(items.length-1,selIdx+1);buildCmdk();}
-    if(e.key==='ArrowUp'){e.preventDefault();selIdx=Math.max(0,selIdx-1);buildCmdk();}
-    if(e.key==='Enter'&&items[selIdx]){location.hash='#'+items[selIdx].dataset.id;closeCmdk()}
-  }
+// Timeline Tabs
+$$('.tab-btn').forEach(btn => {
+  btn.onclick = () => {
+    $$('.tab-btn').forEach(b => b.classList.remove('active'));
+    $$('.tl-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    $('#tab-' + btn.dataset.tab).classList.add('active');
+  };
 });
-cmdkInput.oninput=()=>{selIdx=0;buildCmdk()};
-cmdk.onclick=e=>{if(e.target===cmdk)closeCmdk()};
+
+// Interactive Terminal Drawer
+const termModal = $('#terminal-modal'), termInput = $('#term-input'), termBody = $('#term-body');
+$('#term-toggle').onclick = () => {
+  termModal.classList.add('open');
+  termInput.focus();
+};
+termModal.onclick = (e) => { if(e.target === termModal) termModal.classList.remove('open'); };
+
+termInput.onkeydown = (e) => {
+  if(e.key === 'Enter') {
+    const val = termInput.value.trim().toLowerCase();
+    termInput.value = '';
+    appendTermLine('guest@drengubiak:~$ ' + val, '#58a6ff');
+    
+    if(val === 'help') {
+      appendTermLine('Dostupné príkazy:\n - skills : Zobrazí hlavné zručnosti\n - projects : Zobrazí najlepšie projekty\n - contact : Zobrazí kontaktné informácie\n - theme : Prepne svetlý/tmavý režim\n - clear : Vyčistí obrazovku terminálu\n - exit : Zatvorí terminál');
+    } else if(val === 'skills') {
+      appendTermLine('Languages: Python, Java, C, C++, R\nWeb: HTML, CSS, JavaScript, PHP\nDatabases: SQL, MS Access\nNetworks: Cisco CCNA v7, IT Essentials\nOS: Linux, Git');
+    } else if(val === 'projects') {
+      appendTermLine('1. Patterna - Web App pre optimalizáciu postupností vzorov (D3.js, TensorFlow.js, MDP)\n2. Cisco Network Tools & Analyzer');
+    } else if(val === 'contact') {
+      appendTermLine('Email: ondrej.drengubiak1@gmail.com\nLokalita: Bratislava / Zvolen\nGitHub: github.com/Ondrejstuba');
+    } else if(val === 'theme') {
+      setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
+      appendTermLine('Téma bola prepnutá na ' + root.dataset.theme);
+    } else if(val === 'clear') {
+      termBody.innerHTML = '';
+    } else if(val === 'exit') {
+      termModal.classList.remove('open');
+    } else if(val !== '') {
+      appendTermLine('Príkaz nepoznám: "' + val + '". Zadajte "help" pre pomoc.', '#ff7b72');
+    }
+    termBody.scrollTop = termBody.scrollHeight;
+  }
+};
+
+function appendTermLine(text, color = '#c9d1d9') {
+  const div = document.createElement('div');
+  div.className = 'term-out';
+  div.style.color = color;
+  div.textContent = text;
+  termBody.appendChild(div);
+}
 </script>
 </body>
 </html>
