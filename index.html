@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ondrej Drengubiak | Software Developer</title>
+<meta name="description" content="Portfolio of Ondrej Drengubiak, Informatics student at FIIT STU in Bratislava. Python, Java, C/C++, SQL and web development.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E9EEEA; --card:#F8FAF7; --pine:#1D3A33; --pine-2:#2C5248;
+  --ink:#16221E; --muted:#56655F; --brass:#B8893A; --line:#C9D3CD;
+  --head:'Bricolage Grotesque',system-ui,sans-serif;
+  --body:'IBM Plex Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);line-height:1.65;font-size:17px;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--brass);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:10;background:rgba(233,238,234,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+.logo{font-family:var(--head);font-weight:800;font-size:1.15rem;text-decoration:none;color:var(--pine)}
+.links{display:flex;gap:22px;font-size:.95rem;font-weight:500;overflow-x:auto}
+.links a{text-decoration:none;color:var(--muted);white-space:nowrap}
+.links a:hover{color:var(--pine)}
+
+/* hero */
+.hero{padding:72px 0 80px}
+.hero .wrap{display:grid;grid-template-columns:1.25fr .75fr;gap:56px;align-items:center}
+h1{font-family:var(--head);font-weight:800;font-size:clamp(2.4rem,5.6vw,4.3rem);line-height:1.04;letter-spacing:-.025em;color:var(--pine)}
+.lead{margin-top:24px;max-width:56ch;font-size:1.12rem;color:var(--ink)}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.btn{display:inline-block;padding:13px 22px;border-radius:8px;font-weight:600;text-decoration:none;font-size:.97rem;border:2px solid var(--pine);transition:background .2s,color .2s}
+.btn.primary{background:var(--pine);color:var(--card)}
+.btn.primary:hover{background:var(--pine-2);border-color:var(--pine-2)}
+.btn.ghost{color:var(--pine)}
+.btn.ghost:hover{background:var(--pine);color:var(--card)}
+
+/* key card: the one memorable element */
+.keycard{background:var(--pine);color:var(--card);border-radius:18px;padding:28px 28px 26px;position:relative;transform:rotate(2.2deg);box-shadow:0 18px 40px -18px rgba(29,58,51,.6);animation:drop .9s cubic-bezier(.2,.8,.2,1) both}
+.keycard::before{content:"";position:absolute;top:16px;left:50%;width:54px;height:9px;margin-left:-27px;border-radius:9px;background:var(--paper)}
+.keycard .room{margin-top:20px;font-family:var(--head);font-weight:800;font-size:4.2rem;line-height:1;color:var(--brass);letter-spacing:-.03em}
+.keycard .room-label{font-size:.85rem;color:#B9CBC4;margin-top:4px}
+.keycard dl{margin-top:22px;border-top:1px solid rgba(255,255,255,.2)}
+.keycard dl div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.12);font-size:.93rem}
+.keycard dt{color:#B9CBC4}
+.keycard dd{font-weight:600;text-align:right}
+@keyframes drop{from{opacity:0;transform:translateY(-28px) rotate(-4deg)}to{opacity:1;transform:rotate(2.2deg)}}
+
+/* sections */
+section{padding:72px 0;border-top:1px solid var(--line)}
+.sec-head{display:grid;grid-template-columns:240px 1fr;gap:40px;margin-bottom:36px}
+h2{font-family:var(--head);font-weight:800;font-size:2rem;letter-spacing:-.02em;color:var(--pine);line-height:1.15}
+.sec-head p{color:var(--muted);max-width:60ch;padding-top:6px}
+h3{font-family:var(--head);font-weight:700;font-size:1.25rem;color:var(--pine);line-height:1.25}
+
+/* about */
+.about{display:grid;grid-template-columns:240px 1fr;gap:40px}
+.about p+p{margin-top:16px}
+.about p{max-width:64ch}
+
+/* projects */
+.projects{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.project{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px;display:flex;flex-direction:column;gap:12px;min-height:230px}
+.project.featured{grid-column:1/-1;background:var(--card);border:2px solid var(--pine);padding:34px}
+.project.featured h3{font-size:2rem}
+.project.featured p{color:var(--ink);font-size:1.03rem;max-width:68ch}
+.feat{margin:4px 0 4px 18px;max-width:68ch;font-size:.97rem}
+.feat li{margin-bottom:4px}
+.project.featured .plinks a{background:var(--pine);color:var(--card);padding:9px 18px;border-radius:8px;text-decoration:none}
+.project.featured .plinks a:nth-child(n+2){background:transparent;color:var(--pine);border:2px solid var(--pine);padding:7px 16px}
+.project.featured .plinks{flex-wrap:wrap;margin-top:6px}
+.project.soon{border-style:dashed;background:transparent}
+.project .tag{font-size:.85rem;color:var(--brass);font-weight:600}
+.project p{color:var(--muted);font-size:.97rem}
+.stack{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.stack span{font-size:.8rem;background:var(--paper);border:1px solid var(--line);padding:2px 10px;border-radius:99px;color:var(--pine-2)}
+.plinks{display:flex;gap:16px;font-weight:600;font-size:.93rem}
+.plinks a{color:var(--pine);text-underline-offset:4px}
+
+/* skills */
+.skills{display:grid;grid-template-columns:repeat(2,1fr);gap:0 40px}
+.skill-row{display:grid;grid-template-columns:150px 1fr;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}
+.skill-row strong{font-family:var(--head);color:var(--pine)}
+.skill-row span{color:var(--ink);font-size:.97rem}
+
+/* timeline */
+.tl{display:grid;gap:0}
+.tl-item{display:grid;grid-template-columns:240px 1fr;gap:40px;padding:22px 0;border-bottom:1px solid var(--line)}
+.tl-item:first-child{padding-top:0}
+.when{font-weight:600;color:var(--brass)}
+.tl-item h3+p{margin-top:2px;color:var(--muted);font-size:.95rem}
+.tl-item ul{margin:12px 0 0 18px;max-width:64ch}
+.tl-item li{margin-bottom:5px}
+.sub{margin:36px 0 12px;font-family:var(--head);font-size:1.05rem;color:var(--muted);font-weight:700}
+
+/* contact */
+.contact{background:var(--pine);color:var(--card);border-top:none}
+.contact h2{color:var(--card)}
+.contact .sec-head p{color:#B9CBC4}
+.contact-list{display:grid;gap:12px;font-size:1.1rem}
+.contact-list a{color:var(--card);text-decoration-color:var(--brass);text-underline-offset:5px}
+.contact-list span{display:inline-block;min-width:90px;color:#B9CBC4;font-size:.9rem}
+footer{background:var(--pine);color:#8FA89F;font-size:.85rem;padding:0 0 32px}
+footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px}
+
+@media (max-width:820px){
+  .hero .wrap,.sec-head,.about,.tl-item{grid-template-columns:1fr;gap:20px}
+  .hero{padding:48px 0}
+  .keycard{max-width:340px}
+  .projects,.skills{grid-template-columns:1fr}
+  .skill-row{grid-template-columns:1fr;gap:2px}
+  section{padding:56px 0}
+}
+@media (prefers-reduced-motion:reduce){.keycard{animation:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<nav aria-label="Main navigation">
+  <div class="wrap">
+    <a class="logo" href="#top">Ondrej Drengubiak</a>
+    <div class="links">
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#background">Background</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <h1>Software developer who is used to solving problems in real time.</h1>
+      <p class="lead">I'm a Master's student of Intelligent Software Systems at FIIT STU in Bratislava. I write code in Python, Java and C/C++, and for the past four years I've also run a hotel front desk, so I know what it's like when people depend on a system working.</p>
+      <div class="cta">
+        <a class="btn primary" href="#projects">See my projects</a>
+        <a class="btn ghost" href="mailto:ondrej.drengubiak1@gmail.com">Email me</a>
+      </div>
+    </div>
+
+    <aside class="keycard" aria-label="Quick facts">
+      <div class="room">2026</div>
+      <div class="room-label">Currently checked in at</div>
+      <dl>
+        <div><dt>University</dt><dd>FIIT STU</dd></div>
+        <div><dt>Study</dt><dd>Intelligent Software Systems</dd></div>
+        <div><dt>Based in</dt><dd>Bratislava</dd></div>
+        <div><dt>Languages</dt><dd>EN C1, DE A2</dd></div>
+        <div><dt>Looking for</dt><dd>Part-time dev role</dd></div>
+      </dl>
+    </aside>
+  </div>
+</header>
+
+<main>
+<section id="about">
+  <div class="wrap about">
+    <h2>About me</h2>
+    <div>
+      <p>I finished my Bachelor's degree in Informatics at the Faculty of Informatics and Information Technologies (STU Bratislava) in June 2026 and started the Engineering degree in September. Before that I studied information and network technologies at a vocational high school and completed Cisco CCNA courses.</p>
+      <p>Since 2022 I've worked at a hotel reception. I handle bookings in a reservation system, close the daily and monthly accounts, prepare statistics and fix problems on the spot. That job taught me to stay calm, communicate clearly and care about details, and I want to bring the same habits into software development.</p>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Projects</h2>
+      <p>A selection of university and personal projects. Each one links to its code on GitHub.</p>
+    </div>
+
+    <div class="projects">
+      <!-- TODO: replace each remaining "soon" card with a real project. Copy the structure below. -->
+      <article class="project featured">
+        <span class="tag">Bachelor's thesis · Web application</span>
+        <h3>Patterna</h3>
+        <p>A web application that generates optimal sequences of patterns. It measures how similar pattern descriptions are (TF-IDF or Universal Sentence Encoder) and then uses a Markov Decision Process with configurable rewards to build a path from a start pattern to a goal pattern.</p>
+        <ul class="feat">
+          <li>Similarity matrix, statistics and an interactive force-directed graph of pattern relationships</li>
+          <li>Forced start and goal, reference bonus and sentiment-based reward adjustments</li>
+          <li>Drag and drop reordering, export to TXT, PDF, CSV, PNG or ZIP</li>
+          <li>Slovak and English interface, dark mode, deployed on Vercel</li>
+        </ul>
+        <div class="stack"><span>JavaScript</span><span>TensorFlow.js</span><span>D3.js</span><span>Tailwind CSS</span><span>MDP</span><span>NLP</span><span>jsPDF</span><span>JSZip</span></div>
+        <div class="plinks">
+          <a href="https://patterna-project-github-io.vercel.app" target="_blank" rel="noopener">Live app</a>
+          <a href="https://github.com/patterna-project/patterna-project.github.io" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://www.overleaf.com/read/czbdxjrnbfqz" target="_blank" rel="noopener">Guide</a>
+          <a href="https://tally.so/r/Y5rWkB" target="_blank" rel="noopener">Feedback</a>
+        </div>
+      </article>
+      <article class="project soon">
+        <span class="tag">Project 2</span>
+        <h3>Coming soon</h3>
+        <p>Short description: what it does, what problem it solves and what you built.</p>
+        <div class="stack"><span>Tech</span><span>Tech</span></div>
+        <div class="plinks"><a href="#">GitHub</a></div>
+      </article>
+      <article class="project soon">
+        <span class="tag">Project 3</span>
+        <h3>Coming soon</h3>
+        <p>Short description: what it does, what problem it solves and what you built.</p>
+        <div class="stack"><span>Tech</span><span>Tech</span></div>
+        <div class="plinks"><a href="#">GitHub</a></div>
+      </article>
+      <article class="project soon">
+        <span class="tag">Project 4</span>
+        <h3>Coming soon</h3>
+        <p>Short description: what it does, what problem it solves and what you built.</p>
+        <div class="stack"><span>Tech</span><span>Tech</span></div>
+        <div class="plinks"><a href="#">GitHub</a></div>
+      </article>
+      <article class="project soon">
+        <span class="tag">Project 5</span>
+        <h3>Coming soon</h3>
+        <p>Short description: what it does, what problem it solves and what you built.</p>
+        <div class="stack"><span>Tech</span><span>Tech</span></div>
+        <div class="plinks"><a href="#">GitHub</a></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Skills</h2>
+      <p>Tools and technologies I work with, grouped by area.</p>
+    </div>
+    <div class="skills">
+      <div class="skill-row"><strong>Languages</strong><span>Python, Java, C, C++, R</span></div>
+      <div class="skill-row"><strong>Web</strong><span>HTML, CSS, JavaScript, PHP</span></div>
+      <div class="skill-row"><strong>Databases</strong><span>SQL, MS Access</span></div>
+      <div class="skill-row"><strong>Tools</strong><span>Git, Linux basics, Microsoft Office, Open Office</span></div>
+      <div class="skill-row"><strong>Networking</strong><span>Cisco CCNA v7 (semesters 1 to 3), IT Essentials</span></div>
+      <div class="skill-row"><strong>Spoken languages</strong><span>English C1, German A2, Slovak native</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="background">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Background</h2>
+      <p>Where I've studied and worked.</p>
+    </div>
+
+    <h3 class="sub">Work experience</h3>
+    <div class="tl">
+      <div class="tl-item">
+        <div class="when">July 2022 to present</div>
+        <div>
+          <h3>Hotel receptionist</h3>
+          <p>Franko-Real, s.r.o., Zvolen</p>
+          <ul>
+            <li>Manage reservations and guest communication in a booking system.</li>
+            <li>Settle accommodation and daily revenue, issue invoices and close each day and month.</li>
+            <li>Prepare statistics, take inventory and do first-stage payroll processing.</li>
+            <li>Solve problems during guest stays and keep the front desk running smoothly.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub">Education</h3>
+    <div class="tl">
+      <div class="tl-item">
+        <div class="when">Sep 2026 to present</div>
+        <div><h3>Intelligent Software Systems (Engineering degree)</h3><p>FIIT, Slovak University of Technology, Bratislava</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="when">Sep 2023 to Jun 2026</div>
+        <div><h3>Informatics (Bc.)</h3><p>FIIT, Slovak University of Technology, Bratislava</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="when">Sep 2018 to Jun 2022</div>
+        <div><h3>Information and network technologies</h3><p>Stredná priemyselná škola Jozefa Murgaša, Banská Bystrica</p></div>
+      </div>
+    </div>
+
+    <h3 class="sub">Courses</h3>
+    <div class="tl">
+      <div class="tl-item">
+        <div class="when">Cisco Networking Academy</div>
+        <div><h3>CCNA v7 (semesters 1 to 3) and IT Essentials</h3><p>Introduction to Networks, Switching, Routing and Wireless Essentials, Enterprise Networking, Security and Automation.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Get in touch</h2>
+      <p>I'm looking for a part-time developer or trainee role where I can learn and contribute. Write to me or call.</p>
+    </div>
+    <div class="contact-list">
+      <div><span>Email</span><a href="mailto:ondrej.drengubiak1@gmail.com">ondrej.drengubiak1@gmail.com</a></div>
+      <div><span>Phone</span><a href="tel:+421911677611">+421 911 677 611</a></div>
+      <div><span>Location</span>Bratislava, Slovakia</div>
+      <!-- TODO: add LinkedIn if you have one -->
+      <div><span>GitHub</span><a href="https://github.com/Ondrejstuba" target="_blank" rel="noopener">github.com/Ondrejstuba</a></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">© 2026 Ondrej Drengubiak</div>
+</footer>
+
+</body>
+</html>
