@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,316 +8,323 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+// Apply saved/system theme and enable reveal animations before first paint (no flash)
+(function(){var d=document.documentElement,t;try{t=localStorage.getItem('theme')}catch(e){}
+if(!t)t=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';d.dataset.theme=t;d.classList.add('js')})();
+</script>
 <style>
-:root{
-  --paper:#E9EEEA; --card:#F8FAF7; --pine:#1D3A33; --pine-2:#2C5248;
-  --ink:#16221E; --muted:#56655F; --brass:#B8893A; --line:#C9D3CD;
-  --head:'Bricolage Grotesque',system-ui,sans-serif;
-  --body:'IBM Plex Sans',system-ui,sans-serif;
-}
+:root{--bg:#E9EEEA;--card:#F8FAF7;--accent:#1D3A33;--accent2:#2C5248;--on:#F8FAF7;--ink:#16221E;--muted:#56655F;--brass:#B8893A;--line:#C9D3CD;--key:#1D3A33;--key-ink:#F8FAF7;--key-mut:#B9CBC4;
+--head:'Bricolage Grotesque',system-ui,sans-serif;--body:'IBM Plex Sans',system-ui,sans-serif}
+[data-theme=dark]{--bg:#0D1613;--card:#13211C;--accent:#8FD1B6;--accent2:#A9E0C9;--on:#0D1613;--ink:#E4EEE9;--muted:#93A8A0;--brass:#D9A84F;--line:#24372F;--key:#183029;--key-ink:#EAF3EF;--key-mut:#93B1A5}
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:var(--body);background:var(--paper);color:var(--ink);line-height:1.65;font-size:17px;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.65;font-size:17px;-webkit-font-smoothing:antialiased;transition:background .4s,color .4s}
 a{color:inherit}
 :focus-visible{outline:3px solid var(--brass);outline-offset:3px;border-radius:4px}
 .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+#bar{position:fixed;top:0;left:0;height:3px;width:100%;background:var(--brass);transform:scaleX(0);transform-origin:left;z-index:30}
 
-/* nav */
-nav{position:sticky;top:0;z-index:10;background:rgba(233,238,234,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
-.logo{font-family:var(--head);font-weight:800;font-size:1.15rem;text-decoration:none;color:var(--pine)}
-.links{display:flex;gap:22px;font-size:.95rem;font-weight:500;overflow-x:auto}
-.links a{text-decoration:none;color:var(--muted);white-space:nowrap}
-.links a:hover{color:var(--pine)}
+nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;gap:14px}
+.logo{font-family:var(--head);font-weight:800;font-size:1.1rem;text-decoration:none;color:var(--accent);white-space:nowrap}
+.links{display:flex;gap:20px;font-size:.93rem;font-weight:500;overflow-x:auto;scrollbar-width:none}
+.links a{text-decoration:none;color:var(--muted);white-space:nowrap;padding:4px 0;border-bottom:2px solid transparent;transition:color .2s,border-color .2s}
+.links a:hover,.links a.on{color:var(--accent);border-color:var(--brass)}
+.tools{display:flex;gap:8px}
+.tools button{font:600 .85rem var(--body);min-width:40px;height:36px;border-radius:8px;border:1.5px solid var(--line);background:var(--card);color:var(--accent);cursor:pointer;transition:transform .2s,border-color .2s}
+.tools button:hover{border-color:var(--accent);transform:translateY(-2px)}
+#theme{font-size:1.05rem}
 
-/* hero */
-.hero{padding:72px 0 80px}
-.hero .wrap{display:grid;grid-template-columns:1.25fr .75fr;gap:56px;align-items:center}
-h1{font-family:var(--head);font-weight:800;font-size:clamp(2.4rem,5.6vw,4.3rem);line-height:1.04;letter-spacing:-.025em;color:var(--pine)}
-.lead{margin-top:24px;max-width:56ch;font-size:1.12rem;color:var(--ink)}
-.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
-.btn{display:inline-block;padding:13px 22px;border-radius:8px;font-weight:600;text-decoration:none;font-size:.97rem;border:2px solid var(--pine);transition:background .2s,color .2s}
-.btn.primary{background:var(--pine);color:var(--card)}
-.btn.primary:hover{background:var(--pine-2);border-color:var(--pine-2)}
-.btn.ghost{color:var(--pine)}
-.btn.ghost:hover{background:var(--pine);color:var(--card)}
+.hero{padding:76px 0 84px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;width:520px;height:520px;right:-140px;top:-160px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--brass) 28%,transparent),transparent 68%);animation:float 9s ease-in-out infinite;pointer-events:none}
+@keyframes float{50%{transform:translate(-30px,40px) scale(1.08)}}
+.hero .wrap{display:grid;grid-template-columns:1.25fr .75fr;gap:56px;align-items:center;position:relative}
+h1{font-family:var(--head);font-weight:800;font-size:clamp(2.4rem,5.6vw,4.2rem);line-height:1.05;letter-spacing:-.025em;color:var(--accent)}
+.up{opacity:0;transform:translateY(22px);animation:up .8s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes up{to{opacity:1;transform:none}}
+.lead{margin-top:22px;max-width:56ch;font-size:1.1rem}
+.typed{margin-top:20px;font-family:var(--head);font-weight:700;font-size:1.25rem;color:var(--muted);min-height:1.8em}
+.typed b{color:var(--brass)}
+.caret{display:inline-block;width:2px;height:1.1em;background:var(--brass);margin-left:3px;vertical-align:-3px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.btn{display:inline-block;padding:13px 22px;border-radius:8px;font:600 .97rem var(--body);text-decoration:none;border:2px solid var(--accent);cursor:pointer;transition:transform .2s,background .2s,color .2s;background:none;color:var(--accent)}
+.btn:hover{transform:translateY(-3px)}
+.btn.primary{background:var(--accent);color:var(--on)}
+.btn.primary:hover{background:var(--accent2);border-color:var(--accent2)}
 
-/* key card: the one memorable element */
-.keycard{background:var(--pine);color:var(--card);border-radius:18px;padding:28px 28px 26px;position:relative;transform:rotate(2.2deg);box-shadow:0 18px 40px -18px rgba(29,58,51,.6);animation:drop .9s cubic-bezier(.2,.8,.2,1) both}
-.keycard::before{content:"";position:absolute;top:16px;left:50%;width:54px;height:9px;margin-left:-27px;border-radius:9px;background:var(--paper)}
-.keycard .room{margin-top:20px;font-family:var(--head);font-weight:800;font-size:4.2rem;line-height:1;color:var(--brass);letter-spacing:-.03em}
-.keycard .room-label{font-size:.85rem;color:#B9CBC4;margin-top:4px}
+.keycard{background:var(--key);color:var(--key-ink);border-radius:18px;padding:28px;position:relative;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) rotate(2.2deg);transition:transform .25s ease-out;box-shadow:0 24px 48px -20px rgba(0,0,0,.55);animation:drop 1s cubic-bezier(.2,.8,.2,1) .3s backwards}
+.keycard::before{content:"";position:absolute;top:16px;left:50%;width:54px;height:9px;margin-left:-27px;border-radius:9px;background:var(--bg)}
+.keycard::after{content:"";position:absolute;inset:0;border-radius:18px;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.14) 50%,transparent 65%);background-size:250% 100%;background-position:var(--sh,120%) 0;pointer-events:none}
+@keyframes drop{from{opacity:0;transform:translateY(-60px) rotate(-8deg)}}
+.room{margin-top:20px;font-family:var(--head);font-weight:800;font-size:4.2rem;line-height:1;color:var(--brass);letter-spacing:-.03em}
+.room-label{font-size:.85rem;color:var(--key-mut);margin-top:4px}
 .keycard dl{margin-top:22px;border-top:1px solid rgba(255,255,255,.2)}
 .keycard dl div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.12);font-size:.93rem}
-.keycard dt{color:#B9CBC4}
-.keycard dd{font-weight:600;text-align:right}
-@keyframes drop{from{opacity:0;transform:translateY(-28px) rotate(-4deg)}to{opacity:1;transform:rotate(2.2deg)}}
+.keycard dt{color:var(--key-mut)}.keycard dd{font-weight:600;text-align:right}
 
-/* sections */
 section{padding:72px 0;border-top:1px solid var(--line)}
-.sec-head{display:grid;grid-template-columns:240px 1fr;gap:40px;margin-bottom:36px}
-h2{font-family:var(--head);font-weight:800;font-size:2rem;letter-spacing:-.02em;color:var(--pine);line-height:1.15}
+.sec-head,.about,.tl-item{display:grid;grid-template-columns:240px 1fr;gap:40px}
+.sec-head{margin-bottom:36px}
+h2{font-family:var(--head);font-weight:800;font-size:2rem;letter-spacing:-.02em;color:var(--accent);line-height:1.15}
 .sec-head p{color:var(--muted);max-width:60ch;padding-top:6px}
-h3{font-family:var(--head);font-weight:700;font-size:1.25rem;color:var(--pine);line-height:1.25}
+h3{font-family:var(--head);font-weight:700;font-size:1.25rem;color:var(--accent);line-height:1.25}
+.about p{max-width:64ch}.about p+p{margin-top:16px}
+.rv{transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+.js .rv{opacity:0;transform:translateY(24px)}.js .rv.in{opacity:1;transform:none}
 
-/* about */
-.about{display:grid;grid-template-columns:240px 1fr;gap:40px}
-.about p+p{margin-top:16px}
-.about p{max-width:64ch}
-
-/* projects */
 .projects{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
-.project{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px;display:flex;flex-direction:column;gap:12px;min-height:230px}
-.project.featured{grid-column:1/-1;background:var(--card);border:2px solid var(--pine);padding:34px}
+.project{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px;display:flex;flex-direction:column;gap:12px;min-height:220px;transition:transform .3s,border-color .3s}
+.project:hover{transform:translateY(-5px);border-color:var(--brass)}
+.project::before{content:"";position:absolute;inset:0;background:radial-gradient(320px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--brass) 20%,transparent),transparent 70%);opacity:0;transition:opacity .3s;pointer-events:none}
+.project:hover::before{opacity:1}
+.project>*{position:relative}
+.project.featured{grid-column:1/-1;border:2px solid var(--accent);padding:34px}
 .project.featured h3{font-size:2rem}
-.project.featured p{color:var(--ink);font-size:1.03rem;max-width:68ch}
-.feat{margin:4px 0 4px 18px;max-width:68ch;font-size:.97rem}
-.feat li{margin-bottom:4px}
-.project.featured .plinks a{background:var(--pine);color:var(--card);padding:9px 18px;border-radius:8px;text-decoration:none}
-.project.featured .plinks a:nth-child(n+2){background:transparent;color:var(--pine);border:2px solid var(--pine);padding:7px 16px}
-.project.featured .plinks{flex-wrap:wrap;margin-top:6px}
+.project.featured p{color:var(--ink);max-width:68ch}
 .project.soon{border-style:dashed;background:transparent}
-.project .tag{font-size:.85rem;color:var(--brass);font-weight:600}
+.tag{font-size:.85rem;color:var(--brass);font-weight:600}
 .project p{color:var(--muted);font-size:.97rem}
+.feat{margin:4px 0 4px 18px;max-width:68ch;font-size:.97rem}.feat li{margin-bottom:4px}
 .stack{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
-.stack span{font-size:.8rem;background:var(--paper);border:1px solid var(--line);padding:2px 10px;border-radius:99px;color:var(--pine-2)}
-.plinks{display:flex;gap:16px;font-weight:600;font-size:.93rem}
-.plinks a{color:var(--pine);text-underline-offset:4px}
+.stack span{font-size:.8rem;background:var(--bg);border:1px solid var(--line);padding:2px 10px;border-radius:99px;color:var(--accent)}
+.plinks{display:flex;gap:10px;flex-wrap:wrap;font-weight:600;font-size:.93rem}
+.plinks a{background:var(--accent);color:var(--on);padding:9px 18px;border-radius:8px;text-decoration:none;border:2px solid var(--accent);transition:transform .2s}
+.plinks a:nth-child(n+2){background:transparent;color:var(--accent)}
+.plinks a:hover{transform:translateY(-2px)}
+.soon .plinks a{background:none;color:var(--muted);border:none;padding:0;text-decoration:underline;text-underline-offset:4px}
 
-/* skills */
 .skills{display:grid;grid-template-columns:repeat(2,1fr);gap:0 40px}
-.skill-row{display:grid;grid-template-columns:150px 1fr;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}
-.skill-row strong{font-family:var(--head);color:var(--pine)}
-.skill-row span{color:var(--ink);font-size:.97rem}
-
-/* timeline */
-.tl{display:grid;gap:0}
-.tl-item{display:grid;grid-template-columns:240px 1fr;gap:40px;padding:22px 0;border-bottom:1px solid var(--line)}
-.tl-item:first-child{padding-top:0}
+.skill-row{display:grid;grid-template-columns:150px 1fr;gap:16px;padding:16px 0;border-bottom:1px solid var(--line);position:relative}
+.skill-row::after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:100%;background:var(--brass);transform:scaleX(0);transform-origin:left;transition:transform .8s .2s}
+.rv.in .skill-row::after,.skill-row.in::after{transform:scaleX(1)}
+.skill-row strong{font-family:var(--head);color:var(--accent)}
+.sub{margin:36px 0 12px;font:700 1.05rem var(--head);color:var(--muted)}
+.sub:first-of-type{margin-top:0}
+.tl-item{padding:22px 0;border-bottom:1px solid var(--line)}.tl-item:first-child{padding-top:0}
 .when{font-weight:600;color:var(--brass)}
 .tl-item h3+p{margin-top:2px;color:var(--muted);font-size:.95rem}
-.tl-item ul{margin:12px 0 0 18px;max-width:64ch}
-.tl-item li{margin-bottom:5px}
-.sub{margin:36px 0 12px;font-family:var(--head);font-size:1.05rem;color:var(--muted);font-weight:700}
+.tl-item ul{margin:12px 0 0 18px;max-width:64ch}.tl-item li{margin-bottom:5px}
 
-/* contact */
-.contact{background:var(--pine);color:var(--card);border-top:none}
-.contact h2{color:var(--card)}
-.contact .sec-head p{color:#B9CBC4}
-.contact-list{display:grid;gap:12px;font-size:1.1rem}
-.contact-list a{color:var(--card);text-decoration-color:var(--brass);text-underline-offset:5px}
-.contact-list span{display:inline-block;min-width:90px;color:#B9CBC4;font-size:.9rem}
-footer{background:var(--pine);color:#8FA89F;font-size:.85rem;padding:0 0 32px}
-footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px}
+.contact{background:var(--key);color:var(--key-ink);border-top:none}
+.contact h2{color:var(--key-ink)}.contact .sec-head p{color:var(--key-mut)}
+.contact-list{display:grid;gap:14px;font-size:1.1rem}
+.contact-list span{display:inline-block;min-width:90px;color:var(--key-mut);font-size:.9rem}
+.contact-list a{text-decoration-color:var(--brass);text-underline-offset:5px}
+.copy{margin-left:10px;font:600 .8rem var(--body);padding:4px 12px;border-radius:99px;border:1.5px solid var(--key-mut);background:none;color:var(--key-ink);cursor:pointer;transition:background .2s}
+.copy:hover{background:rgba(255,255,255,.12)}
+footer{background:var(--key);color:var(--key-mut);font-size:.85rem;padding-bottom:32px}
+footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+footer a{text-decoration:none;cursor:pointer}
+#toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,30px);background:var(--accent);color:var(--on);padding:10px 20px;border-radius:99px;font-weight:600;font-size:.9rem;opacity:0;pointer-events:none;transition:.35s;z-index:40}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#top-btn{position:fixed;right:20px;bottom:24px;width:44px;height:44px;border-radius:50%;border:none;background:var(--accent);color:var(--on);font-size:1.2rem;cursor:pointer;opacity:0;transform:scale(.6);transition:.3s;z-index:20}
+#top-btn.show{opacity:1;transform:none}
 
 @media (max-width:820px){
   .hero .wrap,.sec-head,.about,.tl-item{grid-template-columns:1fr;gap:20px}
-  .hero{padding:48px 0}
-  .keycard{max-width:340px}
+  .hero{padding:48px 0}.keycard{max-width:340px}
   .projects,.skills{grid-template-columns:1fr}
   .skill-row{grid-template-columns:1fr;gap:2px}
-  section{padding:56px 0}
+  .links{display:none}section{padding:56px 0}
 }
-@media (prefers-reduced-motion:reduce){.keycard{animation:none}html{scroll-behavior:auto}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.js .rv,.up{opacity:1;transform:none}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
+<div id="bar"></div>
+<nav aria-label="Main navigation"><div class="wrap">
+  <a class="logo" href="#top">Ondrej Drengubiak</a>
+  <div class="links">
+    <a href="#about" data-i18n="n_about"></a><a href="#projects" data-i18n="n_projects"></a><a href="#skills" data-i18n="n_skills"></a><a href="#background" data-i18n="n_bg"></a><a href="#contact" data-i18n="n_contact"></a>
+  </div>
+  <div class="tools">
+    <button id="lang" type="button" aria-label="Change language">SK</button>
+    <button id="theme" type="button" aria-label="Toggle dark mode">☾</button>
+  </div>
+</div></nav>
 
-<nav aria-label="Main navigation">
-  <div class="wrap">
-    <a class="logo" href="#top">Ondrej Drengubiak</a>
-    <div class="links">
-      <a href="#about">About</a>
-      <a href="#projects">Projects</a>
-      <a href="#skills">Skills</a>
-      <a href="#background">Background</a>
-      <a href="#contact">Contact</a>
+<header class="hero" id="top"><div class="wrap">
+  <div>
+    <h1 class="up" data-i18n="h1"></h1>
+    <p class="lead up" style="animation-delay:.15s" data-i18n="lead"></p>
+    <p class="typed up" style="animation-delay:.3s"><span data-i18n="typed_pre"></span> <b id="typed"></b><span class="caret"></span></p>
+    <div class="cta up" style="animation-delay:.45s">
+      <a class="btn primary" href="#projects" data-i18n="b_proj"></a>
+      <a class="btn" href="mailto:ondrej.drengubiak1@gmail.com" data-i18n="b_mail"></a>
     </div>
   </div>
-</nav>
-
-<header class="hero" id="top">
-  <div class="wrap">
-    <div>
-      <h1>Software developer who is used to solving problems in real time.</h1>
-      <p class="lead">I'm a Master's student of Intelligent Software Systems at FIIT STU in Bratislava. I write code in Python, Java and C/C++, and for the past four years I've also run a hotel front desk, so I know what it's like when people depend on a system working.</p>
-      <div class="cta">
-        <a class="btn primary" href="#projects">See my projects</a>
-        <a class="btn ghost" href="mailto:ondrej.drengubiak1@gmail.com">Email me</a>
-      </div>
-    </div>
-
-    <aside class="keycard" aria-label="Quick facts">
-      <div class="room">2026</div>
-      <div class="room-label">Currently checked in at</div>
-      <dl>
-        <div><dt>University</dt><dd>FIIT STU</dd></div>
-        <div><dt>Study</dt><dd>Intelligent Software Systems</dd></div>
-        <div><dt>Based in</dt><dd>Bratislava</dd></div>
-        <div><dt>Languages</dt><dd>EN C1, DE A2</dd></div>
-        <div><dt>Looking for</dt><dd>Part-time dev role</dd></div>
-      </dl>
-    </aside>
-  </div>
-</header>
+  <aside class="keycard" id="card" aria-label="Quick facts">
+    <div class="room">2026</div>
+    <div class="room-label" data-i18n="k_label"></div>
+    <dl>
+      <div><dt data-i18n="k_uni"></dt><dd>FIIT STU</dd></div>
+      <div><dt data-i18n="k_study"></dt><dd data-i18n="k_study_v"></dd></div>
+      <div><dt data-i18n="k_based"></dt><dd>Bratislava</dd></div>
+      <div><dt data-i18n="k_lang"></dt><dd data-i18n="k_lang_v"></dd></div>
+      <div><dt data-i18n="k_look"></dt><dd data-i18n="k_look_v"></dd></div>
+    </dl>
+  </aside>
+</div></header>
 
 <main>
-<section id="about">
-  <div class="wrap about">
-    <h2>About me</h2>
-    <div>
-      <p>I finished my Bachelor's degree in Informatics at the Faculty of Informatics and Information Technologies (STU Bratislava) in June 2026 and started the Engineering degree in September. Before that I studied information and network technologies at a vocational high school and completed Cisco CCNA courses.</p>
-      <p>Since 2022 I've worked at a hotel reception. I handle bookings in a reservation system, close the daily and monthly accounts, prepare statistics and fix problems on the spot. That job taught me to stay calm, communicate clearly and care about details, and I want to bring the same habits into software development.</p>
-    </div>
-  </div>
-</section>
+<section id="about"><div class="wrap about rv">
+  <h2 data-i18n="a_h"></h2>
+  <div><p data-i18n="a_p1"></p><p data-i18n="a_p2"></p></div>
+</div></section>
 
-<section id="projects">
-  <div class="wrap">
-    <div class="sec-head">
-      <h2>Projects</h2>
-      <p>A selection of university and personal projects. Each one links to its code on GitHub.</p>
-    </div>
-
-    <div class="projects">
-      <!-- TODO: replace each remaining "soon" card with a real project. Copy the structure below. -->
-      <article class="project featured">
-        <span class="tag">Bachelor's thesis · Web application</span>
-        <h3>Patterna</h3>
-        <p>A web application that generates optimal sequences of patterns. It measures how similar pattern descriptions are (TF-IDF or Universal Sentence Encoder) and then uses a Markov Decision Process with configurable rewards to build a path from a start pattern to a goal pattern.</p>
-        <ul class="feat">
-          <li>Similarity matrix, statistics and an interactive force-directed graph of pattern relationships</li>
-          <li>Forced start and goal, reference bonus and sentiment-based reward adjustments</li>
-          <li>Drag and drop reordering, export to TXT, PDF, CSV, PNG or ZIP</li>
-          <li>Slovak and English interface, dark mode, deployed on Vercel</li>
-        </ul>
-        <div class="stack"><span>JavaScript</span><span>TensorFlow.js</span><span>D3.js</span><span>Tailwind CSS</span><span>MDP</span><span>NLP</span><span>jsPDF</span><span>JSZip</span></div>
-        <div class="plinks">
-          <a href="https://patterna-project-github-io.vercel.app" target="_blank" rel="noopener">Live app</a>
-          <a href="https://github.com/patterna-project/patterna-project.github.io" target="_blank" rel="noopener">GitHub</a>
-          <a href="https://www.overleaf.com/read/czbdxjrnbfqz" target="_blank" rel="noopener">Guide</a>
-          <a href="https://tally.so/r/Y5rWkB" target="_blank" rel="noopener">Feedback</a>
-        </div>
-      </article>
-      <article class="project soon">
-        <span class="tag">Project 2</span>
-        <h3>Coming soon</h3>
-        <p>Short description: what it does, what problem it solves and what you built.</p>
-        <div class="stack"><span>Tech</span><span>Tech</span></div>
-        <div class="plinks"><a href="#">GitHub</a></div>
-      </article>
-      <article class="project soon">
-        <span class="tag">Project 3</span>
-        <h3>Coming soon</h3>
-        <p>Short description: what it does, what problem it solves and what you built.</p>
-        <div class="stack"><span>Tech</span><span>Tech</span></div>
-        <div class="plinks"><a href="#">GitHub</a></div>
-      </article>
-      <article class="project soon">
-        <span class="tag">Project 4</span>
-        <h3>Coming soon</h3>
-        <p>Short description: what it does, what problem it solves and what you built.</p>
-        <div class="stack"><span>Tech</span><span>Tech</span></div>
-        <div class="plinks"><a href="#">GitHub</a></div>
-      </article>
-      <article class="project soon">
-        <span class="tag">Project 5</span>
-        <h3>Coming soon</h3>
-        <p>Short description: what it does, what problem it solves and what you built.</p>
-        <div class="stack"><span>Tech</span><span>Tech</span></div>
-        <div class="plinks"><a href="#">GitHub</a></div>
-      </article>
-    </div>
-  </div>
-</section>
-
-<section id="skills">
-  <div class="wrap">
-    <div class="sec-head">
-      <h2>Skills</h2>
-      <p>Tools and technologies I work with, grouped by area.</p>
-    </div>
-    <div class="skills">
-      <div class="skill-row"><strong>Languages</strong><span>Python, Java, C, C++, R</span></div>
-      <div class="skill-row"><strong>Web</strong><span>HTML, CSS, JavaScript, PHP</span></div>
-      <div class="skill-row"><strong>Databases</strong><span>SQL, MS Access</span></div>
-      <div class="skill-row"><strong>Tools</strong><span>Git, Linux basics, Microsoft Office, Open Office</span></div>
-      <div class="skill-row"><strong>Networking</strong><span>Cisco CCNA v7 (semesters 1 to 3), IT Essentials</span></div>
-      <div class="skill-row"><strong>Spoken languages</strong><span>English C1, German A2, Slovak native</span></div>
-    </div>
-  </div>
-</section>
-
-<section id="background">
-  <div class="wrap">
-    <div class="sec-head">
-      <h2>Background</h2>
-      <p>Where I've studied and worked.</p>
-    </div>
-
-    <h3 class="sub">Work experience</h3>
-    <div class="tl">
-      <div class="tl-item">
-        <div class="when">July 2022 to present</div>
-        <div>
-          <h3>Hotel receptionist</h3>
-          <p>Franko-Real, s.r.o., Zvolen</p>
-          <ul>
-            <li>Manage reservations and guest communication in a booking system.</li>
-            <li>Settle accommodation and daily revenue, issue invoices and close each day and month.</li>
-            <li>Prepare statistics, take inventory and do first-stage payroll processing.</li>
-            <li>Solve problems during guest stays and keep the front desk running smoothly.</li>
-          </ul>
-        </div>
+<section id="projects"><div class="wrap">
+  <div class="sec-head rv"><h2 data-i18n="p_h"></h2><p data-i18n="p_sub"></p></div>
+  <div class="projects">
+    <article class="project featured rv">
+      <span class="tag" data-i18n="p_tag"></span>
+      <h3>Patterna</h3>
+      <p data-i18n="p_desc"></p>
+      <ul class="feat"><li data-i18n="p_f1"></li><li data-i18n="p_f2"></li><li data-i18n="p_f3"></li><li data-i18n="p_f4"></li></ul>
+      <div class="stack"><span>JavaScript</span><span>TensorFlow.js</span><span>D3.js</span><span>Tailwind CSS</span><span>MDP</span><span>NLP</span><span>jsPDF</span><span>JSZip</span></div>
+      <div class="plinks">
+        <a href="https://patterna-project-github-io.vercel.app" target="_blank" rel="noopener" data-i18n="p_live"></a>
+        <a href="https://github.com/patterna-project/patterna-project.github.io" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.overleaf.com/read/czbdxjrnbfqz" target="_blank" rel="noopener" data-i18n="p_guide"></a>
+        <a href="https://tally.so/r/Y5rWkB" target="_blank" rel="noopener">Feedback</a>
       </div>
-    </div>
-
-    <h3 class="sub">Education</h3>
-    <div class="tl">
-      <div class="tl-item">
-        <div class="when">Sep 2026 to present</div>
-        <div><h3>Intelligent Software Systems (Engineering degree)</h3><p>FIIT, Slovak University of Technology, Bratislava</p></div>
-      </div>
-      <div class="tl-item">
-        <div class="when">Sep 2023 to Jun 2026</div>
-        <div><h3>Informatics (Bc.)</h3><p>FIIT, Slovak University of Technology, Bratislava</p></div>
-      </div>
-      <div class="tl-item">
-        <div class="when">Sep 2018 to Jun 2022</div>
-        <div><h3>Information and network technologies</h3><p>Stredná priemyselná škola Jozefa Murgaša, Banská Bystrica</p></div>
-      </div>
-    </div>
-
-    <h3 class="sub">Courses</h3>
-    <div class="tl">
-      <div class="tl-item">
-        <div class="when">Cisco Networking Academy</div>
-        <div><h3>CCNA v7 (semesters 1 to 3) and IT Essentials</h3><p>Introduction to Networks, Switching, Routing and Wireless Essentials, Enterprise Networking, Security and Automation.</p></div>
-      </div>
-    </div>
+    </article>
+    <!-- TODO: replace each "soon" card with a real project (keep the same structure) -->
+    <article class="project soon rv"><span class="tag"><span data-i18n="ph_tag"></span> 2</span><h3 data-i18n="ph_t"></h3><p data-i18n="ph_d"></p><div class="stack"><span>Tech</span><span>Tech</span></div><div class="plinks"><a href="#">GitHub</a></div></article>
+    <article class="project soon rv"><span class="tag"><span data-i18n="ph_tag"></span> 3</span><h3 data-i18n="ph_t"></h3><p data-i18n="ph_d"></p><div class="stack"><span>Tech</span><span>Tech</span></div><div class="plinks"><a href="#">GitHub</a></div></article>
+    <article class="project soon rv"><span class="tag"><span data-i18n="ph_tag"></span> 4</span><h3 data-i18n="ph_t"></h3><p data-i18n="ph_d"></p><div class="stack"><span>Tech</span><span>Tech</span></div><div class="plinks"><a href="#">GitHub</a></div></article>
+    <article class="project soon rv"><span class="tag"><span data-i18n="ph_tag"></span> 5</span><h3 data-i18n="ph_t"></h3><p data-i18n="ph_d"></p><div class="stack"><span>Tech</span><span>Tech</span></div><div class="plinks"><a href="#">GitHub</a></div></article>
   </div>
-</section>
+</div></section>
 
-<section class="contact" id="contact">
-  <div class="wrap">
-    <div class="sec-head">
-      <h2>Get in touch</h2>
-      <p>I'm looking for a part-time developer or trainee role where I can learn and contribute. Write to me or call.</p>
-    </div>
-    <div class="contact-list">
-      <div><span>Email</span><a href="mailto:ondrej.drengubiak1@gmail.com">ondrej.drengubiak1@gmail.com</a></div>
-      <div><span>Phone</span><a href="tel:+421911677611">+421 911 677 611</a></div>
-      <div><span>Location</span>Bratislava, Slovakia</div>
-      <!-- TODO: add LinkedIn if you have one -->
-      <div><span>GitHub</span><a href="https://github.com/Ondrejstuba" target="_blank" rel="noopener">github.com/Ondrejstuba</a></div>
-    </div>
+<section id="skills"><div class="wrap">
+  <div class="sec-head rv"><h2 data-i18n="s_h"></h2><p data-i18n="s_sub"></p></div>
+  <div class="skills rv">
+    <div class="skill-row"><strong data-i18n="s1"></strong><span>Python, Java, C, C++, R</span></div>
+    <div class="skill-row"><strong>Web</strong><span>HTML, CSS, JavaScript, PHP</span></div>
+    <div class="skill-row"><strong data-i18n="s3"></strong><span>SQL, MS Access</span></div>
+    <div class="skill-row"><strong data-i18n="s4"></strong><span data-i18n="s4_v"></span></div>
+    <div class="skill-row"><strong data-i18n="s5"></strong><span>Cisco CCNA v7, IT Essentials</span></div>
+    <div class="skill-row"><strong data-i18n="s6"></strong><span data-i18n="s6_v"></span></div>
   </div>
-</section>
+</div></section>
+
+<section id="background"><div class="wrap">
+  <div class="sec-head rv"><h2 data-i18n="bg_h"></h2><p data-i18n="bg_sub"></p></div>
+  <h3 class="sub rv" data-i18n="bg_work"></h3>
+  <div class="tl-item rv"><div class="when" data-i18n="w_date"></div><div>
+    <h3 data-i18n="w_title"></h3><p>Franko-Real, s.r.o., Zvolen</p>
+    <ul><li data-i18n="w1"></li><li data-i18n="w2"></li><li data-i18n="w3"></li><li data-i18n="w4"></li></ul>
+  </div></div>
+  <h3 class="sub rv" data-i18n="bg_edu"></h3>
+  <div class="tl-item rv"><div class="when" data-i18n="e1_d"></div><div><h3 data-i18n="e1_t"></h3><p data-i18n="e_fiit"></p></div></div>
+  <div class="tl-item rv"><div class="when" data-i18n="e2_d"></div><div><h3 data-i18n="e2_t"></h3><p data-i18n="e_fiit"></p></div></div>
+  <div class="tl-item rv"><div class="when" data-i18n="e3_d"></div><div><h3 data-i18n="e3_t"></h3><p>SPŠ Jozefa Murgaša, Banská Bystrica</p></div></div>
+  <h3 class="sub rv" data-i18n="bg_course"></h3>
+  <div class="tl-item rv"><div class="when">Cisco Networking Academy</div><div><h3>CCNA v7 (1 to 3), IT Essentials</h3><p data-i18n="cc_d"></p></div></div>
+</div></section>
+
+<section class="contact" id="contact"><div class="wrap">
+  <div class="sec-head rv"><h2 data-i18n="c_h"></h2><p data-i18n="c_p"></p></div>
+  <div class="contact-list rv">
+    <div><span data-i18n="c_email"></span><a href="mailto:ondrej.drengubiak1@gmail.com">ondrej.drengubiak1@gmail.com</a><button class="copy" id="copy" type="button" data-i18n="c_copy"></button></div>
+    <div><span data-i18n="c_phone"></span><a href="tel:+421911677611">+421 911 677 611</a></div>
+    <div><span data-i18n="c_loc"></span>Bratislava, Slovakia</div>
+    <div><span>GitHub</span><a href="https://github.com/Ondrejstuba" target="_blank" rel="noopener">github.com/Ondrejstuba</a></div>
+  </div>
+</div></section>
 </main>
 
-<footer>
-  <div class="wrap">© 2026 Ondrej Drengubiak</div>
-</footer>
+<footer><div class="wrap"><span>© 2026 Ondrej Drengubiak</span><a id="to-top" href="#top" data-i18n="f_top"></a></div></footer>
+<div id="toast" role="status"></div>
+<button id="top-btn" type="button" aria-label="Back to top">↑</button>
 
+<script>
+const T={
+en:{n_about:'About',n_projects:'Projects',n_skills:'Skills',n_bg:'Background',n_contact:'Contact',
+h1:'Software developer who solves problems in real time.',
+lead:"I'm a Master's student of Intelligent Software Systems at FIIT STU in Bratislava. I write code in Python, Java and C/C++, and for the past four years I've also run a hotel front desk, so I know what it's like when people depend on a system working.",
+typed_pre:'I work with',b_proj:'See my projects',b_mail:'Email me',
+k_label:'Currently checked in at',k_uni:'University',k_study:'Study',k_study_v:'Intelligent Software Systems',k_based:'Based in',k_lang:'Languages',k_lang_v:'EN C1, DE A2',k_look:'Looking for',k_look_v:'Part-time dev role',
+a_h:'About me',
+a_p1:'I finished my Bachelor\'s degree in Informatics at the Faculty of Informatics and Information Technologies (STU Bratislava) in June 2026 and started the Engineering degree in September. Before that I studied information and network technologies at a vocational high school and completed Cisco CCNA courses.',
+a_p2:'Since 2022 I\'ve worked at a hotel reception. I handle bookings in a reservation system, close the daily and monthly accounts, prepare statistics and fix problems on the spot. That job taught me to stay calm, communicate clearly and care about details, and I want to bring the same habits into software development.',
+p_h:'Projects',p_sub:'A selection of university and personal projects. Each one links to its code on GitHub.',
+p_tag:"Bachelor's thesis · Web application",
+p_desc:'A web application that generates optimal sequences of patterns. It measures how similar pattern descriptions are (TF-IDF or Universal Sentence Encoder) and then uses a Markov Decision Process with configurable rewards to build a path from a start pattern to a goal pattern.',
+p_f1:'Similarity matrix, statistics and an interactive force-directed graph of pattern relationships',p_f2:'Forced start and goal, reference bonus and sentiment-based reward adjustments',p_f3:'Drag and drop reordering, export to TXT, PDF, CSV, PNG or ZIP',p_f4:'Slovak and English interface, dark mode, deployed on Vercel',
+p_live:'Live app',p_guide:'Guide',ph_tag:'Project',ph_t:'Coming soon',ph_d:'Short description: what it does, what problem it solves and what you built.',
+s_h:'Skills',s_sub:'Tools and technologies I work with, grouped by area.',s1:'Languages',s3:'Databases',s4:'Tools',s4_v:'Git, Linux basics, Microsoft Office, Open Office',s5:'Networking',s6:'Spoken languages',s6_v:'English C1, German A2, Slovak native',
+bg_h:'Background',bg_sub:"Where I've studied and worked.",bg_work:'Work experience',bg_edu:'Education',bg_course:'Courses',
+w_date:'July 2022 to present',w_title:'Hotel receptionist',
+w1:'Manage reservations and guest communication in a booking system.',w2:'Settle accommodation and daily revenue, issue invoices and close each day and month.',w3:'Prepare statistics, take inventory and do first-stage payroll processing.',w4:'Solve problems during guest stays and keep the front desk running smoothly.',
+e1_d:'Sep 2026 to present',e1_t:'Intelligent Software Systems (Engineering degree)',e_fiit:'FIIT, Slovak University of Technology, Bratislava',
+e2_d:'Sep 2023 to Jun 2026',e2_t:'Informatics (Bc.)',e3_d:'Sep 2018 to Jun 2022',e3_t:'Information and network technologies',
+cc_d:'Introduction to Networks, Switching, Routing and Wireless Essentials, Enterprise Networking, Security and Automation.',
+c_h:'Get in touch',c_p:"I'm looking for a part-time developer or trainee role where I can learn and contribute. Write to me or call.",c_email:'Email',c_phone:'Phone',c_loc:'Location',c_copy:'Copy',c_copied:'Email copied',f_top:'Back to top'},
+sk:{n_about:'O mne',n_projects:'Projekty',n_skills:'Zručnosti',n_bg:'Prax a štúdium',n_contact:'Kontakt',
+h1:'Softvérový vývojár, ktorý rieši problémy za pochodu.',
+lead:'Študujem Inteligentné softvérové systémy na FIIT STU v Bratislave. Programujem v Pythone, Jave a C/C++ a posledné štyri roky pracujem aj na hotelovej recepcii, takže viem, aké je to, keď sa ľudia musia spoľahnúť na fungujúci systém.',
+typed_pre:'Pracujem s',b_proj:'Pozrieť projekty',b_mail:'Napísať e-mail',
+k_label:'Momentálne ubytovaný na',k_uni:'Univerzita',k_study:'Štúdium',k_study_v:'Inteligentné softvérové systémy',k_based:'Bydlisko',k_lang:'Jazyky',k_lang_v:'AJ C1, NJ A2',k_look:'Hľadám',k_look_v:'Brigádu vývojára',
+a_h:'O mne',
+a_p1:'V júni 2026 som dokončil bakalárske štúdium informatiky na Fakulte informatiky a informačných technológií STU v Bratislave a v septembri som nastúpil na inžinierske. Predtým som študoval informačné a sieťové technológie na strednej priemyselnej škole a absolvoval som kurzy Cisco CCNA.',
+a_p2:'Od roku 2022 pracujem na hotelovej recepcii. Pracujem s rezervačným systémom, robím denné a mesačné uzávierky, pripravujem štatistiky a riešim problémy hneď na mieste. Naučilo ma to zachovať pokoj, jasne komunikovať a dbať na detaily, a rovnaké návyky chcem preniesť do vývoja softvéru.',
+p_h:'Projekty',p_sub:'Výber školských a osobných projektov. Pri každom je odkaz na kód na GitHube.',
+p_tag:'Bakalárska práca · Webová aplikácia',
+p_desc:'Webová aplikácia, ktorá generuje optimálne postupnosti vzorov. Meria podobnosť popisov vzorov (TF-IDF alebo Universal Sentence Encoder) a potom pomocou Markovovho rozhodovacieho procesu s nastaviteľnými odmenami zostaví cestu od štartovacieho vzoru k cieľovému.',
+p_f1:'Matica podobnosti, štatistiky a interaktívny graf vzťahov medzi vzormi',p_f2:'Pevný štart a cieľ, bonus za odkazy a úprava odmien podľa sentimentu',p_f3:'Presúvanie myšou, export do TXT, PDF, CSV, PNG alebo ZIP',p_f4:'Slovenské a anglické rozhranie, tmavý režim, nasadené na Verceli',
+p_live:'Spustiť aplikáciu',p_guide:'Príručka',ph_tag:'Projekt',ph_t:'Čoskoro',ph_d:'Krátky popis: čo to robí, aký problém to rieši a čo si vytvoril.',
+s_h:'Zručnosti',s_sub:'Nástroje a technológie, s ktorými pracujem, rozdelené podľa oblastí.',s1:'Jazyky',s3:'Databázy',s4:'Nástroje',s4_v:'Git, základy Linuxu, Microsoft Office, Open Office',s5:'Siete',s6:'Hovorené jazyky',s6_v:'Angličtina C1, nemčina A2, slovenčina materinský',
+bg_h:'Prax a štúdium',bg_sub:'Kde som študoval a pracoval.',bg_work:'Pracovné skúsenosti',bg_edu:'Vzdelanie',bg_course:'Kurzy',
+w_date:'Júl 2022 až súčasnosť',w_title:'Hotelový recepčný',
+w1:'Spravujem rezervácie a komunikáciu s hosťami v rezervačnom systéme.',w2:'Zúčtovávam ubytovanie a denné tržby, vystavujem faktúry a robím denné a mesačné uzávierky.',w3:'Pripravujem štatistiky, robím inventarizáciu a prvotné spracovanie miezd.',w4:'Riešim problémy počas pobytu hostí a zabezpečujem plynulý chod recepcie.',
+e1_d:'Sep 2026 až súčasnosť',e1_t:'Inteligentné softvérové systémy (Ing.)',e_fiit:'FIIT, Slovenská technická univerzita v Bratislave',
+e2_d:'Sep 2023 až Jún 2026',e2_t:'Informatika (Bc.)',e3_d:'Sep 2018 až Jún 2022',e3_t:'Informačné a sieťové technológie',
+cc_d:'Úvod do sietí, Switching, Routing and Wireless Essentials, Enterprise Networking, Security and Automation.',
+c_h:'Kontakt',c_p:'Hľadám brigádu alebo trainee pozíciu vývojára, kde sa môžem učiť a prispievať. Napíšte mi alebo zavolajte.',c_email:'E-mail',c_phone:'Telefón',c_loc:'Lokalita',c_copy:'Kopírovať',c_copied:'E-mail skopírovaný',f_top:'Hore'}};
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],root=document.documentElement;
+const save=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},load=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+let lang=load('lang')||'en';if(!T[lang])lang='en';
+
+function setLang(l){lang=l;save('lang',l);root.lang=l;
+  $$('[data-i18n]').forEach(e=>e.textContent=T[l][e.dataset.i18n]);
+  $('#lang').textContent=l==='en'?'SK':'EN';$('#lang').setAttribute('aria-label',l==='en'?'Prepnúť do slovenčiny':'Switch to English');
+  document.title=l==='en'?'Ondrej Drengubiak | Software Developer':'Ondrej Drengubiak | Softvérový vývojár'}
+function setTheme(t){root.dataset.theme=t;save('theme',t);$('#theme').textContent=t==='dark'?'☀':'☾'}
+$('#lang').onclick=()=>setLang(lang==='en'?'sk':'en');
+$('#theme').onclick=()=>setTheme(root.dataset.theme==='dark'?'light':'dark');
+setLang(lang);setTheme(root.dataset.theme);
+
+// typewriter
+const words=['Python','Java','C / C++','SQL & databases','Web development'],el=$('#typed');let wi=0,ci=0,del=false;
+(function tick(){const w=words[wi];ci+=del?-1:1;el.textContent=w.slice(0,ci);let d=del?45:85;
+  if(!del&&ci===w.length){del=true;d=1400}else if(del&&ci===0){del=false;wi=(wi+1)%words.length;d=300}setTimeout(tick,d)})();
+
+// scroll: progress bar, back-to-top, active nav link
+const bar=$('#bar'),tb=$('#top-btn'),secs=$$('main section'),navA=$$('.links a');
+function onScroll(){const h=root.scrollHeight-innerHeight;bar.style.transform='scaleX('+(h>0?scrollY/h:0)+')';tb.classList.toggle('show',scrollY>600);
+  let cur='';secs.forEach(s=>{if(s.getBoundingClientRect().top<innerHeight*.4)cur=s.id});navA.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+cur))}
+addEventListener('scroll',onScroll,{passive:true});onScroll();
+tb.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+
+// reveal on scroll
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+$$('.rv').forEach(e=>io.observe(e));
+
+// key card 3D tilt + shine, project spotlight
+const card=$('#card');
+if(matchMedia('(hover:hover)').matches){
+  card.addEventListener('mousemove',e=>{const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    card.style.setProperty('--ry',x*14+'deg');card.style.setProperty('--rx',-y*14+'deg');card.style.setProperty('--sh',(120-(x+.5)*140)+'%')});
+  card.addEventListener('mouseleave',()=>{card.style.setProperty('--rx','0deg');card.style.setProperty('--ry','0deg');card.style.setProperty('--sh','120%')});
+  $$('.project').forEach(p=>p.addEventListener('mousemove',e=>{const r=p.getBoundingClientRect();p.style.setProperty('--mx',e.clientX-r.left+'px');p.style.setProperty('--my',e.clientY-r.top+'px')}));
+}
+
+// copy email
+const toast=$('#toast');
+$('#copy').onclick=async()=>{try{await navigator.clipboard.writeText('ondrej.drengubiak1@gmail.com');toast.textContent=T[lang].c_copied;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1800)}catch(e){}};
+</script>
 </body>
 </html>
