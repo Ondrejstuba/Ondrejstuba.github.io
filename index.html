@@ -4,7 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bc. Ondrej Drengubiak | Softvérový vývojár</title>
-<meta name="description" content="Osobné portfólio Ondreja Drengubiaka - študenta FIIT STU v Bratislave. Vývoj v Python, Java, C/C++, SQL a WebDev.">
+<meta name="theme-color" content="#1D3A33">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%231D3A33%27/%3E%3Ctext x=%2732%27 y=%2743%27 text-anchor=%27middle%27 font-family=%27Arial,sans-serif%27 font-size=%2728%27 font-weight=%27700%27 letter-spacing=%27-2%27 fill=%27%23F8FAF7%27%3EOD%3C/text%3E%3Ccircle cx=%2753%27 cy=%2713%27 r=%274%27 fill=%27%23B8893A%27/%3E%3C/svg%3E">
+<meta name="description" id="meta-description" content="Osobné portfólio Ondreja Drengubiaka - študenta FIIT STU v Bratislave. Vývoj v Python, Java, C/C++, SQL a WebDev.">
+<meta property="og:title" id="og-title" content="Bc. Ondrej Drengubiak | Softvérový vývojár">
+<meta property="og:description" id="og-description" content="Osobné portfólio Ondreja Drengubiaka - študenta FIIT STU v Bratislave. Vývoj v Python, Java, C/C++, SQL a WebDev.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Fira+Code:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -35,13 +41,23 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 .status-dot{width:9px;height:9px;background:#10B981;border-radius:50%;box-shadow:0 0 0 0 rgba(16,185,129,0.7);animation:pulse 2s infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,0.7)}70%{box-shadow:0 0 0 8px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
 
-.links{display:flex;gap:20px;font-size:.93rem;font-weight:500;overflow-x:auto;scrollbar-width:none}
+.links{display:flex;gap:15px;font-size:.88rem;font-weight:500;overflow-x:auto;scrollbar-width:none}
 .links a{text-decoration:none;color:var(--muted);white-space:nowrap;padding:4px 0;border-bottom:2px solid transparent;transition:color .2s,border-color .2s}
 .links a:hover,.links a.on{color:var(--accent);border-color:var(--brass)}
 .tools{display:flex;gap:8px;align-items:center}
 .tools button{font:600 .85rem var(--body);min-width:38px;height:36px;padding:0 8px;border-radius:8px;border:1.5px solid var(--line);background:var(--card);color:var(--accent);cursor:pointer;transition:transform .2s,border-color .2s}
 .tools button:hover{border-color:var(--accent);transform:translateY(-2px)}
 #term-toggle{font-family:var(--code);font-weight:700}
+#mobile-menu-toggle{display:none;font-size:1.1rem}
+.mobile-menu{display:none}
+@media (max-width:820px){
+  #mobile-menu-toggle{display:inline-flex;align-items:center;justify-content:center}
+  .mobile-menu{position:absolute;left:0;right:0;top:64px;display:flex;flex-direction:column;padding:10px 24px 14px;background:color-mix(in srgb,var(--bg) 96%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);box-shadow:0 14px 30px rgba(0,0,0,.08);opacity:0;visibility:hidden;transform:translateY(-8px);transition:.2s}
+  .mobile-menu.open{opacity:1;visibility:visible;transform:none}
+  .mobile-menu a{padding:11px 0;text-decoration:none;color:var(--muted);font-weight:600;border-bottom:1px solid var(--line)}
+  .mobile-menu a:last-child{border-bottom:none}
+  .mobile-menu a:hover{color:var(--accent)}
+}
 
 /* Hero Section */
 .hero{padding:76px 0 84px;position:relative;overflow:hidden}
@@ -76,9 +92,15 @@ h1{font-family:var(--head);font-weight:800;font-size:clamp(2.4rem,5.6vw,4.2rem);
 /* Sections Global */
 section{padding:72px 0;border-top:1px solid var(--line)}
 .sec-head,.about,.tl-item{display:grid;grid-template-columns:240px 1fr;gap:40px}
-.sec-head{margin-bottom:36px}
+.sec-head{margin-bottom:36px;align-items:start}
 h2{font-family:var(--head);font-weight:800;font-size:2rem;letter-spacing:-.02em;color:var(--accent);line-height:1.15}
 .sec-head p{color:var(--muted);max-width:60ch;padding-top:6px}
+
+.sec-title{display:inline-flex;align-items:center;gap:8px}.info-tip{position:relative;display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;margin:0;border:1px solid var(--line);border-radius:50%;background:var(--card);color:var(--accent);font:700 .75rem var(--head);cursor:help;opacity:0;transform:translateX(-4px);transition:opacity .18s,transform .18s,border-color .2s,background .2s}
+.sec-head:hover .info-tip,.info-tip:focus-visible{opacity:1;transform:none}.info-tip:hover,.info-tip:focus-visible{transform:translateY(-2px);border-color:var(--brass);background:color-mix(in srgb,var(--brass) 12%,var(--card))}
+.info-tip::after{content:attr(data-tip);position:absolute;right:0;top:calc(100% + 9px);width:min(340px,72vw);padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:500 .82rem/1.45 var(--body);text-align:left;box-shadow:0 12px 28px rgba(0,0,0,.16);opacity:0;visibility:hidden;transform:translateY(-4px);pointer-events:none;z-index:25;transition:.18s}
+.info-tip:hover::after,.info-tip:focus-visible::after{opacity:1;visibility:visible;transform:none}
+
 h3{font-family:var(--head);font-weight:700;font-size:1.25rem;color:var(--accent);line-height:1.25}
 .about p{max-width:64ch}.about p+p{margin-top:16px}
 .rv{transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
@@ -139,9 +161,13 @@ h3{font-family:var(--head);font-weight:700;font-size:1.25rem;color:var(--accent)
 .contact-row:last-child{border-bottom:none;padding-bottom:0}
 .contact-label{color:var(--key-mut);font-size:.9rem;min-width:120px;font-weight:500}
 .contact-val{font-size:1.05rem;font-weight:600}
-.contact-val a{text-decoration-color:var(--brass);text-underline-offset:5px}
-.copy-btn{font:600 .8rem var(--body);padding:5px 14px;border-radius:99px;border:1.5px solid var(--key-mut);background:none;color:var(--key-ink);cursor:pointer;transition:all .2s;margin-left:10px}
-.copy-btn:hover{background:rgba(255,255,255,.15);border-color:var(--key-ink)}
+.contact-val a{text-decoration-color:var(--brass);text-underline-offset:5px}.contact-val a:hover{color:var(--brass)}
+.copy-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;border-radius:8px;border:1.5px solid var(--key-mut);background:none;color:var(--key-ink);cursor:pointer;transition:all .2s;margin-left:10px;vertical-align:middle}
+.copy-btn:hover{background:rgba(255,255,255,.15);border-color:var(--key-ink);transform:translateY(-1px)}
+.copy-btn svg,.icon-link svg{width:17px;height:17px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.copy-btn:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+.icon-link{display:inline-flex;align-items:center;gap:7px}
+.plinks a.icon-link{display:inline-flex;align-items:center;gap:7px}
 
 /* Interactive Terminal Drawer */
 #terminal-modal{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(5px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
@@ -168,6 +194,8 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
 
 @media (max-width:820px){
   .hero .wrap,.sec-head,.about,.tl-item{grid-template-columns:1fr;gap:20px}
+  .sec-head{display:flex;align-items:center;justify-content:space-between}
+  .info-tip::after{right:auto;left:0}
   .hero{padding:48px 0}.keycard{max-width:100%}
   .projects,.skills-grid{grid-template-columns:1fr}
   .links{display:none}section{padding:56px 0}
@@ -178,9 +206,9 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
 <body>
 <div id="bar"></div>
 
-<nav aria-label="Hlavná navigácia"><div class="wrap">
+<nav data-i18n-attr="aria-label:nav_aria"><div class="wrap">
   <a class="logo" href="#top">
-    <span class="status-dot" title="K dispozícii pre vývojárske prácu / brigádu"></span>
+    <span class="status-dot" data-i18n-attr="title:status_title"></span>
     Ondrej Drengubiak
   </a>
   <div class="links">
@@ -191,10 +219,18 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
     <a href="#contact" data-i18n="n_contact">Kontakt</a>
   </div>
   <div class="tools">
-    <button id="term-toggle" type="button" aria-label="Otvoriť terminál" title="Otvoriť vývojársky terminál">&gt;_</button>
-    <button id="lang" type="button" aria-label="Zmeniť jazyk">EN</button>
-    <button id="theme" type="button" aria-label="Prepnúť tmavý režim">☾</button>
+    <button id="mobile-menu-toggle" type="button" data-i18n-attr="aria-label:menu_open;title:menu_open_title" aria-expanded="false">☰</button>
+    <button id="term-toggle" type="button" data-i18n-attr="aria-label:term_open;title:term_open_title">&gt;_</button>
+    <button id="lang" type="button" data-i18n-attr="aria-label:lang_label">EN</button>
+    <button id="theme" type="button" data-i18n-attr="aria-label:theme_label">☾</button>
   </div>
+</div>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#about" data-i18n="n_about">O mne</a>
+  <a href="#projects" data-i18n="n_projects">Projekty</a>
+  <a href="#skills" data-i18n="n_skills">Zručnosti</a>
+  <a href="#background" data-i18n="n_bg">Prax</a>
+  <a href="#contact" data-i18n="n_contact">Kontakt</a>
 </div></nav>
 
 <header class="hero" id="top"><div class="wrap">
@@ -220,7 +256,7 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
       <div><dt data-i18n="k_study">Odbor</dt><dd data-i18n="k_study_v">Inteligentné softvérové systémy</dd></div>
       <div><dt data-i18n="k_based">Lokalita</dt><dd>Bratislava / Zvolen</dd></div>
       <div><dt data-i18n="k_lang">Jazyky</dt><dd data-i18n="k_lang_v">SK (Native), EN (C1), DE (A2)</dd></div>
-      <div><dt data-i18n="k_drive">Vodičský preukaz</dt><dd>Skupina B</dd></div>
+      <div><dt data-i18n="k_drive">Vodičský preukaz</dt><dd data-i18n="k_drive_v">Skupina B</dd></div>
       <div><dt data-i18n="k_look">Hľadám</dt><dd data-i18n="k_look_v">Brigádu / Part-time dev</dd></div>
     </dl>
   </aside>
@@ -241,8 +277,7 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
 
 <section id="projects"><div class="wrap">
   <div class="sec-head rv">
-    <h2 data-i18n="p_h">Projekty</h2>
-    <p data-i18n="p_sub">Výber akademických a osobných projektov s priamym odkazom na zdrojové kódy a živé ukážky.</p>
+    <div class="sec-title"><h2 data-i18n="p_h">Projekty</h2><button class="info-tip" type="button" data-i18n-attr="aria-label:p_sub;data-tip:p_sub" aria-label="Info" data-tip="Info">?</button></div>
   </div>
   <div class="projects">
     <article class="project featured rv">
@@ -252,17 +287,17 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
       <ul class="feat">
         <li data-i18n="p_f1">Interaktívny vizualizačný graf vzťahov (D3.js) a matica podobnosti v reálnom čase.</li>
         <li data-i18n="p_f2">Vlastné nastavenia: pevný štart/cieľ, sentiment odmeny a bonusy za referencie.</li>
-        <li data-i18n="p_f3">Kompletná správa postupností pomocou drag-and-drop, exporty do TXT, PDF, CSV, PNG aj ZIP archive.</li>
+        <li data-i18n="p_f3">Kompletná správa postupností pomocou drag-and-drop, exporty do TXT, PDF, CSV, PNG aj ZIP archives.</li>
         <li data-i18n="p_f4">Plne responsívne rozhranie v slovenčine a angličtine, tmavý režim, nasadené na Verceli.</li>
       </ul>
       <div class="stack">
         <span>JavaScript</span><span>TensorFlow.js</span><span>D3.js</span><span>Tailwind CSS</span><span>MDP</span><span>NLP</span><span>jsPDF</span><span>JSZip</span>
       </div>
       <div class="plinks">
-        <a href="https://patterna-project-github-io.vercel.app" target="_blank" rel="noopener" data-i18n="p_live">Živá aplikácia</a>
-        <a href="https://github.com/patterna-project/patterna-project.github.io" target="_blank" rel="noopener">GitHub Kód</a>
-        <a href="https://www.overleaf.com/read/czbdxjrnbfqz" target="_blank" rel="noopener" data-i18n="p_guide">Dokumentácia</a>
-        <a href="https://tally.so/r/Y5rWkB" target="_blank" rel="noopener">Feedback</a>
+        <a class="icon-link" href="https://patterna-project-github-io.vercel.app" target="_blank" rel="noopener" data-i18n="p_live"><span>Živá aplikácia</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7m0-7L10 14"/><path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6"/></svg></a>
+        <a class="icon-link" href="https://github.com/patterna-project/patterna-project.github.io" target="_blank" rel="noopener" data-i18n="p_github"><span>GitHub Code</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.3-.4 6.8-1.6 6.8-7A5.4 5.4 0 0 0 19.3 4c.1-1.2.1-2.4-.1-3.5 0 0-1.2-.4-4 1.5a13.8 13.8 0 0 0-7.2 0C5.2.1 4 0.5 4 .5c-.2 1.1-.2 2.3-.1 3.5A5.4 5.4 0 0 0 2.2 7.5c0 5.4 3.5 6.6 6.8 7A4.8 4.8 0 0 0 8 18v4"/><path d="M8 19c-3 .9-3-1.5-4.2-2"/></svg></a>
+        <a class="icon-link" href="https://www.overleaf.com/read/czbdxjrnbfqz" target="_blank" rel="noopener" data-i18n="p_guide"><span>Dokumentácia</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h12a2 2 0 0 1 2 2v14H6a2 2 0 0 1-2-2V4Z"/><path d="M18 20a2 2 0 0 0-2-2H4"/><path d="M8 8h6M8 12h6"/></svg></a>
+        <a class="icon-link" href="https://tally.so/r/Y5rWkB" target="_blank" rel="noopener" data-i18n="p_feedback"><span>Feedback</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.8 7.5L7 21l1.5-3.2A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8 11.5h.01M12 11.5h.01M16 11.5h.01"/></svg></a>
       </div>
     </article>
 
@@ -271,7 +306,7 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
       <h3 data-i18n="ph_t">Systém pre spracovanie dát</h3>
       <p data-i18n="ph_d">Backendový modul v Pythone a SQL zameraný na efektívnu analýzu a spracovanie rozsiahlych datasetov.</p>
       <div class="stack"><span>Python</span><span>SQL</span><span>Git</span></div>
-      <div class="plinks"><a href="https://github.com/Ondrejstuba" target="_blank" rel="noopener">GitHub</a></div>
+      <div class="plinks"><a class="icon-link" href="https://github.com/Ondrejstuba" target="_blank" rel="noopener" data-i18n="p_github_short"><span>GitHub</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.3-.4 6.8-1.6 6.8-7A5.4 5.4 0 0 0 19.3 4c.1-1.2.1-2.4-.1-3.5 0 0-1.2-.4-4 1.5a13.8 13.8 0 0 0-7.2 0C5.2.1 4 0.5 4 .5c-.2 1.1-.2 2.3-.1 3.5A5.4 5.4 0 0 0 2.2 7.5c0 5.4 3.5 6.6 6.8 7A4.8 4.8 0 0 0 8 18v4"/><path d="M8 19c-3 .9-3-1.5-4.2-2"/></svg></a></div>
     </article>
 
     <article class="project soon rv">
@@ -279,15 +314,14 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
       <h3 data-i18n="ph_t">Sieťový Analyzer &amp; Utility</h3>
       <p data-i18n="ph_d">Aplikácia v C/C++ využívajúca znalosti zo štúdia Cisco CCNA na monitorovanie a simuláciu sieťovej komunikácie.</p>
       <div class="stack"><span>C++</span><span>Cisco CCNA</span><span>Networking</span></div>
-      <div class="plinks"><a href="https://github.com/Ondrejstuba" target="_blank" rel="noopener">GitHub</a></div>
+      <div class="plinks"><a class="icon-link" href="https://github.com/Ondrejstuba" target="_blank" rel="noopener" data-i18n="p_github_short"><span>GitHub</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.3-.4 6.8-1.6 6.8-7A5.4 5.4 0 0 0 19.3 4c.1-1.2.1-2.4-.1-3.5 0 0-1.2-.4-4 1.5a13.8 13.8 0 0 0-7.2 0C5.2.1 4 0.5 4 .5c-.2 1.1-.2 2.3-.1 3.5A5.4 5.4 0 0 0 2.2 7.5c0 5.4 3.5 6.6 6.8 7A4.8 4.8 0 0 0 8 18v4"/><path d="M8 19c-3 .9-3-1.5-4.2-2"/></svg></a></div>
     </article>
   </div>
 </div></section>
 
 <section id="skills"><div class="wrap">
   <div class="sec-head rv">
-    <h2 data-i18n="s_h">Zručnosti &amp; Technológie</h2>
-    <p data-i18n="s_sub">Prehľad mojich technických znalostí a nástrojov s možnosťou filtrovania.</p>
+    <div class="sec-title"><h2 data-i18n="s_h">Zručnosti &amp; Technológie</h2><button class="info-tip" type="button" data-i18n-attr="aria-label:s_sub;data-tip:s_sub" aria-label="Info" data-tip="Info">?</button></div>
   </div>
 
   <div class="skill-filters rv">
@@ -296,40 +330,68 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
     <button class="filter-btn" data-filter="web" data-i18n="sf_web">WebDev</button>
     <button class="filter-btn" data-filter="db" data-i18n="sf_db">Databázy &amp; OS</button>
     <button class="filter-btn" data-filter="net" data-i18n="sf_net">Siete &amp; Nástroje</button>
+    <button class="filter-btn" data-filter="other" data-i18n="sf_other">Ostatné</button>
   </div>
 
   <div class="skills-grid rv">
     <div class="skill-card" data-cat="prog">
-      <h4><span data-i18n="sk_lang">Programovacie jazyky</span> <span>Pokročilý</span></h4>
-      <div class="skill-tags"><span>Python</span><span>Java</span><span>C</span><span>C++</span><span>R</span></div>
+      <h4><span data-i18n="sk_prog_core">Základné programovanie</span> <span data-i18n="level_adv">Pokročilý</span></h4>
+      <div class="skill-tags"><span>Python</span><span>Java</span><span>C</span><span>C++</span></div>
+    </div>
+    <div class="skill-card" data-cat="prog">
+      <h4><span data-i18n="sk_prog_data">Dátové &amp; vedecké programovanie</span> <span data-i18n="level_intermediate">Mierne pokročilý</span></h4>
+      <div class="skill-tags"><span>R</span></div>
     </div>
     <div class="skill-card" data-cat="web">
-      <h4><span>Web Development</span> <span>Pokročilý</span></h4>
+      <h4><span data-i18n="sk_web">Web Development</span> <span data-i18n="level_adv">Pokročilý</span></h4>
       <div class="skill-tags"><span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>PHP</span></div>
     </div>
     <div class="skill-card" data-cat="db">
-      <h4><span data-i18n="sk_db">Databázové systémy</span> <span>Mierne pokročilý</span></h4>
-      <div class="skill-tags"><span>SQL</span><span>MS Access</span><span>Relačný dizajn</span></div>
+      <h4><span data-i18n="sk_db">Databázové systémy</span> <span data-i18n="level_intermediate">Mierne pokročilý</span></h4>
+      <div class="skill-tags"><span>SQL</span><span>MS Access</span><span data-i18n="tag_relational">Relačný dizajn</span></div>
     </div>
     <div class="skill-card" data-cat="db">
-      <h4><span data-i18n="sk_os">Operačné systémy &amp; Nástroje</span> <span>Pokročilý / Základy</span></h4>
-      <div class="skill-tags"><span>Linux OS (Základy)</span><span>Git</span><span>MS Office</span><span>Open Office</span></div>
+      <h4><span>Linux OS</span> <span data-i18n="level_intermediate">Mierne pokročilý</span></h4>
+    </div>
+    <div class="skill-card" data-cat="db">
+      <h4><span>GitHub</span> <span data-i18n="level_intermediate">Mierne pokročilý</span></h4>
+    </div>
+    <div class="skill-card" data-cat="db">
+      <h4><span data-i18n="sk_office">Office Tools</span> <span data-i18n="level_adv">Pokročilý</span></h4>
+      <div class="skill-tags"><span>MS Office</span><span>OpenOffice</span></div>
     </div>
     <div class="skill-card" data-cat="net">
-      <h4><span data-i18n="sk_net">Sieťové technológie</span> <span>Certifikované</span></h4>
-      <div class="skill-tags"><span>Cisco CCNA v7 (1–3)</span><span>Routing &amp; Switching</span><span>IT Essentials</span></div>
+      <h4><span data-i18n="sk_net_fund">Sieťové technológie</span> <span data-i18n="level_intermediate">Mierne pokročilý</span></h4>
+      <div class="skill-tags"><span>TCP/IP</span><span>Routing</span><span>Switching</span><span>VLAN</span><span>Subnetting</span><span>Cisco Packet Tracer</span></div>
     </div>
-    <div class="skill-card" data-cat="prog">
-      <h4><span data-i18n="sk_other">Jazyky &amp; Vodičský preukaz</span> <span>C1 / A2 / B</span></h4>
-      <div class="skill-tags"><span>Angličtina (C1)</span><span>Nemčina (A2)</span><span>Slovenčina (Materinský)</span><span>Vodičský preukaz: Sk. B</span></div>
+    <div class="skill-card" data-cat="net">
+      <h4><span data-i18n="sk_net_sec">Bezpečnosť</span> <span data-i18n="level_intermediate">Mierne pokročilý</span></h4>
+      <div class="skill-tags"><span data-i18n="tag_cyber">Kybernetická bezpečnosť</span><span>Firewall</span><span>VPN</span></div>
+    </div>
+    <div class="skill-card" data-cat="net">
+      <h4><span data-i18n="sk_net_tools">Sieťové nástroje</span> <span data-i18n="level_intermediate">Mierne pokročilý</span></h4>
+      <div class="skill-tags"><span>Wireshark</span><span>Nmap</span><span>GNS3</span></div>
+    </div>
+    <div class="skill-card" data-cat="other">
+      <h4><span data-i18n="sk_languages">Jazyky</span> <span>C1 / A2</span></h4>
+      <div class="skill-tags"><span data-i18n="tag_en">Angličtina (C1)</span><span data-i18n="tag_de">Nemčina (A2)</span><span data-i18n="tag_sk">Slovenčina (Materinský)</span></div>
+    </div>
+    <div class="skill-card" data-cat="other">
+      <h4><span>LaTeX</span> <span data-i18n="level_intermediate">Mierne pokročilý</span></h4>
+    </div>
+    <div class="skill-card" data-cat="other">
+      <h4><span data-i18n="sk_soft">Soft Skills</span></h4>
+      <div class="skill-tags"><span data-i18n="soft_comm">Komunikácia</span><span data-i18n="soft_problem">Riešenie problémov</span><span data-i18n="soft_stress">Práca pod tlakom</span><span data-i18n="soft_team">Tímová spolupráca</span></div>
+    </div>
+    <div class="skill-card" data-cat="other">
+      <h4><span data-i18n="sk_license">Vodičský preukaz</span> <span data-i18n="tag_drive_short">Skupina B</span></h4>
     </div>
   </div>
 </div></section>
 
 <section id="background"><div class="wrap">
   <div class="sec-head rv">
-    <h2 data-i18n="bg_h">Prax a štúdium</h2>
-    <p data-i18n="bg_sub">Interaktívny časový prehľad mojich pracovných skúseností, vzdelania a získaných certifikátov.</p>
+    <div class="sec-title"><h2 data-i18n="bg_h">Prax a štúdium</h2><button class="info-tip" type="button" data-i18n-attr="aria-label:bg_sub;data-tip:bg_sub" aria-label="Info" data-tip="Info">?</button></div>
   </div>
 
   <div class="tab-controls rv">
@@ -341,10 +403,10 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
   <!-- Tab Pracovné skúsenosti -->
   <div class="tl-content active" id="tab-work">
     <div class="tl-item rv">
-      <div class="when">07/2022 – Doteraz</div>
+      <div class="when">07/2022 – <span data-i18n="present">Doteraz</span></div>
       <div>
         <h3 data-i18n="w_title">Hotelový recepčný</h3>
-        <p>Franko-Real, s.r.o. — Zvolen, Slovenská republika</p>
+        <p>Franko-Real, s.r.o. — Zvolen, <span data-i18n="slovak_republic">Slovenská republika</span></p>
         <ul>
           <li data-i18n="w1_desc"><strong>Správa rezervácií a komunikácia:</strong> Prvý kontakt s hosťami, kompletné vybavovanie rezervácií, telefonická a e-mailová komunikácia v slovenskom a anglickom jazyku.</li>
           <li data-i18n="w2_desc"><strong>Finančné zúčtovanie &amp; Uzávierky:</strong> Práca v špecializovanom rezervačnom systéme, spracovanie platieb, denné a mesačné uzávierky, zúčtovanie ubytovania a celkových denných tržieb.</li>
@@ -353,12 +415,25 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
         </ul>
       </div>
     </div>
+    <div class="tl-item rv">
+      <div class="when">06/2021 – 08/2021</div>
+      <div>
+        <h3 data-i18n="w_carp_title">Výroba nábytku na mieru</h3>
+        <p data-i18n="w_carp_meta">Brigáda / výpomoc — Zvolen, Slovenská republika</p>
+        <ul>
+          <li data-i18n="w_carp_1"><strong>Výroba nábytku na mieru:</strong> Výpomoc pri realizácii zákazkovej výroby od prípravy materiálu až po finálnu kompletizáciu.</li>
+          <li data-i18n="w_carp_2"><strong>Spracovanie a kompletizácia dielov:</strong> Rezanie, lepenie, brúsenie a skladanie jednotlivých častí podľa technických pokynov.</li>
+          <li data-i18n="w_carp_3"><strong>Montáž u zákazníkov:</strong> Účasť na montážach, osadzovaní a finálnom doladení nábytku priamo na mieste.</li>
+          <li data-i18n="w_carp_4"><strong>Náradie a pracovná disciplína:</strong> Práca s ručným a elektrickým náradím s dôrazom na presnosť, samostatnosť a dodržanie dohodnutých termínov.</li>
+        </ul>
+      </div>
+    </div>
   </div>
 
   <!-- Tab Vzdelanie -->
   <div class="tl-content" id="tab-edu">
     <div class="tl-item">
-      <div class="when">09/2026 – Doteraz</div>
+      <div class="when">09/2026 – <span data-i18n="present">Doteraz</span></div>
       <div>
         <h3 data-i18n="e1_title">Inteligentné softvérové systémy (Ing.)</h3>
         <p>Fakulta informatiky a informačných technológií STU v Bratislave</p>
@@ -394,7 +469,7 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
     <div class="tl-item">
       <div class="when">CISCO Networking Academy</div>
       <div>
-        <h3>CCNAv7 (Semestre 1–3)</h3>
+        <h3>CCNAv7 (Semesters 1–3)</h3>
         <p>Routing, Switching, Wireless Essentials, Enterprise Networking &amp; Security</p>
         <ul>
           <li><strong>Semester 1:</strong> Routing and Switching: Introduction to Networks</li>
@@ -416,25 +491,29 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
 
 <section class="contact" id="contact"><div class="wrap">
   <div class="sec-head rv">
-    <h2 data-i18n="c_h">Kontaktujte ma</h2>
-    <p data-i18n="c_p">Hľadám vývojársku brigádu alebo part-time pozíciu (Bratislava / Zvolen / Remote). Neváhajte ma kontaktovať e-mailom.</p>
+    <div class="sec-title"><h2 data-i18n="c_h">Kontaktujte ma</h2><button class="info-tip" type="button" data-i18n-attr="aria-label:c_p;data-tip:c_p" aria-label="Info" data-tip="Info">?</button></div>
   </div>
   <div class="contact-card rv">
     <div class="contact-row">
       <span class="contact-label" data-i18n="c_email">E-mail:</span>
       <div class="contact-val">
         <a href="mailto:ondrej.drengubiak1@gmail.com">ondrej.drengubiak1@gmail.com</a>
-        <button class="copy-btn" id="copy" type="button" data-i18n="c_copy">Kopírovať e-mail</button>
+        <button class="copy-btn" id="copy" type="button" data-i18n-attr="aria-label:c_copy;title:c_copy" aria-live="polite">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3"/></svg>
+        </button>
       </div>
     </div>
     <div class="contact-row">
       <span class="contact-label" data-i18n="c_loc">Lokalita:</span>
-      <div class="contact-val">Bratislava / Zvolen, Slovenská republika</div>
+      <div class="contact-val">Bratislava / Zvolen, <span data-i18n="slovak_republic">Slovenská republika</span></div>
     </div>
     <div class="contact-row">
       <span class="contact-label">GitHub:</span>
       <div class="contact-val">
         <a href="https://github.com/Ondrejstuba" target="_blank" rel="noopener">github.com/Ondrejstuba</a>
+        <button class="copy-btn" id="copy-github" type="button" data-copy="https://github.com/Ondrejstuba" data-i18n-attr="aria-label:c_copy_github;title:c_copy_github">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3"/></svg>
+        </button>
       </div>
     </div>
   </div>
@@ -447,7 +526,7 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
 </div></footer>
 
 <!-- Interactive Terminal Modal -->
-<div id="terminal-modal" role="dialog" aria-label="Interaktívny terminál">
+<div id="terminal-modal" role="dialog" data-i18n-attr="aria-label:term_aria" aria-modal="true">
   <div class="terminal-window">
     <div class="terminal-head">
       <div class="term-dots">
@@ -457,30 +536,30 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
       <span style="width:30px"></span>
     </div>
     <div class="terminal-body" id="term-body">
-      <div class="term-out">Vítajte v CLI termináli Ondreja Drengubiaka!
-Zadajte <span style="color:#58a6ff">help</span> pre zoznam dostupných príkazov.</div>
+      <div class="term-out" id="term-welcome"></div>
     </div>
     <div style="padding:12px 18px; background:#161b22; border-top:1px solid #30363d">
       <div class="term-input-line">
         <span class="term-prompt">guest@drengubiak:~$</span>
-        <input type="text" id="term-input" autocomplete="off" spellcheck="false" placeholder="píšte príkaz sem...">
+        <input type="text" id="term-input" autocomplete="off" spellcheck="false" data-i18n-attr="placeholder:term_placeholder">
       </div>
     </div>
   </div>
 </div>
 
 <div id="toast" role="status"></div>
-<button id="top-btn" type="button" aria-label="Späť nahor">↑</button>
+<button id="top-btn" type="button" data-i18n-attr="aria-label:back_top" title="Späť nahor">↑</button>
 
 <script>
 // Translation Dictionary
 const T = {
   sk: {
-    n_about:'O mne', n_projects:'Projekty', n_skills:'Zručnosti', n_bg:'Prax a štúdium', n_contact:'Kontakt',
+    n_about:'O mne', n_projects:'Projekty', n_skills:'Zručnosti', n_bg:'Prax', n_contact:'Kontakt',
     h1:'Softvérový vývojár, ktorý rieši problémy za pochodu.',
     lead:'Študujem Inteligentné softvérové systémy na FIIT STU v Bratislave. Vyvíjam v Pythone, Jave a C/C++, aktívne pracujem s databázami aj webovými technológiami. Už viac ako 3 roky vediem hotelovú recepciu, vďaka čomu skvelo zvládam stresové situácie, komunikáciu a prácu s dátami pod tlakom.',
     typed_pre:'Pracujem s', b_proj:'Pozrieť projekty', b_mail:'Napísať e-mail',
-    k_label:'Inžinierske štúdium (Ing.)', k_uni:'Univerzita', k_study:'Odbor', k_study_v:'Inteligentné softvérové systémy', k_based:'Lokalita', k_lang:'Jazyky', k_lang_v:'SK (Native), EN (C1), DE (A2)', k_drive:'Vodičský preukaz', k_look:'Hľadám', k_look_v:'Brigádu / Part-time dev',
+    k_label:'Inžinierske štúdium (Ing.)', k_uni:'Univerzita', k_study:'Odbor', k_study_v:'Inteligentné softvérové systémy', k_based:'Lokalita', k_lang:'Jazyky', k_lang_v:'SK (Native), EN (C1), DE (A2)', k_drive:'Vodičský preukaz', k_drive_v:'Skupina B', k_look:'Hľadám', k_look_v:'Brigádu / Part-time dev',
+    status_title:'K dispozícii pre vývojársku prácu / brigádu', menu_open:'Otvoriť menu', menu_open_title:'Otvoriť navigáciu', nav_aria:'Hlavná navigácia', tag_en:'Angličtina (C1)', tag_de:'Nemčina (A2)', tag_sk:'Slovenčina (Materinský)', tag_drive:'Vodičský preukaz: Skupina B', meta_desc:'Osobné portfólio Ondreja Drengubiaka - študenta FIIT STU v Bratislave. Vývoj v Python, Java, C/C++, SQL a WebDev.', term_open:'Otvoriť terminál', term_open_title:'Otvoriť vývojársky terminál', lang_label:'Zmeniť jazyk', theme_label:'Prepnúť tmavý režim',
     a_h:'O mne',
     a_p1:'V júni 2026 som úspešne ukončil bakalárske štúdium informatiky na Fakulte informatiky a informačných technológií STU v Bratislave a od septembra pokračujem na inžinierskom stupni v špecializácii Inteligentné softvérové systémy. Základy IT a sietí som získal už na Strednej priemyselnej škole Jozefa Murgaša v Banskej Bystrici.',
     a_p2:'Od júla 2022 pôsobím ako hotelový recepčný vo Franko-Real, s.r.o. vo Zvolene. Táto práca mi dala neoceniteľnú prax v precíznosti, analytickom myslení pri dennom zúčtovaní tržieb a fakturácii, ako aj v zvládaní krízových situácií s hosťami. Kombinácia silného technického zázemia a schopnosti efektívne komunikovať mi umožňuje prinášať reálnu hodnotu do vývojárskych tímov.',
@@ -491,10 +570,12 @@ const T = {
     p_f2:'Vlastné nastavenia: pevný štart/cieľ, sentiment odmeny a bonusy za referencie.',
     p_f3:'Kompletná správa postupností pomocou drag-and-drop, exporty do TXT, PDF, CSV, PNG aj ZIP archívu.',
     p_f4:'Plne responsívne rozhranie v slovenčine a angličtine, tmavý režim, nasadené na Verceli.',
-    p_live:'Živá aplikácia', p_guide:'Dokumentácia', ph_tag:'Projekt', ph_t:'Pripravuje sa', ph_d:'Rozpracovaný projekt zameraný na praktické IT riešenie.',
+    p_live:'Živá aplikácia', p_github:'GitHub Kód', p_github_short:'GitHub', p_guide:'Dokumentácia', p_feedback:'Spätná väzba', ph_tag:'Projekt', ph_t:'Pripravuje sa', ph_d:'Rozpracovaný projekt zameraný na praktické IT riešenie.',
     s_h:'Zručnosti & Technológie', s_sub:'Prehľad mojich technických znalostí a nástrojov s možnosťou filtrovania.',
-    sf_all:'Všetko', sf_prog:'Programovanie', sf_web:'WebDev', sf_db:'Databázy & OS', sf_net:'Siete & Nástroje',
-    sk_lang:'Programovacie jazyky', sk_db:'Databázové systémy', sk_os:'Operačné systémy & Nástroje', sk_net:'Sieťové technológie', sk_other:'Jazyky & Vodičský preukaz',
+    sf_all:'Všetko', sf_prog:'Programovanie', sf_web:'WebDev', sf_db:'Databázy & OS', sf_net:'Siete & Nástroje', sf_other:'Ostatné',
+    sk_lang:'Programovacie jazyky', sk_languages:'Jazyky', sk_license:'Vodičský preukaz', sk_prog_core:'Základné programovanie', sk_prog_data:'Dátové & vedecké programovanie', tag_drive_short:'Skupina B', sk_web:'Web Development', sk_db:'Databázové systémy', sk_office:'Office nástroje', sk_net:'Sieťové technológie', sk_net_ccna:'Cisco CCNA v7', sk_net_fund:'Sieťové technológie', sk_net_sec:'Bezpečnosť', sk_net_tools:'Sieťové nástroje', sk_soft:'Mäkké zručnosti', tag_relational:'Relačný dizajn', tag_cyber:'Kybernetická bezpečnosť', soft_comm:'Komunikácia', soft_problem:'Riešenie problémov', soft_stress:'Práca pod tlakom', soft_team:'Tímová spolupráca', sk_os:'Operačné systémy & Nástroje', sk_other:'Jazyky & Vodičský preukaz',
+    level_adv:'Pokročilý', level_intermediate:'Mierne pokročilý', level_mixed:'Pokročilý / Základy', level_cert:'Certifikované', slovak_republic:'Slovenská republika',
+    term_aria:'Interaktívny terminál', term_placeholder:'píšte príkaz sem...', term_welcome:'Vítajte v CLI termináli Ondreja Drengubiaka!\nZadajte help pre zoznam dostupných príkazov.', term_help:'Dostupné príkazy:\n - skills : Zobrazí hlavné zručnosti\n - projects : Zobrazí najlepšie projekty\n - contact : Zobrazí kontaktné informácie\n - theme : Prepne svetlý/tmavý režim\n - clear : Vyčistí obrazovku terminálu\n - exit : Zatvorí terminál', term_unknown:'Príkaz nepoznám: "{cmd}". Zadajte "help" pre pomoc.', term_theme:'Téma bola prepnutá na {theme}', term_skills:'Jazyky: Python, Java, C, C++, R\nWeb: HTML, CSS, JavaScript, PHP\nDatabázy: SQL, MS Access\nSiete: Cisco CCNA v7, IT Essentials\nOS: Linux, Git', term_projects:'1. Patterna - Webová aplikácia na optimalizáciu postupností vzorov (D3.js, TensorFlow.js, MDP)\n2. Cisco Network Tools & Analyzer', term_contact:'E-mail: ondrej.drengubiak1@gmail.com\nLokalita: Bratislava / Zvolen\nGitHub: github.com/Ondrejstuba', 
     bg_h:'Prax a štúdium', bg_sub:'Interaktívny časový prehľad mojich pracovných skúseností, vzdelania a získaných certifikátov.',
     tb_work:'Pracovné skúsenosti', tb_edu:'Vzdelanie', tb_certs:'Kurzy a certifikáty',
     w_title:'Hotelový recepčný',
@@ -502,18 +583,25 @@ const T = {
     w2_desc:'<strong>Finančné zúčtovanie & Uzávierky:</strong> Práca v špecializovanom rezervačnom systéme, spracovanie platieb, denné a mesačné uzávierky, zúčtovanie ubytovania a celkových denných tržieb.',
     w3_desc:'<strong>Administratíva a analytika:</strong> Vystavovanie faktúr, príprava podkladov pre štatistiky, evidencia inventáru, prvotné spracovanie podkladov pre mzdy.',
     w4_desc:'<strong>Riešenie problémov (Problem Solving):</strong> Operatívne riešenie nečakaných situácií a požiadaviek hostí priamo počas pobytu, plná zodpovednosť za plynulý a bezchybný chod recepcie.',
-    e1_title:'Inteligentné softvérové systémy (Ing.)', e1_desc:'Inžinierske štúdium zamerné na pokročilý vývoj softvéru, architektúry a inteligentné systémy.',
+    w_carp_title:'Výroba nábytku na mieru',
+    w_carp_meta:'Brigáda / výpomoc — Zvolen, Slovenská republika',
+    w_carp_1:'<strong>Výroba nábytku na mieru:</strong> Výpomoc pri realizácii zákazkovej výroby od prípravy materiálu až po finálnu kompletizáciu.',
+    w_carp_2:'<strong>Spracovanie a kompletizácia dielov:</strong> Rezanie, lepenie, brúsenie a skladanie jednotlivých častí podľa technických pokynov.',
+    w_carp_3:'<strong>Montáž u zákazníkov:</strong> Účasť na montážach, osadzovaní a finálnom doladení nábytku priamo na mieste.',
+    w_carp_4:'<strong>Náradie a pracovná disciplína:</strong> Práca s ručným a elektrickým náradím s dôrazom na presnosť, samostatnosť a dodržanie dohodnutých termínov.',
+    e1_title:'Inteligentné softvérové systémy (Ing.)', e1_desc:'Inžinierske štúdium zamerané na pokročilý vývoj softvéru, architektúry a inteligentné systémy.',
     e2_title:'Informatika (Bc.)', e2_desc:'Úspešne ukončené bakalárske štúdium štátnou skúškou a obhajobou bakalárskej práce Patterna.',
     e3_title:'Informačné a sieťové technológie (Maturita)', e3_desc:'Odborné stredoškolské vzdelanie zamerané na sieťové architektúry, hardvér a základy programovania.',
     c_h:'Kontaktujte ma', c_p:'Hľadám vývojársku brigádu alebo part-time pozíciu (Bratislava / Zvolen / Remote). Neváhajte ma kontaktovať e-mailom.',
-    c_email:'E-mail:', c_loc:'Lokalita:', c_copy:'Kopírovať e-mail', c_copied:'E-mail bol skopírovaný!', f_top:'Späť nahor ↑'
+    c_email:'E-mail:', c_loc:'Lokalita:', c_copy:'Kopírovať e-mail', c_copy_github:'Kopírovať GitHub odkaz', c_copied:'Skopírované!', f_top:'Späť nahor ↑', back_top:'Späť nahor', present:'Doteraz'
   },
   en: {
-    n_about:'About', n_projects:'Projects', n_skills:'Skills', n_bg:'Experience & Edu', n_contact:'Contact',
+    n_about:'About', n_projects:'Projects', n_skills:'Skills', n_bg:'Experience', n_contact:'Contact',
     h1:'Software developer who solves problems in real time.',
     lead:'I am a Master’s student of Intelligent Software Systems at FIIT STU in Bratislava. I build applications in Python, Java, and C/C++, actively working with databases and web technologies. Managing a hotel front desk for over 3 years taught me to excel under pressure, handle complex data, and communicate clearly.',
     typed_pre:'I work with', b_proj:'View Projects', b_mail:'Send Email',
-    k_label:'Master Degree (Ing.)', k_uni:'University', k_study:'Major', k_study_v:'Intelligent Software Systems', k_based:'Location', k_lang:'Languages', k_lang_v:'SK (Native), EN (C1), DE (A2)', k_drive:'Drivers License', k_look:'Looking for', k_look_v:'Part-time / Dev Role',
+    k_label:'Master’s Degree (Ing.)', k_uni:'University', k_study:'Major', k_study_v:'Intelligent Software Systems', k_based:'Location', k_lang:'Languages', k_lang_v:'SK (Native), EN (C1), DE (A2)', k_drive:'Driver’s Licence', k_drive_v:'Category B', k_look:'Looking for', k_look_v:'Part-time / Dev Role',
+    status_title:'Available for development work / part-time roles', menu_open:'Open menu', menu_open_title:'Open navigation', nav_aria:'Main navigation', tag_en:'English (C1)', tag_de:'German (A2)', tag_sk:'Slovak (Native)', tag_drive:'Driver’s Licence: Category B', meta_desc:'Personal portfolio of Ondrej Drengubiak, an FIIT STU student in Bratislava. Development in Python, Java, C/C++, SQL, and web technologies.', term_open:'Open terminal', term_open_title:'Open developer terminal', lang_label:'Change language', theme_label:'Toggle dark mode',
     a_h:'About Me',
     a_p1:'In June 2026, I completed my Bachelor’s degree in Informatics at FIIT STU in Bratislava and continued into the Master’s program specializing in Intelligent Software Systems. I built my initial technical and networking background at SPŠ Jozefa Murgaša high school.',
     a_p2:'Since July 2022, I have worked as a hotel receptionist at Franko-Real, s.r.o. in Zvolen. This role gave me strong attention to detail, analytical skills through daily financial settlements, and effective problem-solving under pressure. Combining a strong technical background with high soft skills allows me to deliver immediate value to development teams.',
@@ -524,10 +612,12 @@ const T = {
     p_f2:'Custom rules: forced start/goal, sentiment reward adjustments, reference bonuses.',
     p_f3:'Drag-and-drop sequence reordering, exports to TXT, PDF, CSV, PNG, and ZIP archives.',
     p_f4:'Slovak/English UI, dark mode, fully deployed on Vercel.',
-    p_live:'Live Demo', p_guide:'Documentation', ph_tag:'Project', ph_t:'In Development', ph_d:'Upcoming software project focused on real-world IT solutions.',
+    p_live:'Live Demo', p_github:'GitHub Code', p_github_short:'GitHub', p_guide:'Documentation', p_feedback:'Feedback', ph_tag:'Project', ph_t:'In Development', ph_d:'Upcoming software project focused on real-world IT solutions.',
     s_h:'Skills & Technologies', s_sub:'Interactive overview of my technical toolset with category filtering.',
-    sf_all:'All', sf_prog:'Programming', sf_web:'WebDev', sf_db:'Databases & OS', sf_net:'Networking & Tools',
-    sk_lang:'Programming Languages', sk_db:'Database Systems', sk_os:'Operating Systems & Tools', sk_net:'Networking Technologies', sk_other:'Languages & Driving',
+    sf_all:'All', sf_prog:'Programming', sf_web:'WebDev', sf_db:'Databases & OS', sf_net:'Networking & Tools', sf_other:'Other',
+    sk_lang:'Programming Languages', sk_languages:'Languages', sk_license:'Driver’s Licence', sk_prog_core:'Core Programming', sk_prog_data:'Data & Scientific Programming', tag_drive_short:'Category B', sk_web:'Web Development', sk_db:'Database Systems', sk_office:'Office Tools', sk_net:'Networking Technologies', sk_net_ccna:'Cisco CCNA v7', sk_net_fund:'Networking Technologies', sk_net_sec:'Security', sk_net_tools:'Network Tools', sk_soft:'Soft Skills', tag_relational:'Relational Design', tag_cyber:'Cybersecurity', soft_comm:'Communication', soft_problem:'Problem Solving', soft_stress:'Working Under Pressure', soft_team:'Teamwork', sk_os:'Operating Systems & Tools', sk_other:'Languages & Driving',
+    level_adv:'Advanced', level_intermediate:'Intermediate', level_mixed:'Advanced / Basics', level_cert:'Certified', slovak_republic:'Slovak Republic',
+    term_aria:'Interactive terminal', term_placeholder:'type a command here...', term_welcome:'Welcome to Ondrej Drengubiak’s CLI terminal!\nType help for a list of available commands.', term_help:'Available commands:\n - skills : Show key skills\n - projects : Show featured projects\n - contact : Show contact information\n - theme : Toggle light/dark mode\n - clear : Clear the terminal\n - exit : Close the terminal', term_unknown:'Unknown command: "{cmd}". Type "help" for help.', term_theme:'Theme switched to {theme}', term_skills:'Languages: Python, Java, C, C++, R\nWeb: HTML, CSS, JavaScript, PHP\nDatabases: SQL, MS Access\nNetworks: Cisco CCNA v7, IT Essentials\nOS: Linux, Git', term_projects:'1. Patterna - Web app for optimizing design-pattern sequences (D3.js, TensorFlow.js, MDP)\n2. Cisco Network Tools & Analyzer', term_contact:'Email: ondrej.drengubiak1@gmail.com\nLocation: Bratislava / Zvolen\nGitHub: github.com/Ondrejstuba', 
     bg_h:'Experience & Education', bg_sub:'An interactive timeline of my work experience, education, and Cisco certifications.',
     tb_work:'Work Experience', tb_edu:'Education', tb_certs:'Courses & Certifications',
     w_title:'Hotel Receptionist',
@@ -535,11 +625,17 @@ const T = {
     w2_desc:'<strong>Financial Settlement & Closures:</strong> Handling reservation system transactions, payment processing, daily/monthly accounting closures, and revenue balancing.',
     w3_desc:'<strong>Administration & Analytics:</strong> Invoicing, statistics preparation, inventory audits, and primary payroll data processing.',
     w4_desc:'<strong>Problem Solving:</strong> Managing on-the-spot guest requests and unexpected situations, ensuring seamless 24/7 reception operations.',
+    w_carp_title:'Bespoke Furniture Making',
+    w_carp_meta:'Temporary Work / Assistance — Zvolen, Slovak Republic',
+    w_carp_1:'<strong>Custom Furniture Production:</strong> Assisted with made-to-order furniture production from material preparation through final assembly.',
+    w_carp_2:'<strong>Part Processing & Assembly:</strong> Cutting, gluing, sanding, and assembling individual components according to instructions.',
+    w_carp_3:'<strong>On-Site Installation:</strong> Assisted with installations, fitting, and final adjustments at customer locations.',
+    w_carp_4:'<strong>Tools & Work Discipline:</strong> Worked with hand and power tools, with emphasis on precision, independence, and meeting agreed deadlines.',
     e1_title:'Intelligent Software Systems (Ing. / M.Sc.)', e1_desc:'Master studies focused on advanced software engineering, system architecture, and AI concepts.',
     e2_title:'Informatics (Bc. / B.Sc.)', e2_desc:'Bachelor degree successfully finished with state exams and thesis defense of Patterna.',
     e3_title:'Information & Network Technologies', e3_desc:'High school degree focused on network architecture, hardware, and core programming.',
     c_h:'Get In Touch', c_p:'I am looking for a part-time developer or trainee position (Bratislava / Zvolen / Remote). Feel free to email me.',
-    c_email:'Email:', c_loc:'Location:', c_copy:'Copy Email', c_copied:'Email copied to clipboard!', f_top:'Back to top ↑'
+    c_email:'Email:', c_loc:'Location:', c_copy:'Copy Email', c_copy_github:'Copy GitHub link', c_copied:'Copied to clipboard!', f_top:'Back to top ↑', back_top:'Back to top', present:'Present'
   }
 };
 
@@ -556,14 +652,38 @@ function setLang(l) {
     const key = e.dataset.i18n;
     if(T[l][key]) e.innerHTML = T[l][key];
   });
+  $$('[data-i18n-attr]').forEach(e => {
+    e.dataset.i18nAttr.split(';').forEach(pair => {
+      const parts = pair.split(':');
+      const attr = parts.shift();
+      const key = parts.join(':');
+      if(T[l][key]) e.setAttribute(attr, T[l][key]);
+    });
+  });
   $('#lang').textContent = l === 'sk' ? 'EN' : 'SK';
   document.title = l === 'sk' ? 'Bc. Ondrej Drengubiak | Softvérový vývojár' : 'Bc. Ondrej Drengubiak | Software Developer';
+  $('#meta-description').setAttribute('content', T[l].meta_desc);
+  $('#og-description').setAttribute('content', T[l].meta_desc);
+  $('#og-title').setAttribute('content', l === 'sk' ? 'Bc. Ondrej Drengubiak | Softvérový vývojár' : 'Bc. Ondrej Drengubiak | Software Developer');
+  $('#term-welcome').textContent = T[l].term_welcome;
 }
 
 function setTheme(t) {
   root.dataset.theme = t; save('theme', t);
   $('#theme').textContent = t === 'dark' ? '☀' : '☾';
 }
+
+const mobileMenu = $('#mobile-menu'), mobileMenuToggle = $('#mobile-menu-toggle');
+mobileMenuToggle.onclick = () => {
+  const open = mobileMenu.classList.toggle('open');
+  mobileMenuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  mobileMenuToggle.textContent = open ? '×' : '☰';
+};
+$$('.mobile-menu a').forEach(a => a.addEventListener('click', () => {
+  mobileMenu.classList.remove('open');
+  mobileMenuToggle.setAttribute('aria-expanded','false');
+  mobileMenuToggle.textContent = '☰';
+}));
 
 $('#lang').onclick = () => setLang(lang === 'sk' ? 'en' : 'sk');
 $('#theme').onclick = () => setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
@@ -625,16 +745,18 @@ if(matchMedia('(hover:hover)').matches) {
   }));
 }
 
-// Copy Email Functionality
+// Copy-to-clipboard actions
 const toast = $('#toast');
-$('#copy').onclick = async () => {
+async function copyValue(value, message) {
   try {
-    await navigator.clipboard.writeText('ondrej.drengubiak1@gmail.com');
-    toast.textContent = T[lang].c_copied || 'Skopírované!';
+    await navigator.clipboard.writeText(value);
+    toast.textContent = message;
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 2000);
   } catch(e) {}
-};
+}
+$('#copy').onclick = () => copyValue('ondrej.drengubiak1@gmail.com', T[lang].c_copied || 'Copied!');
+$('#copy-github').onclick = () => copyValue('https://github.com/Ondrejstuba', T[lang].c_copied || 'Copied!');
 
 // Skill Filter
 $$('.filter-btn').forEach(btn => {
@@ -668,7 +790,13 @@ $('#term-toggle').onclick = () => {
   termModal.classList.add('open');
   termInput.focus();
 };
-termModal.onclick = (e) => { if(e.target === termModal) termModal.classList.remove('open'); };
+termModal.onclick = (e) => { if(e.target === termModal) { termModal.classList.remove('open'); $('#term-toggle').focus(); } };
+addEventListener('keydown', e => {
+  if(e.key === 'Escape' && termModal.classList.contains('open')) {
+    termModal.classList.remove('open');
+    $('#term-toggle').focus();
+  }
+});
 
 termInput.onkeydown = (e) => {
   if(e.key === 'Enter') {
@@ -677,22 +805,22 @@ termInput.onkeydown = (e) => {
     appendTermLine('guest@drengubiak:~$ ' + val, '#58a6ff');
     
     if(val === 'help') {
-      appendTermLine('Dostupné príkazy:\n - skills : Zobrazí hlavné zručnosti\n - projects : Zobrazí najlepšie projekty\n - contact : Zobrazí kontaktné informácie\n - theme : Prepne svetlý/tmavý režim\n - clear : Vyčistí obrazovku terminálu\n - exit : Zatvorí terminál');
+      appendTermLine(T[lang].term_help);
     } else if(val === 'skills') {
-      appendTermLine('Languages: Python, Java, C, C++, R\nWeb: HTML, CSS, JavaScript, PHP\nDatabases: SQL, MS Access\nNetworks: Cisco CCNA v7, IT Essentials\nOS: Linux, Git');
+      appendTermLine(T[lang].term_skills);
     } else if(val === 'projects') {
-      appendTermLine('1. Patterna - Web App pre optimalizáciu postupností vzorov (D3.js, TensorFlow.js, MDP)\n2. Cisco Network Tools & Analyzer');
+      appendTermLine(T[lang].term_projects);
     } else if(val === 'contact') {
-      appendTermLine('Email: ondrej.drengubiak1@gmail.com\nLokalita: Bratislava / Zvolen\nGitHub: github.com/Ondrejstuba');
+      appendTermLine(T[lang].term_contact);
     } else if(val === 'theme') {
       setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
-      appendTermLine('Téma bola prepnutá na ' + root.dataset.theme);
+      appendTermLine(T[lang].term_theme.replace('{theme}', root.dataset.theme === 'dark' ? (lang === 'sk' ? 'tmavý režim' : 'dark mode') : (lang === 'sk' ? 'svetlý režim' : 'light mode')));
     } else if(val === 'clear') {
       termBody.innerHTML = '';
     } else if(val === 'exit') {
       termModal.classList.remove('open');
     } else if(val !== '') {
-      appendTermLine('Príkaz nepoznám: "' + val + '". Zadajte "help" pre pomoc.', '#ff7b72');
+      appendTermLine(T[lang].term_unknown.replace('{cmd}', val), '#ff7b72');
     }
     termBody.scrollTop = termBody.scrollHeight;
   }
