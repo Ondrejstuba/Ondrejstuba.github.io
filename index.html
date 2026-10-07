@@ -256,7 +256,6 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
       <div><dt data-i18n="k_study">Odbor</dt><dd data-i18n="k_study_v">Inteligentné softvérové systémy</dd></div>
       <div><dt data-i18n="k_based">Lokalita</dt><dd>Bratislava / Zvolen</dd></div>
       <div><dt data-i18n="k_lang">Jazyky</dt><dd data-i18n="k_lang_v">SK (Native), EN (C1), DE (A2)</dd></div>
-      <div><dt data-i18n="k_drive">Vodičský preukaz</dt><dd data-i18n="k_drive_v">Skupina B</dd></div>
       <div><dt data-i18n="k_look">Hľadám</dt><dd data-i18n="k_look_v">Brigádu / Part-time dev</dd></div>
     </dl>
   </aside>
@@ -339,9 +338,13 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
       <div class="skill-tags"><span>Python</span><span>Java</span><span>C</span><span>C++</span></div>
     </div>
     <div class="skill-card" data-cat="prog">
-      <h4><span data-i18n="sk_prog_data">Dátové &amp; vedecké programovanie</span> <span data-i18n="level_intermediate">Mierne pokročilý</span></h4>
-      <div class="skill-tags"><span>R</span></div>
+    <h4><span data-i18n="sk_prog_data">Dátové &amp; vedecké programovanie</span> <span data-i18n="level_intermediate">Mierne pokročilý</span></h4>
+    <div class="skill-tags">
+      <span>R</span>
+      <span data-i18n="tag_eda">EDA</span>
+      <span>Jupyter Notebook</span>
     </div>
+  </div>
     <div class="skill-card" data-cat="web">
       <h4><span data-i18n="sk_web">Web Development</span> <span data-i18n="level_adv">Pokročilý</span></h4>
       <div class="skill-tags"><span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>PHP</span></div>
@@ -558,7 +561,7 @@ const T = {
     h1:'Softvérový vývojár, ktorý rieši problémy za pochodu.',
     lead:'Študujem Inteligentné softvérové systémy na FIIT STU v Bratislave. Vyvíjam v Pythone, Jave a C/C++, aktívne pracujem s databázami aj webovými technológiami. Už viac ako 3 roky vediem hotelovú recepciu, vďaka čomu skvelo zvládam stresové situácie, komunikáciu a prácu s dátami pod tlakom.',
     typed_pre:'Pracujem s', b_proj:'Pozrieť projekty', b_mail:'Napísať e-mail',
-    k_label:'Inžinierske štúdium (Ing.)', k_uni:'Univerzita', k_study:'Odbor', k_study_v:'Inteligentné softvérové systémy', k_based:'Lokalita', k_lang:'Jazyky', k_lang_v:'SK (Native), EN (C1), DE (A2)', k_drive:'Vodičský preukaz', k_drive_v:'Skupina B', k_look:'Hľadám', k_look_v:'Brigádu / Part-time dev',
+    k_label:'Inžinierske štúdium (Ing.)', k_uni:'Univerzita', k_study:'Odbor', k_study_v:'Inteligentné softvérové systémy', k_based:'Lokalita', k_lang:'Jazyky', k_lang_v:'SK (Native), EN (C1), DE (A2)', k_look:'Hľadám', k_look_v:'Brigádu / Part-time dev',
     status_title:'K dispozícii pre vývojársku prácu / brigádu', menu_open:'Otvoriť menu', menu_open_title:'Otvoriť navigáciu', nav_aria:'Hlavná navigácia', tag_en:'Angličtina (C1)', tag_de:'Nemčina (A2)', tag_sk:'Slovenčina (Materinský)', tag_drive:'Vodičský preukaz: Skupina B', meta_desc:'Osobné portfólio Ondreja Drengubiaka - študenta FIIT STU v Bratislave. Vývoj v Python, Java, C/C++, SQL a WebDev.', term_open:'Otvoriť terminál', term_open_title:'Otvoriť vývojársky terminál', lang_label:'Zmeniť jazyk', theme_label:'Prepnúť tmavý režim',
     a_h:'O mne',
     a_p1:'V júni 2026 som úspešne ukončil bakalárske štúdium informatiky na Fakulte informatiky a informačných technológií STU v Bratislave a od septembra pokračujem na inžinierskom stupni v špecializácii Inteligentné softvérové systémy. Základy IT a sietí som získal už na Strednej priemyselnej škole Jozefa Murgaša v Banskej Bystrici.',
@@ -600,7 +603,7 @@ const T = {
     h1:'Software developer who solves problems in real time.',
     lead:'I am a Master’s student of Intelligent Software Systems at FIIT STU in Bratislava. I build applications in Python, Java, and C/C++, actively working with databases and web technologies. Managing a hotel front desk for over 3 years taught me to excel under pressure, handle complex data, and communicate clearly.',
     typed_pre:'I work with', b_proj:'View Projects', b_mail:'Send Email',
-    k_label:'Master’s Degree (Ing.)', k_uni:'University', k_study:'Major', k_study_v:'Intelligent Software Systems', k_based:'Location', k_lang:'Languages', k_lang_v:'SK (Native), EN (C1), DE (A2)', k_drive:'Driver’s Licence', k_drive_v:'Category B', k_look:'Looking for', k_look_v:'Part-time / Dev Role',
+    k_label:'Master’s Degree (Ing.)', k_uni:'University', k_study:'Major', k_study_v:'Intelligent Software Systems', k_based:'Location', k_lang:'Languages', k_lang_v:'SK (Native), EN (C1), DE (A2)', k_look:'Looking for', k_look_v:'Part-time / Dev Role',
     status_title:'Available for development work / part-time roles', menu_open:'Open menu', menu_open_title:'Open navigation', nav_aria:'Main navigation', tag_en:'English (C1)', tag_de:'German (A2)', tag_sk:'Slovak (Native)', tag_drive:'Driver’s Licence: Category B', meta_desc:'Personal portfolio of Ondrej Drengubiak, an FIIT STU student in Bratislava. Development in Python, Java, C/C++, SQL, and web technologies.', term_open:'Open terminal', term_open_title:'Open developer terminal', lang_label:'Change language', theme_label:'Toggle dark mode',
     a_h:'About Me',
     a_p1:'In June 2026, I completed my Bachelor’s degree in Informatics at FIIT STU in Bratislava and continued into the Master’s program specializing in Intelligent Software Systems. I built my initial technical and networking background at SPŠ Jozefa Murgaša high school.',
