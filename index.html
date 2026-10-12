@@ -127,6 +127,21 @@ h3{font-family:var(--head);font-weight:700;font-size:1.25rem;color:var(--accent)
 .plinks a:nth-child(n+2){background:transparent;color:var(--accent)}
 .plinks a:hover{transform:translateY(-2px)}
 
+/* Smaller projects carousel */
+.mini-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:48px 0 18px}
+.mini-head h3{font-size:1.45rem}
+.car-ctrl{display:flex;gap:8px}
+.car-ctrl button{width:40px;height:38px;border-radius:8px;border:1.5px solid var(--line);background:var(--card);color:var(--accent);font:700 1.05rem var(--body);cursor:pointer;transition:transform .2s,border-color .2s,background .2s}
+.car-ctrl button:hover{border-color:var(--accent);transform:translateY(-2px)}
+.carousel{position:relative}
+.car-track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;padding:8px 2px 10px;margin:-8px -2px -10px}
+.car-track::-webkit-scrollbar{display:none}
+.mini{flex:0 0 calc((100% - 20px)/2);scroll-snap-align:start;min-height:270px}
+.mini h3{font-size:1.35rem}
+.car-dots{display:flex;justify-content:center;gap:8px;margin-top:22px}
+.car-dots button{width:9px;height:9px;padding:0;border:none;border-radius:99px;background:var(--line);cursor:pointer;transition:width .25s,background .25s}
+.car-dots button.on{width:26px;background:var(--brass)}
+
 /* Interactive Skill Filters */
 .skill-filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
 .filter-btn{padding:6px 14px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--muted);font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s}
@@ -198,6 +213,7 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
   .info-tip::after{right:auto;left:0}
   .hero{padding:48px 0}.keycard{max-width:100%}
   .projects,.skills-grid{grid-template-columns:1fr}
+  .mini{flex-basis:100%}
   .links{display:none}section{padding:56px 0}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.js .rv,.up{opacity:1;transform:none}html{scroll-behavior:auto}}
@@ -278,6 +294,8 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
   <div class="sec-head rv">
     <div class="sec-title"><h2 data-i18n="p_h">Projekty</h2><button class="info-tip" type="button" data-i18n-attr="aria-label:p_sub;data-tip:p_sub" aria-label="Info" data-tip="Info">?</button></div>
   </div>
+
+  <!-- HLAVNÝ PROJEKT -->
   <div class="projects">
     <article class="project featured rv">
       <span class="tag" data-i18n="p_tag">Bakalárska práca · Webová aplikácia</span>
@@ -286,7 +304,7 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
       <ul class="feat">
         <li data-i18n="p_f1">Interaktívny vizualizačný graf vzťahov (D3.js) a matica podobnosti v reálnom čase.</li>
         <li data-i18n="p_f2">Vlastné nastavenia: pevný štart/cieľ, sentiment odmeny a bonusy za referencie.</li>
-        <li data-i18n="p_f3">Kompletná správa postupností pomocou drag-and-drop, exporty do TXT, PDF, CSV, PNG aj ZIP archives.</li>
+        <li data-i18n="p_f3">Kompletná správa postupností pomocou drag-and-drop, exporty do TXT, PDF, CSV, PNG aj ZIP archívu.</li>
         <li data-i18n="p_f4">Plne responsívne rozhranie v slovenčine a angličtine, tmavý režim, nasadené na Verceli.</li>
       </ul>
       <div class="stack">
@@ -299,22 +317,57 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
         <a class="icon-link" href="https://tally.so/r/Y5rWkB" target="_blank" rel="noopener" data-i18n="p_feedback"><span>Feedback</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.8 7.5L7 21l1.5-3.2A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8 11.5h.01M12 11.5h.01M16 11.5h.01"/></svg></a>
       </div>
     </article>
+  </div>
 
-    <article class="project soon rv">
-      <span class="tag"><span data-i18n="ph_tag">Projekt</span> 2</span>
-      <h3 data-i18n="ph_t">Systém pre spracovanie dát</h3>
-      <p data-i18n="ph_d">Backendový modul v Pythone a SQL zameraný na efektívnu analýzu a spracovanie rozsiahlych datasetov.</p>
-      <div class="stack"><span>Python</span><span>SQL</span><span>Git</span></div>
-      <div class="plinks"><a class="icon-link" href="https://github.com/Ondrejstuba" target="_blank" rel="noopener" data-i18n="p_github_short"><span>GitHub</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.3-.4 6.8-1.6 6.8-7A5.4 5.4 0 0 0 19.3 4c.1-1.2.1-2.4-.1-3.5 0 0-1.2-.4-4 1.5a13.8 13.8 0 0 0-7.2 0C5.2.1 4 0.5 4 .5c-.2 1.1-.2 2.3-.1 3.5A5.4 5.4 0 0 0 2.2 7.5c0 5.4 3.5 6.6 6.8 7A4.8 4.8 0 0 0 8 18v4"/><path d="M8 19c-3 .9-3-1.5-4.2-2"/></svg></a></div>
-    </article>
+  <!-- MENŠIE PROJEKTY (karusel) -->
+  <div class="mini-head rv">
+    <h3 data-i18n="mp_h">Menšie projekty</h3>
+    <div class="car-ctrl">
+      <button id="car-prev" type="button" data-i18n-attr="aria-label:car_prev;title:car_prev" aria-label="Predchádzajúci projekt">←</button>
+      <button id="car-next" type="button" data-i18n-attr="aria-label:car_next;title:car_next" aria-label="Ďalší projekt">→</button>
+    </div>
+  </div>
 
-    <article class="project soon rv">
-      <span class="tag"><span data-i18n="ph_tag">Projekt</span> 3</span>
-      <h3 data-i18n="ph_t">Sieťový Analyzer &amp; Utility</h3>
-      <p data-i18n="ph_d">Aplikácia v C/C++ využívajúca znalosti zo štúdia Cisco CCNA na monitorovanie a simuláciu sieťovej komunikácie.</p>
-      <div class="stack"><span>C++</span><span>Cisco CCNA</span><span>Networking</span></div>
-      <div class="plinks"><a class="icon-link" href="https://github.com/Ondrejstuba" target="_blank" rel="noopener" data-i18n="p_github_short"><span>GitHub</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.3-.4 6.8-1.6 6.8-7A5.4 5.4 0 0 0 19.3 4c.1-1.2.1-2.4-.1-3.5 0 0-1.2-.4-4 1.5a13.8 13.8 0 0 0-7.2 0C5.2.1 4 0.5 4 .5c-.2 1.1-.2 2.3-.1 3.5A5.4 5.4 0 0 0 2.2 7.5c0 5.4 3.5 6.6 6.8 7A4.8 4.8 0 0 0 8 18v4"/><path d="M8 19c-3 .9-3-1.5-4.2-2"/></svg></a></div>
-    </article>
+  <div class="carousel rv" id="carousel" role="region" aria-roledescription="carousel" data-i18n-attr="aria-label:mp_h" aria-label="Menšie projekty">
+    <div class="car-track" id="car-track">
+
+      <!-- Projekt 2: Arcana Bellum (odkaz na priečinok v tomto repozitári) -->
+      <article class="project mini">
+        <span class="tag" data-i18n="ab_tag">Školský projekt · Databázy</span>
+        <h3>Arcana Bellum</h3>
+        <p data-i18n="ab_desc">Dátový model a logika turn-based RPG bojového systému v PostgreSQL. 16 tabuliek, 8 uložených procedúr v PL/pgSQL (kasting kúziel s hodom d20, vstup do boja a odchod z neho, nové kolo, odpočinok, lootovanie, tvorba postáv a predmetov), level-up systém s EXP a 12 pohľadov na štatistiky bojov, inventára a kúziel.</p>
+        <div class="stack"><span>PostgreSQL</span><span>PL/pgSQL</span><span>SQL</span><span>ER model</span></div>
+        <div class="plinks">
+          <a class="icon-link" href="Arcana%20Bellum/" target="_blank" rel="noopener" data-i18n="ab_open"><span>Otvoriť projekt</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7m0-7L10 14"/><path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6"/></svg></a>
+        </div>
+      </article>
+
+      <!-- Projekt 3: placeholder (doplníme neskôr) -->
+      <article class="project mini soon">
+        <span class="tag"><span data-i18n="ph_tag">Projekt</span> 3</span>
+        <h3 data-i18n="ph_t">Pripravuje sa</h3>
+        <p data-i18n="ph_d">Menší projekt, ktorý sa čoskoro objaví v tejto sekcii.</p>
+        <div class="stack"><span>TBA</span></div>
+      </article>
+
+      <!-- Projekt 4: placeholder (doplníme neskôr) -->
+      <article class="project mini soon">
+        <span class="tag"><span data-i18n="ph_tag">Projekt</span> 4</span>
+        <h3 data-i18n="ph_t">Pripravuje sa</h3>
+        <p data-i18n="ph_d">Menší projekt, ktorý sa čoskoro objaví v tejto sekcii.</p>
+        <div class="stack"><span>TBA</span></div>
+      </article>
+
+      <!-- Projekt 5: placeholder (doplníme neskôr) -->
+      <article class="project mini soon">
+        <span class="tag"><span data-i18n="ph_tag">Projekt</span> 5</span>
+        <h3 data-i18n="ph_t">Pripravuje sa</h3>
+        <p data-i18n="ph_d">Menší projekt, ktorý sa čoskoro objaví v tejto sekcii.</p>
+        <div class="stack"><span>TBA</span></div>
+      </article>
+
+    </div>
+    <div class="car-dots" id="car-dots"></div>
   </div>
 </div></section>
 
@@ -351,7 +404,7 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
     </div>
     <div class="skill-card" data-cat="db">
       <h4><span data-i18n="sk_db">Databázové systémy</span> <span data-i18n="level_intermediate">Mierne pokročilý</span></h4>
-      <div class="skill-tags"><span>SQL</span><span>MS Access</span><span data-i18n="tag_relational">Relačný dizajn</span></div>
+      <div class="skill-tags"><span>SQL</span><span>PostgreSQL</span><span>PL/pgSQL</span><span>MS Access</span><span data-i18n="tag_relational">Relačný dizajn</span></div>
     </div>
     <div class="skill-card" data-cat="db">
       <h4><span>Linux OS</span> <span data-i18n="level_intermediate">Mierne pokročilý</span></h4>
@@ -573,12 +626,16 @@ const T = {
     p_f2:'Vlastné nastavenia: pevný štart/cieľ, sentiment odmeny a bonusy za referencie.',
     p_f3:'Kompletná správa postupností pomocou drag-and-drop, exporty do TXT, PDF, CSV, PNG aj ZIP archívu.',
     p_f4:'Plne responsívne rozhranie v slovenčine a angličtine, tmavý režim, nasadené na Verceli.',
-    p_live:'Živá aplikácia', p_github:'GitHub Kód', p_github_short:'GitHub', p_guide:'Dokumentácia', p_feedback:'Spätná väzba', ph_tag:'Projekt', ph_t:'Pripravuje sa', ph_d:'Rozpracovaný projekt zameraný na praktické IT riešenie.',
+    p_live:'Živá aplikácia', p_github:'GitHub Kód', p_github_short:'GitHub', p_guide:'Dokumentácia', p_feedback:'Spätná väzba',
+    mp_h:'Menšie projekty', car_prev:'Predchádzajúci projekt', car_next:'Ďalší projekt', car_go:'Prejsť na pozíciu',
+    ab_tag:'Školský projekt · Databázy', ab_open:'Otvoriť projekt',
+    ab_desc:'Dátový model a logika turn-based RPG bojového systému v PostgreSQL. 16 tabuliek, 8 uložených procedúr v PL/pgSQL (kasting kúziel s hodom d20, vstup do boja a odchod z neho, nové kolo, odpočinok, lootovanie, tvorba postáv a predmetov), level-up systém s EXP a 12 pohľadov na štatistiky bojov, inventára a kúziel.',
+    ph_tag:'Projekt', ph_t:'Pripravuje sa', ph_d:'Menší projekt, ktorý sa čoskoro objaví v tejto sekcii.',
     s_h:'Zručnosti & Technológie', s_sub:'Prehľad mojich technických znalostí a nástrojov s možnosťou filtrovania.',
     sf_all:'Všetko', sf_prog:'Programovanie', sf_web:'WebDev', sf_db:'Databázy & OS', sf_net:'Siete & Nástroje', sf_other:'Ostatné',
     sk_lang:'Programovacie jazyky', sk_languages:'Jazyky', sk_license:'Vodičský preukaz', sk_prog_core:'Základné programovanie', sk_prog_data:'Dátové & vedecké programovanie', tag_drive_short:'Skupina B', sk_web:'Web Development', sk_db:'Databázové systémy', sk_office:'Office nástroje', sk_net:'Sieťové technológie', sk_net_ccna:'Cisco CCNA v7', sk_net_fund:'Sieťové technológie', sk_net_sec:'Bezpečnosť', sk_net_tools:'Sieťové nástroje', sk_soft:'Mäkké zručnosti', tag_relational:'Relačný dizajn', tag_cyber:'Kybernetická bezpečnosť', soft_comm:'Komunikácia', soft_problem:'Riešenie problémov', soft_stress:'Práca pod tlakom', soft_team:'Tímová spolupráca', sk_os:'Operačné systémy & Nástroje', sk_other:'Jazyky & Vodičský preukaz',
     level_adv:'Pokročilý', level_intermediate:'Mierne pokročilý', level_mixed:'Pokročilý / Základy', level_cert:'Certifikované', slovak_republic:'Slovenská republika',
-    term_aria:'Interaktívny terminál', term_placeholder:'píšte príkaz sem...', term_welcome:'Vítajte v CLI termináli Ondreja Drengubiaka!\nZadajte help pre zoznam dostupných príkazov.', term_help:'Dostupné príkazy:\n - skills : Zobrazí hlavné zručnosti\n - projects : Zobrazí najlepšie projekty\n - contact : Zobrazí kontaktné informácie\n - theme : Prepne svetlý/tmavý režim\n - clear : Vyčistí obrazovku terminálu\n - exit : Zatvorí terminál', term_unknown:'Príkaz nepoznám: "{cmd}". Zadajte "help" pre pomoc.', term_theme:'Téma bola prepnutá na {theme}', term_skills:'Jazyky: Python, Java, C, C++, R\nWeb: HTML, CSS, JavaScript, PHP\nDatabázy: SQL, MS Access\nSiete: Cisco CCNA v7, IT Essentials\nOS: Linux, Git', term_projects:'1. Patterna - Webová aplikácia na optimalizáciu postupností vzorov (D3.js, TensorFlow.js, MDP)\n2. Cisco Network Tools & Analyzer', term_contact:'E-mail: ondrej.drengubiak1@gmail.com\nLokalita: Bratislava / Zvolen\nGitHub: github.com/Ondrejstuba', 
+    term_aria:'Interaktívny terminál', term_placeholder:'píšte príkaz sem...', term_welcome:'Vítajte v CLI termináli Ondreja Drengubiaka!\nZadajte help pre zoznam dostupných príkazov.', term_help:'Dostupné príkazy:\n - skills : Zobrazí hlavné zručnosti\n - projects : Zobrazí najlepšie projekty\n - contact : Zobrazí kontaktné informácie\n - theme : Prepne svetlý/tmavý režim\n - clear : Vyčistí obrazovku terminálu\n - exit : Zatvorí terminál', term_unknown:'Príkaz nepoznám: "{cmd}". Zadajte "help" pre pomoc.', term_theme:'Téma bola prepnutá na {theme}', term_skills:'Jazyky: Python, Java, C, C++, R\nWeb: HTML, CSS, JavaScript, PHP\nDatabázy: SQL, PostgreSQL, PL/pgSQL, MS Access\nSiete: Cisco CCNA v7, IT Essentials\nOS: Linux, Git', term_projects:'1. Patterna - Webová aplikácia na optimalizáciu postupností vzorov (D3.js, TensorFlow.js, MDP)\n2. Arcana Bellum - RPG bojový systém v PostgreSQL (PL/pgSQL, 16 tabuliek, 8 procedúr)', term_contact:'E-mail: ondrej.drengubiak1@gmail.com\nLokalita: Bratislava / Zvolen\nGitHub: github.com/Ondrejstuba', 
     bg_h:'Prax a štúdium', bg_sub:'Interaktívny časový prehľad mojich pracovných skúseností, vzdelania a získaných certifikátov.',
     tb_work:'Pracovné skúsenosti', tb_edu:'Vzdelanie', tb_certs:'Kurzy a certifikáty',
     w_title:'Hotelový recepčný',
@@ -615,12 +672,16 @@ const T = {
     p_f2:'Custom rules: forced start/goal, sentiment reward adjustments, reference bonuses.',
     p_f3:'Drag-and-drop sequence reordering, exports to TXT, PDF, CSV, PNG, and ZIP archives.',
     p_f4:'Slovak/English UI, dark mode, fully deployed on Vercel.',
-    p_live:'Live Demo', p_github:'GitHub Code', p_github_short:'GitHub', p_guide:'Documentation', p_feedback:'Feedback', ph_tag:'Project', ph_t:'In Development', ph_d:'Upcoming software project focused on real-world IT solutions.',
+    p_live:'Live Demo', p_github:'GitHub Code', p_github_short:'GitHub', p_guide:'Documentation', p_feedback:'Feedback',
+    mp_h:'Smaller projects', car_prev:'Previous project', car_next:'Next project', car_go:'Go to position',
+    ab_tag:'University Project · Databases', ab_open:'Open project',
+    ab_desc:'Data model and game logic of a turn-based RPG combat system built in PostgreSQL. 16 tables, 8 stored procedures in PL/pgSQL (d20 spell casting, entering and leaving combat, new rounds, resting, looting, character and item creation), an EXP/level-up system and 12 views for combat, inventory and spell statistics.',
+    ph_tag:'Project', ph_t:'In Development', ph_d:'A smaller project that will appear in this section soon.',
     s_h:'Skills & Technologies', s_sub:'Interactive overview of my technical toolset with category filtering.',
     sf_all:'All', sf_prog:'Programming', sf_web:'WebDev', sf_db:'Databases & OS', sf_net:'Networking & Tools', sf_other:'Other',
     sk_lang:'Programming Languages', sk_languages:'Languages', sk_license:'Driver’s Licence', sk_prog_core:'Core Programming', sk_prog_data:'Data & Scientific Programming', tag_drive_short:'Category B', sk_web:'Web Development', sk_db:'Database Systems', sk_office:'Office Tools', sk_net:'Networking Technologies', sk_net_ccna:'Cisco CCNA v7', sk_net_fund:'Networking Technologies', sk_net_sec:'Security', sk_net_tools:'Network Tools', sk_soft:'Soft Skills', tag_relational:'Relational Design', tag_cyber:'Cybersecurity', soft_comm:'Communication', soft_problem:'Problem Solving', soft_stress:'Working Under Pressure', soft_team:'Teamwork', sk_os:'Operating Systems & Tools', sk_other:'Languages & Driving',
     level_adv:'Advanced', level_intermediate:'Intermediate', level_mixed:'Advanced / Basics', level_cert:'Certified', slovak_republic:'Slovak Republic',
-    term_aria:'Interactive terminal', term_placeholder:'type a command here...', term_welcome:'Welcome to Ondrej Drengubiak’s CLI terminal!\nType help for a list of available commands.', term_help:'Available commands:\n - skills : Show key skills\n - projects : Show featured projects\n - contact : Show contact information\n - theme : Toggle light/dark mode\n - clear : Clear the terminal\n - exit : Close the terminal', term_unknown:'Unknown command: "{cmd}". Type "help" for help.', term_theme:'Theme switched to {theme}', term_skills:'Languages: Python, Java, C, C++, R\nWeb: HTML, CSS, JavaScript, PHP\nDatabases: SQL, MS Access\nNetworks: Cisco CCNA v7, IT Essentials\nOS: Linux, Git', term_projects:'1. Patterna - Web app for optimizing design-pattern sequences (D3.js, TensorFlow.js, MDP)\n2. Cisco Network Tools & Analyzer', term_contact:'Email: ondrej.drengubiak1@gmail.com\nLocation: Bratislava / Zvolen\nGitHub: github.com/Ondrejstuba', 
+    term_aria:'Interactive terminal', term_placeholder:'type a command here...', term_welcome:'Welcome to Ondrej Drengubiak’s CLI terminal!\nType help for a list of available commands.', term_help:'Available commands:\n - skills : Show key skills\n - projects : Show featured projects\n - contact : Show contact information\n - theme : Toggle light/dark mode\n - clear : Clear the terminal\n - exit : Close the terminal', term_unknown:'Unknown command: "{cmd}". Type "help" for help.', term_theme:'Theme switched to {theme}', term_skills:'Languages: Python, Java, C, C++, R\nWeb: HTML, CSS, JavaScript, PHP\nDatabases: SQL, PostgreSQL, PL/pgSQL, MS Access\nNetworks: Cisco CCNA v7, IT Essentials\nOS: Linux, Git', term_projects:'1. Patterna - Web app for optimizing design-pattern sequences (D3.js, TensorFlow.js, MDP)\n2. Arcana Bellum - RPG combat system in PostgreSQL (PL/pgSQL, 16 tables, 8 procedures)', term_contact:'Email: ondrej.drengubiak1@gmail.com\nLocation: Bratislava / Zvolen\nGitHub: github.com/Ondrejstuba', 
     bg_h:'Experience & Education', bg_sub:'An interactive timeline of my work experience, education, and Cisco certifications.',
     tb_work:'Work Experience', tb_edu:'Education', tb_certs:'Courses & Certifications',
     w_title:'Hotel Receptionist',
@@ -669,6 +730,7 @@ function setLang(l) {
   $('#og-description').setAttribute('content', T[l].meta_desc);
   $('#og-title').setAttribute('content', l === 'sk' ? 'Bc. Ondrej Drengubiak | Softvérový vývojár' : 'Bc. Ondrej Drengubiak | Software Developer');
   $('#term-welcome').textContent = T[l].term_welcome;
+  if(typeof buildDots === 'function') buildDots();
 }
 
 function setTheme(t) {
@@ -690,7 +752,6 @@ $$('.mobile-menu a').forEach(a => a.addEventListener('click', () => {
 
 $('#lang').onclick = () => setLang(lang === 'sk' ? 'en' : 'sk');
 $('#theme').onclick = () => setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
-setLang(lang); setTheme(root.dataset.theme || 'light');
 
 // Multilingual Typewriter Effect
 const wordList = {
@@ -747,6 +808,74 @@ if(matchMedia('(hover:hover)').matches) {
     p.style.setProperty('--my', e.clientY - r.top + 'px');
   }));
 }
+
+// Smaller projects carousel (manual + auto-advance)
+const track = $('#car-track'), dotsBox = $('#car-dots'), carousel = $('#carousel');
+const minis = $$('#car-track .mini');
+const reduceMotion = matchMedia('(prefers-reduced-motion:reduce)').matches;
+let carHover = false, carVisible = false, lastTouch = 0;
+
+function carStep() {
+  const gap = parseFloat(getComputedStyle(track).columnGap) || 20;
+  return minis[0].offsetWidth + gap;
+}
+function carPositions() {
+  const gap = parseFloat(getComputedStyle(track).columnGap) || 20;
+  const perView = Math.max(1, Math.round((track.clientWidth + gap) / carStep()));
+  return Math.max(1, minis.length - perView + 1);
+}
+function carIndex() {
+  return Math.min(carPositions() - 1, Math.max(0, Math.round(track.scrollLeft / carStep())));
+}
+function carGo(i) {
+  const n = carPositions();
+  i = ((i % n) + n) % n;
+  track.scrollTo({left: i * carStep(), behavior: reduceMotion ? 'auto' : 'smooth'});
+}
+function updateDots() {
+  const idx = carIndex();
+  [...dotsBox.children].forEach((d, i) => {
+    d.classList.toggle('on', i === idx);
+    d.setAttribute('aria-current', i === idx ? 'true' : 'false');
+  });
+}
+function buildDots() {
+  if(!dotsBox) return;
+  dotsBox.innerHTML = '';
+  const n = carPositions();
+  for(let i = 0; i < n; i++) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('aria-label', (T[lang].car_go || 'Go to') + ' ' + (i + 1));
+    b.onclick = () => { lastTouch = Date.now(); carGo(i); };
+    dotsBox.appendChild(b);
+  }
+  updateDots();
+}
+track.addEventListener('scroll', () => requestAnimationFrame(updateDots), {passive: true});
+$('#car-prev').onclick = () => { lastTouch = Date.now(); carGo(carIndex() - 1); };
+$('#car-next').onclick = () => { lastTouch = Date.now(); carGo(carIndex() + 1); };
+carousel.addEventListener('mouseenter', () => carHover = true);
+carousel.addEventListener('mouseleave', () => carHover = false);
+carousel.addEventListener('focusin', () => carHover = true);
+carousel.addEventListener('focusout', () => carHover = false);
+carousel.addEventListener('touchstart', () => lastTouch = Date.now(), {passive: true});
+carousel.addEventListener('keydown', e => {
+  if(e.key === 'ArrowLeft') { lastTouch = Date.now(); carGo(carIndex() - 1); }
+  if(e.key === 'ArrowRight') { lastTouch = Date.now(); carGo(carIndex() + 1); }
+});
+new IntersectionObserver(es => es.forEach(e => carVisible = e.isIntersecting), {threshold: .3}).observe(carousel);
+addEventListener('resize', buildDots);
+if(!reduceMotion) {
+  setInterval(() => {
+    if(carHover || !carVisible || document.hidden || Date.now() - lastTouch < 7000) return;
+    carGo(carIndex() + 1);
+  }, 5000);
+}
+
+// Init language/theme (after carousel helpers exist so dots get translated labels)
+setLang(lang); setTheme(root.dataset.theme || 'light');
+buildDots();
 
 // Copy-to-clipboard actions
 const toast = $('#toast');
