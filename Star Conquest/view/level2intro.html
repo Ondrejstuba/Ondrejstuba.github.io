@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="intros.css">
+<html>
+
+<head>
+	<title>Star Conquest CUTSCENE</title>
+
+  <script defer>
+
+    document.addEventListener("DOMContentLoaded", function() {
+    
+      var savedMusicVolume = localStorage.getItem('musicVolume');
+        console.log('Saved music volume:', savedMusicVolume);
+        
+        // set the initial volume of the audio elements to the saved volume after they have loaded
+        var musicElements = document.querySelectorAll('#music');
+        for (var i = 0; i < musicElements.length; i++) {
+          musicElements[i].addEventListener('canplaythrough', function () {
+            this.volume = savedMusicVolume / 100;
+          });
+          musicElements[i].load();
+          musicElements[i].play();
+        }
+        var savedNarrationVolume = localStorage.getItem('narrationVolume');
+        console.log('Saved narration volume:', savedNarrationVolume);
+        
+        // set the initial volume of the audio elements to the saved volume after they have loaded
+        var voiceElements = document.querySelectorAll('#narration');
+        for (var i = 0; i < voiceElements.length; i++) {
+          voiceElements[i].addEventListener('canplaythrough', function () {
+            this.volume = savedNarrationVolume / 100;
+          });
+          voiceElements[i].load();
+          voiceElements[i].play();
+        }
+        
+        const numStars = 100;
+        
+        // For every star we want to display
+        for (let i = 0; i < numStars; i++) {
+          let star = document.createElement("div");  
+          star.className = "star";
+          var xy = getRandomPosition();
+            star.style.top = xy[0] + 'px';
+            star.style.left = xy[1] + 'px';
+          document.body.append(star);
+        }
+        
+        // Gets random x, y values based on the size of the container
+        function getRandomPosition() {  
+          var y = window.innerWidth;
+          var x = window.innerHeight;
+            var randomX = Math.floor(Math.random()*x);
+            var randomY = Math.floor(Math.random()*y);
+            return [randomX,randomY];
+        }
+     
+    });
+      
+    
+        
+          </script>
+    
+</head>
+
+<body>
+
+	<video autoplay muted loop id="myVideo">
+        <source src="graphics/intro.mp4" type="video/mp4">
+      </video>
+
+      <audio id="narration" hidden src="/view/sounds/voiceovers/2.mp3"></audio>
+  <audio id="music" hidden src="/view/sounds/levelintromusic2.mp3"></audio>
+
+              <a id="sipkadole2" href="game.html"><i class="material-icons" style="font-size:30px;color:lightblue;text-shadow:2px 2px 4px #000000;background-color:rgba(70, 64, 64, 0.8); padding: 9px;"><span class="material-symbols-outlined">
+                <span class="material-symbols-outlined">
+                  home
+                  </span>
+                </span></i></a>
+
+              <a id="sipkadole" href="level2.html"><i class="material-icons" style="font-size:30px;color:lightblue;text-shadow:2px 2px 4px #000000;background-color:rgba(70, 64, 64, 0.8); padding: 9px;"><span class="material-symbols-outlined">
+                <span class="material-symbols-outlined">
+                  skip_next
+                  </span>
+                </span></i></a>
+
+             
+            
+
+
+
+	<section class="intro">
+		The Emparasyan Invasion<br>        Mission Two
+	  </section>
+	  
+	  
+	  <div id="board">  
+		<div id="content">
+		  <p id="title">The year is 3025 AD</p>
+		  <p id="subtitle">Your second trial of death if about to unfold...</p>
+		  <br>
+
+          <p>As the war wages on, the aliens seem to be getting stronger every day.</p>
+<p>Despite your best efforts, their superior technology and tactics make it difficult to gain any ground.</p>
+<p>One day, you receive a distress call from a nearby ship.</p>
+<p>When you arrive, you find that the ship has been infiltrated by an alien spy.</p>
+<p>The spy has stolen valuable information about Earth's defences.</p>
+<p>It is too late.</p>
+<p>Your starfleet ventures right into an open ambush.</p>
+<p>A deadly battle ensues and the stakes are higher than ever before...</p>
+	
+          
+
+		</div>  
+	  </div>
+	  
+	  
+
+
+
+	
+
+
+
+
+</body>
+
+</html>

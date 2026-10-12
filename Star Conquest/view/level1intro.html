@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="intros.css">
+<html>
+
+<head>
+  <title>Star Conquest CUTSCENE</title>
+
+  <script defer>
+
+    document.addEventListener("DOMContentLoaded", function() {
+    
+      var savedMusicVolume = localStorage.getItem('musicVolume');
+        console.log('Saved music volume:', savedMusicVolume);
+        
+        // set the initial volume of the audio elements to the saved volume after they have loaded
+        var musicElements = document.querySelectorAll('#music');
+        for (var i = 0; i < musicElements.length; i++) {
+          musicElements[i].addEventListener('canplaythrough', function () {
+            this.volume = savedMusicVolume / 100;
+          });
+          musicElements[i].load();
+          musicElements[i].play();
+        }
+        var savedNarrationVolume = localStorage.getItem('narrationVolume');
+        console.log('Saved narration volume:', savedNarrationVolume);
+        
+        // set the initial volume of the audio elements to the saved volume after they have loaded
+        var voiceElements = document.querySelectorAll('#narration');
+        for (var i = 0; i < voiceElements.length; i++) {
+          voiceElements[i].addEventListener('canplaythrough', function () {
+            this.volume = savedNarrationVolume / 100;
+          });
+          voiceElements[i].load();
+          voiceElements[i].play();
+        }
+        
+        const numStars = 100;
+        
+        // For every star we want to display
+        for (let i = 0; i < numStars; i++) {
+          let star = document.createElement("div");  
+          star.className = "star";
+          var xy = getRandomPosition();
+            star.style.top = xy[0] + 'px';
+            star.style.left = xy[1] + 'px';
+          document.body.append(star);
+        }
+        
+        // Gets random x, y values based on the size of the container
+        function getRandomPosition() {  
+          var y = window.innerWidth;
+          var x = window.innerHeight;
+            var randomX = Math.floor(Math.random()*x);
+            var randomY = Math.floor(Math.random()*y);
+            return [randomX,randomY];
+        }
+     
+    });
+      
+    
+        
+          </script>
+    
+
+</head>
+
+<body>
+
+  <video autoplay muted loop id="myVideo">
+    <source src="graphics/intro.mp4" type="video/mp4">
+  </video>
+
+  <audio id="narration" hidden src="/view/sounds/voiceovers/1.mp3"></audio>
+  <audio id="music" hidden src="/view/sounds/levelintromusic.mp3"></audio>
+
+
+
+  <a id="sipkadole2" href="game.html"><i class="material-icons"
+      style="font-size:30px;color:lightblue;text-shadow:2px 2px 4px #000000;background-color:rgba(70, 64, 64, 0.8); padding: 9px;"><span
+        class="material-symbols-outlined">
+        <span class="material-symbols-outlined">
+          home
+        </span>
+      </span></i></a>
+
+  <a id="sipkadole" href="level1.html"><i class="material-icons"
+      style="font-size:30px;color:lightblue;text-shadow:2px 2px 4px #000000;background-color:rgba(70, 64, 64, 0.8); padding: 9px;"><span
+        class="material-symbols-outlined">
+        <span class="material-symbols-outlined">
+          skip_next
+        </span>
+      </span></i></a>
+
+
+
+
+
+
+  <section class="intro">
+    The Emparasyan Invasion<br> Mission One
+  </section>
+
+  <div id="board">
+    <div id="content">
+      <p id="title">The year is 3023 AD</p>
+      <p id="subtitle">This is your first encounter with the devil...</p>
+      <br>
+
+      <p>The battle for the universe has just begun.</p>
+      <p>As Captain Nick T. Vrenna, you lead your Star Fleet Force Delta One into the fray.</p>
+      <p>The aliens have arrived, and their intentions remain unknown.</p>
+      <p>As you prepare for the fight of your life, you remind your crew that they are Earth's last line of defense.</p>
+      <p>And so, eventually, the battle which was long to ensue finally
+        begins at last, and the fate of humanity rests heavily on your shoulders...</p>
+
+    </div>
+  </div>
+
+</body>
+
+</html>

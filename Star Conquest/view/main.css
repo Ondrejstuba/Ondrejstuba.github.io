@@ -1,0 +1,450 @@
+body {
+    overflow: hidden;
+
+  }
+
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
+
+  #cinematicsmenu {
+    height: 85vh;
+    color: beige;
+    position: fixed;
+    top: 5%;
+    left: 30%;
+    transform: translateX(-50%);
+    border: solid 1px white;
+    border-radius: 10px;
+    padding: 20px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation-name: slide-in;
+    animation-duration: 1s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+  }
+
+  #levelsmenu {
+    height: 85vh;
+    color: beige;
+    position: fixed;
+    top: 5%;
+    left: 30%;
+    transform: translateX(-50%);
+    border: solid 1px white;
+    border-radius: 10px;
+    padding: 20px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation-name: slide-in;
+    animation-duration: 1s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+  }
+
+  #tutorialmenu {
+    height: 80vh;
+    color: beige;
+    position: fixed;
+    top: 5%;
+    left: 17%;
+    transform: translateX(-50%);
+    border: solid 1px white;
+    border-radius: 10px;
+    padding: 20px 50px;
+    display: none;
+    /* hide the element by default */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation-name: slide-in;
+    animation-duration: 1s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+    overflow-y: scroll;
+    max-width: 820px;
+  }
+
+  #leaderboardsmenu {
+    height: 85vh;
+    color: beige;
+    position: fixed;
+    top: 5%;
+    left: 35%;
+    transform: translateX(-50%);
+    border: solid 1px white;
+    border-radius: 10px;
+    padding: 20px;
+    display: none;
+    /* hide the element by default */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation-name: slide-in;
+    animation-duration: 1s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+  }
+
+
+  #settingsmenu {
+    height: 75vh;
+    color: beige;
+    position: fixed;
+    top: 5%;
+    left: 41%;
+    transform: translateX(-50%);
+    border: solid 1px white;
+    border-radius: 10px;
+    padding: 50px;
+    display: none;
+    /* hide the element by default */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation-name: slide-in;
+    animation-duration: 1s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+  }
+
+  #levelmenu {
+    height: 85vh;
+    color: beige;
+    position: fixed;
+    top: 5%;
+    left: 35%;
+    transform: translateX(-50%);
+    border: solid 1px white;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation-name: slide-in;
+    animation-duration: 2s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+  }
+
+  .icon-container {
+    display: flex;
+  }
+
+  .icon-container a {
+    padding: 0;
+    margin-left: 10px;
+  }
+
+  @keyframes slide-in {
+    from {
+      left: -100%;
+      /* start off-screen to the left */
+      transform: translateX(-100%);
+    }
+
+    to {
+      left: 25%;
+      /* end at center of screen */
+      transform: translateX(-50%);
+    }
+  }
+
+  #levelmenu h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    color: grey;
+  }
+
+  #settingsmenu h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    color: grey;
+  }
+
+  #leaderboardsmenu h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    color: grey;
+  }
+
+  #tutorialmenu h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    color: grey;
+  }
+
+  #levelsmenu h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    color: grey;
+  }
+
+  #cinematicsmenu h1 {
+    font-size: 3em;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    color: grey;
+  }
+
+  #levelmenu a {
+    font-size: 2em;
+    margin-bottom: 10px;
+    text-decoration: none;
+    color: beige;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    padding: 10px 20px;
+    transition: all 0.2s ease-in-out;
+  }
+
+  #settingsmenu a {
+    font-size: 2em;
+    margin-bottom: 10px;
+    text-decoration: none;
+    color: beige;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    padding: 10px 20px;
+    transition: all 0.2s ease-in-out;
+  }
+
+  #levelmenu a:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+  }
+
+  #levelsmenu a {
+    font-size: 2em;
+    margin-bottom: 10px;
+    text-decoration: none;
+    color: beige;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    padding: 10px 20px;
+    transition: all 0.2s ease-in-out;
+  }
+
+  #cinematicsmenu a {
+    font-size: 1.5em;
+    margin-bottom: 5px;
+    text-decoration: none;
+    color: beige;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    padding: 10px 20px;
+    transition: all 0.2s ease-in-out;
+  }
+
+  #settingsmenu a:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+  }
+
+  #levelsmenu a:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+  }
+
+  #cinematicsmenu a:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+  }
+
+  .spark {
+    background-color: #DE4A00;
+    font-family: 'Helvetica', sans-serif;
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 30%;
+    box-shadow: 0 0 10px #FFA500;
+
+  }
+
+
+  #menuimage {
+    width: 140px;
+  }
+
+  #myVideo {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+  }
+
+  #logos {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    margin: 20px;
+    height: 200px;
+    width: 90px;
+    animation: slide-in 2s ease-out;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #logos p {
+    color: white;
+    text-align: right;
+  }
+
+  .key-image {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+
+  @keyframes slide-in {
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  .logo-image {
+    width: 100%;
+    height: 100%;
+  }
+
+  #sipkadole2 {
+    padding: 0px;
+  }
+
+  #sipkadole2:hover {
+    transform: scale(1.25) perspective(1px);
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 80%;
+    margin: 30px auto;
+    background-color: rgba(255, 255, 255, 0.3);
+    animation: fadeIn 6s ease;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  thead {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+  }
+
+  th,
+  td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid white;
+  }
+
+  th {
+    text-transform: uppercase;
+    font-size: 1.2em;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+
+  #leaderboard {
+    max-height: 50vh;
+    overflow-y: scroll;
+  }
+
+  h2 {
+    margin-top: 0px;
+    margin-bottom: 20px;
+    color: #555;
+  }
+
+  p {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+    color: #666;
+  }
+
+  ul {
+    margin-bottom: 20px;
+    padding-left: 30px;
+    color: #666;
+  }
+
+  li {
+    margin-bottom: 10px;
+  }
+
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 2px;
+  }
+
+
+  .settings-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .settings-button {
+    background-color: rgba(70, 64, 64, 0.8);
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    padding: 10px;
+    text-align: center;
+    width: 33%;
+    margin: 6px;
+  }
+
+  .settings-button.active {
+    background-color: #7a9969;
+  }
+
+  .settings-section {
+    margin-bottom: 10px;
+  }

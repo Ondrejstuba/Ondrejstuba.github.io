@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<html>
+
+<head>
+  <title>Star Conquest CREDITS</title>
+
+  <script defer>
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+      var savedMusicVolume = localStorage.getItem('musicVolume');
+console.log('Saved music volume:', savedMusicVolume);
+
+// set the initial volume of the audio elements to the saved volume after they have loaded
+var musicElements = document.querySelectorAll('#music');
+for (var i = 0; i < musicElements.length; i++) {
+  musicElements[i].addEventListener('canplaythrough', function () {
+    this.volume = savedMusicVolume / 100;
+  });
+  musicElements[i].load();
+  musicElements[i].play();
+}
+
+      const numStars = 100;
+
+      // For every star we want to display
+      for (let i = 0; i < numStars; i++) {
+        let star = document.createElement("div");
+        star.className = "star";
+        var xy = getRandomPosition();
+        star.style.top = xy[0] + 'px';
+        star.style.left = xy[1] + 'px';
+        document.body.append(star);
+      }
+
+      // Gets random x, y values based on the size of the container
+      function getRandomPosition() {
+        var y = window.innerWidth;
+        var x = window.innerHeight;
+        var randomX = Math.floor(Math.random() * x);
+        var randomY = Math.floor(Math.random() * y);
+        return [randomX, randomY];
+      }
+    
+
+     
+    });
+      
+    
+        
+          </script>
+    
+
+
+
+  <style>
+    body {
+      background-color: black;
+      overflow: hidden;
+      background-image: url('/intro.jpg');
+
+    }
+
+
+    /* Set the animation, color, size and hide the text */
+    .intro {
+      position: absolute;
+      top: 30%;
+      left: 35%;
+      z-index: 1;
+      animation: intro 6s ease-out 1s;
+      color: rgb(75, 213, 238);
+      font-weight: 400;
+      font-size: 300%;
+      opacity: 0;
+      margin: auto;
+      z-index: 4;
+    }
+
+    @keyframes intro {
+      0% {
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    /* Set the animation & hide the logo */
+    .logo {
+      position: absolute;
+      top: 20%;
+      left: 35%;
+      z-index: 1;
+      margin: auto;
+      animation: logo 9s ease-out 9s;
+      opacity: 0;
+    }
+
+    /* Scale the logo down and maintain it centered */
+    @keyframes logo {
+      0% {
+        width: 18em;
+        transform: scale(2.75);
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 1;
+        width: 18em;
+      }
+
+      100% {
+        opacity: 0;
+        transform: scale(0.1);
+        width: 18em;
+      }
+    }
+
+
+
+
+
+    /* Set the animation & hide the logo */
+    .logo2 {
+      position: absolute;
+      top: 20%;
+      left: 35%;
+      z-index: 1;
+      animation: logo 7s ease-out 18s;
+      opacity: 0;
+    }
+
+    .intro2 {
+      position: absolute;
+      top: 30%;
+      left: 35%;
+      z-index: 1;
+      animation: intro 4s ease-out 16s;
+      color: rgb(75, 213, 238);
+      font-weight: 400;
+      font-size: 300%;
+      opacity: 0;
+      margin: auto;
+      z-index: 4;
+    }
+
+    @keyframes intro2 {
+      0% {
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    /* Scale the logo down and maintain it centered */
+    @keyframes logo2 {
+      0% {
+        width: 18em;
+        transform: scale(2.75);
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 1;
+        width: 18em;
+      }
+
+      100% {
+        opacity: 0;
+        transform: scale(0.1);
+        width: 18em;
+      }
+    }
+
+
+  /* Set the animation & hide the logo */
+  .logo3 {
+      position: absolute;
+      top: 20%;
+      left: 35%;
+      z-index: 1;
+      animation: logo 7s ease-out 26s;
+      opacity: 0;
+    }
+
+    .intro3 {
+      position: absolute;
+      top: 30%;
+      left: 35%;
+      z-index: 1;
+      animation: intro 4s ease-out 24s;
+      color: rgb(75, 213, 238);
+      font-weight: 400;
+      font-size: 300%;
+      opacity: 0;
+      margin: auto;
+      z-index: 4;
+    }
+
+    @keyframes intro3 {
+      0% {
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    /* Scale the logo down and maintain it centered */
+    @keyframes logo3 {
+      0% {
+        width: 18em;
+        transform: scale(2.75);
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 1;
+        width: 18em;
+      }
+
+      100% {
+        opacity: 0;
+        transform: scale(0.1);
+        width: 18em;
+      }
+    }
+
+    p {
+      color: #FFFF82;
+    }
+
+    /* Set the font, lean the board, position it */
+    #board {
+      font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
+      transform: perspective(300px) rotateX(25deg);
+      transform-origin: 50% 100%;
+      text-align: justify;
+      position: absolute;
+      margin-left: -9em;
+      font-weight: bold;
+      overflow: hidden;
+      font-size: 350%;
+      height: 50em;
+      width: 22em;
+      bottom: 0;
+      left: 45%;
+    }
+
+    #board:after {
+      position: absolute;
+      content: ' ';
+      bottom: 60%;
+      left: 0;
+      right: 0;
+      top: 0;
+    }
+
+    /* Set the scrolling animation and position it */
+    #content {
+      animation: scroll 100s linear 32s;
+      position: absolute;
+      top: 100%;
+    }
+
+    #title,
+    #subtitle {
+      text-align: center;
+
+    }
+
+    @keyframes scroll {
+      0% {
+        top: 100%;
+      }
+
+      100% {
+        top: -170%;
+      }
+    }
+
+    #sipkadole {
+      position: absolute;
+      right: 1%;
+      top: 75%;
+      z-index: 5;
+    }
+
+    #sipkadole:hover {
+      transform: scale(1.25) perspective(1px);
+    }
+
+
+    @keyframes move-background {
+      from {
+        -webkit-transform: translate3d(0px, 0px, 0px);
+      }
+
+      to {
+        -webkit-transform: translate3d(1000px, 0px, 0px);
+      }
+    }
+
+    @-webkit-keyframes move-background {
+      from {
+        -webkit-transform: translate3d(0px, 0px, 0px);
+      }
+
+      to {
+        -webkit-transform: translate3d(1000px, 0px, 0px);
+      }
+    }
+
+    @-moz-keyframes move-background {
+      from {
+        -webkit-transform: translate3d(0px, 0px, 0px);
+      }
+
+      to {
+        -webkit-transform: translate3d(1000px, 0px, 0px);
+      }
+    }
+
+    @-webkit-keyframes move-background {
+      from {
+        -webkit-transform: translate3d(0px, 0px, 0px);
+      }
+
+      to {
+        -webkit-transform: translate3d(1000px, 0px, 0px);
+      }
+    }
+
+    .background-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+    }
+
+    .stars {
+      background: black url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png) repeat;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: block;
+      z-index: 0;
+    }
+
+    .twinkling {
+      width: 10000px;
+      height: 100%;
+      background: transparent url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/twinkling.png") repeat;
+      background-size: 1000px 1000px;
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 2;
+
+      -moz-animation: move-background 70s linear infinite;
+      -ms-animation: move-background 70s linear infinite;
+      -o-animation: move-background 70s linear infinite;
+      -webkit-animation: move-background 70s linear infinite;
+      animation: move-background 70s linear infinite;
+
+    }
+
+    .clouds {
+      width: 10000px;
+      height: 100%;
+      opacity: 50%;
+      background: transparent url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/clouds_repeat.png") repeat;
+      background-size: 1000px 1000px;
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 3;
+
+
+      -moz-animation: move-background 150s linear infinite;
+      -ms-animation: move-background 150s linear infinite;
+      -o-animation: move-background 150s linear infinite;
+      -webkit-animation: move-background 150s linear infinite;
+      animation: move-background 150s linear infinite;
+    }
+
+    img {
+      height: 70vh;
+      width: 70vh;
+      position: absolute;
+      z-index: 3;
+      right: 20px;
+    }
+
+  </style>
+</head>
+
+<body>
+  <audio id="music" hidden src="/view/sounds/endcredits.mp3"></audio>
+
+  <a id="sipkadole" href="game.html"><i class="material-icons"
+      style="font-size:30px;color:lightblue;text-shadow:2px 2px 4px #000000;background-color:rgba(70, 64, 64, 0.8); padding: 9px;"><span
+        class="material-symbols-outlined">
+        <span class="material-symbols-outlined">
+          skip_next
+        </span>
+      </span></i></a>
+
+  <div class="background-container">
+    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/moon2.png" alt="">
+    <div class="stars"></div>
+    <div class="twinkling"></div>
+    <div class="clouds"></div>
+
+
+
+
+
+
+    <section class="intro">
+      A long time ago, in a galaxy far,<br> far away....<br>
+      A single man decided to create a game,<br> a game that would stand the test of time....<br>
+      And so, a game was born...
+    </section>
+
+    <section class="logo">
+      <img src="/view/graphics/logo.png" alt="">
+    </section>
+
+    <section class="intro2">
+      Produced under...
+    </section>
+
+    <section class="logo2">
+      <img src="/view/graphics/stu.png" alt="">
+    </section>
+
+    <section class="intro3">
+      And under...
+    </section>
+
+    <section class="logo3">
+      <img src="/view/graphics/fiit.png" alt="">
+    </section>
+
+    <div id="board">
+      <div id="content">
+        <p id="title">Star Conquest</p>
+        <p id="subtitle">Battle for the universe...</p>
+        <br>     
+
+        <p>Game Credits</p>
+
+        <p>All Things Done By<br>
+          Ondrej Drengubiak</p>
+
+        <p>Game Designer<br>
+          Ondrej Drengubiak</p>
+
+        <p>Game Writing<br>
+          Ondrej Drengubiak</p>
+
+        <p>Story<br>
+          Ondrej Drengubiak</p>
+
+        <p>Lead Programmer<br>
+          Ondrej Drengubiak</p>
+
+        <p>Lead Artist<br>
+          Ondrej Drengubiak</p>
+
+        <p>Level Designer <br>
+          Ondrej Drengubiak</p>
+
+        <p>Concept Artist<br>
+          Ondrej Drengubiak</p>
+
+        <p>3D Artist<br>
+          Ondrej Drengubiak</p>
+
+
+        <p>Quality Assurance<br>
+          Ondrej Drengubiak</p>
+
+        <p>Marketing<br>
+          Ondrej Drengubiak</p>
+
+        <p>Voice Actor<br>
+          Andrej Kristof</p>
+
+        <p>Sprites<br>
+          Opengameart.com</p>
+
+        <p>Sound effects<br>
+          Opengameart.com<br>
+          CC content</p>
+
+        <p>Sound effects<br>
+          Opengameart.com</p>
+
+        <p>Produced under<br>
+          SLovak University of Technology in Bratislava</p>
+
+        <p>Faculty<br>
+          Faculty of Informatics and Information Technologies</p>
+
+        <p>Produced as<br>
+          2nd semester project</p>
+
+        <p>Subject<br>
+          Introduction to Interactive Applications Development</p>
+
+        <p>Instructor<br>
+          Ing. Vladimír Kunštár</p>
+
+        <p>Lecturer<br>
+          Ing. Peter Kapec, PhD.</p>
+
+        <p>Person responsible for course<br>
+          prof. Ing. Vanda Benešová, PhD. </p>
+
+        <p>Testers<br>
+          Andrej Kristof<br>
+          Jan Balazs<br>
+          Andrej Kotulic </p>
+
+        <p>Special Thanks<br>
+          To my family and friends for their endless support and encouragement throughout the development process.
+        </p>
+
+        <p>Version<br>
+          1.00
+        </p>
+
+        
+      </div>
+
+      </div>
+    </div>
+
+
+
+
+
+</body>
+
+</html>

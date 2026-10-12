@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="intros.css">
+<html>
+
+<head>
+	<title>Star Conquest CUTSCENE</title>
+
+  <script defer>
+
+document.addEventListener("DOMContentLoaded", function() {
+
+  var savedMusicVolume = localStorage.getItem('musicVolume');
+    console.log('Saved music volume:', savedMusicVolume);
+    
+    // set the initial volume of the audio elements to the saved volume after they have loaded
+    var musicElements = document.querySelectorAll('#music');
+    for (var i = 0; i < musicElements.length; i++) {
+      musicElements[i].addEventListener('canplaythrough', function () {
+        this.volume = savedMusicVolume / 100;
+      });
+      musicElements[i].load();
+      musicElements[i].play();
+    }
+    var savedNarrationVolume = localStorage.getItem('narrationVolume');
+    console.log('Saved narration volume:', savedNarrationVolume);
+    
+    // set the initial volume of the audio elements to the saved volume after they have loaded
+    var voiceElements = document.querySelectorAll('#narration');
+    for (var i = 0; i < voiceElements.length; i++) {
+      voiceElements[i].addEventListener('canplaythrough', function () {
+        this.volume = savedNarrationVolume / 100;
+      });
+      voiceElements[i].load();
+      voiceElements[i].play();
+    }
+    
+    const numStars = 100;
+    
+    // For every star we want to display
+    for (let i = 0; i < numStars; i++) {
+      let star = document.createElement("div");  
+      star.className = "star";
+      var xy = getRandomPosition();
+        star.style.top = xy[0] + 'px';
+        star.style.left = xy[1] + 'px';
+      document.body.append(star);
+    }
+    
+    // Gets random x, y values based on the size of the container
+    function getRandomPosition() {  
+      var y = window.innerWidth;
+      var x = window.innerHeight;
+        var randomX = Math.floor(Math.random()*x);
+        var randomY = Math.floor(Math.random()*y);
+        return [randomX,randomY];
+    }
+ 
+});
+  
+
+    
+      </script>
+
+ 
+</head>
+
+<body>
+
+	<video autoplay muted loop id="myVideo">
+        <source src="graphics/intro.mp4" type="video/mp4">
+      </video>
+
+      <audio id="narration" hidden src="/view/sounds/voiceovers/5.mp3"></audio>
+  <audio id="music" hidden src="/view/sounds/levelintromusic5.mp3"></audio>
+  
+              <a id="sipkadole2" href="game.html"><i class="material-icons" style="font-size:30px;color:lightblue;text-shadow:2px 2px 4px #000000;background-color:rgba(70, 64, 64, 0.8); padding: 9px;"><span class="material-symbols-outlined">
+                <span class="material-symbols-outlined">
+                  home
+                  </span>
+                </span></i></a>
+
+              <a id="sipkadole" href="level5.html"><i class="material-icons" style="font-size:30px;color:lightblue;text-shadow:2px 2px 4px #000000;background-color:rgba(70, 64, 64, 0.8); padding: 9px;"><span class="material-symbols-outlined">
+                <span class="material-symbols-outlined">
+                  skip_next
+                  </span>
+                </span></i></a>
+
+             
+            
+
+
+
+	<section class="intro">
+		The Emparasyan Invasion<br>        Mission Five<br>        The Last Stand
+	  </section>
+	  
+	  
+	  
+	  <div id="board">  
+		<div id="content">
+		  <p id="title">The year is 3032 AD</p>
+		  <p id="subtitle">The eve of destruction is here...</p>
+		  <br>
+
+          <p>The battle was brutal, and your forces were no match for the aliens.</p>
+<p>They have now taken over the planet, and what remains of humanity is scattered and broken.</p>
+<p>You reflect on all that has been lost and wonder if there was anything more you could have done.</p>
+<p>But you know that you did everything in your power, and that your fight was not in vain.</p>
+<p>You will continue to fight, for the sake of those who remain and for the hope that one day, Earth may be restored.</p>
+<p>No other options remain, but to make one more - one last - stand.</p>
+<p>In the name of humanity...</p>
+
+
+          
+
+		</div>  
+	  </div>
+	  
+	  
+
+
+
+   
+
+
+
+
+</body>
+
+</html>

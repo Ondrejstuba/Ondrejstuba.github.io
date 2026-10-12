@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="main.css">
+<html>
+
+<head>
+
+  <title>Star Conquest MAIN MENU</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/gsap.min.js">
+
+  </script>
+
+
+
+
+<script defer >
+
+function resetSettings() {
+        // Reset music and narration volume to 50
+        document.getElementById("musicVolume").value = 50;
+        document.getElementById("narrationVolume").value = 50;
+
+        // Update the volume slider values when the volume changes
+        music.addEventListener('volumechange', function () {
+          musicVolumeSlider.value = music.volume * 100;
+        });
+        narration.addEventListener('volumechange', function () {
+          narrationVolumeSlider.value = narration.volume * 100;
+        });
+
+        // Reset controls to arrows and spacebar
+        document.getElementById("controls").value = "arrows";
+        document.getElementById("controls2").value = "spacebar";
+
+        // Reset brightness and font size to default
+        document.getElementById("brightness").value = 85;
+        document.getElementById("fontsize").value = 16;
+      }
+
+function resetLeaderboards() {
+        var confirmation = confirm("Are you sure you want to reset the leaderboards?");
+        if (confirmation) {
+          localStorage.removeItem("scores");
+          location.reload(); // refresh page to update leaderboard
+        }
+      }
+
+function showSettings() {
+        var settingsMenu = document.getElementById("settingsmenu");
+        var levelMenu = document.getElementById("levelmenu");
+        settingsMenu.style.display = "flex";
+        levelMenu.style.display = "none";
+      }
+
+      function hideSettings() {
+        var settingsMenu = document.getElementById("settingsmenu");
+        var levelMenu = document.getElementById("levelmenu");
+        settingsMenu.style.display = "none";
+        levelMenu.style.display = "flex";
+      }
+
+      function showLeaderboards() {
+        var settingsMenu = document.getElementById("leaderboardsmenu");
+        var levelMenu = document.getElementById("levelmenu");
+        settingsMenu.style.display = "flex";
+        levelMenu.style.display = "none";
+      }
+      function hideLeaderboards() {
+        var LeaderboardsMenu = document.getElementById("leaderboardsmenu");
+        var levelMenu = document.getElementById("levelmenu");
+        LeaderboardsMenu.style.display = "none";
+        levelMenu.style.display = "flex";
+      }
+
+      function showTutorial() {
+        var settingsMenu = document.getElementById("tutorialmenu");
+        var levelMenu = document.getElementById("levelmenu");
+        settingsMenu.style.display = "flex";
+        levelMenu.style.display = "none";
+      }
+      function hideTutorial() {
+        var LeaderboardsMenu = document.getElementById("tutorialmenu");
+        var levelMenu = document.getElementById("levelmenu");
+        LeaderboardsMenu.style.display = "none";
+        levelMenu.style.display = "flex";
+      }
+
+      function showLevels() {
+        var settingsMenu = document.getElementById("levelsmenu");
+        var levelMenu = document.getElementById("levelmenu");
+        settingsMenu.style.display = "flex";
+        levelMenu.style.display = "none";
+      }
+      function hideLevels() {
+        var LeaderboardsMenu = document.getElementById("levelsmenu");
+        var levelMenu = document.getElementById("levelmenu");
+        LeaderboardsMenu.style.display = "none";
+        levelMenu.style.display = "flex";
+      }
+
+      function showCinematics() {
+        var settingsMenu = document.getElementById("cinematicsmenu");
+        var levelMenu = document.getElementById("levelmenu");
+        settingsMenu.style.display = "flex";
+        levelMenu.style.display = "none";
+      }
+      function hideCinematics() {
+        var LeaderboardsMenu = document.getElementById("cinematicsmenu");
+        var levelMenu = document.getElementById("levelmenu");
+        LeaderboardsMenu.style.display = "none";
+        levelMenu.style.display = "flex";
+      }
+
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+      var density = 70,
+        speed = 2,
+        winHeight = window.innerHeight,
+        winWidth = window.innerWidth,
+        start = {
+          yMin: winHeight - 50,
+          yMax: winHeight,
+          xMin: (winWidth / 2) + 10,
+          xMax: (winWidth / 2) + 40,
+          scaleMin: 0.1,
+          scaleMax: 0.25,
+          scaleXMin: 0.1,
+          scaleXMax: 1,
+          scaleYMin: 1,
+          scaleYMax: 2,
+          opacityMin: 0.1,
+          opacityMax: 0.4
+        },
+        mid = {
+          yMin: winHeight * 0.4,
+          yMax: winHeight * 0.9,
+          xMin: winWidth * 0.1,
+          xMax: winWidth * 0.9,
+          scaleMin: 0.2,
+          scaleMax: 0.8,
+          opacityMin: 0.5,
+          opacityMax: 1
+        },
+        end = {
+          yMin: -180,
+          yMax: -180,
+          xMin: -100,
+          xMax: winWidth + 180,
+          scaleMin: 0.1,
+          scaleMax: 1,
+          opacityMin: 0.4,
+          opacityMax: 0.7
+        };
+
+      function range(map, prop) {
+        var min = map[prop + 'Min'],
+          max = map[prop + 'Max'];
+        return min + (max - min) * Math.random();
+      }
+
+      function sign() {
+        return Math.random() < 0.5 ? -1 : 1;
+      }
+
+      function randomEase(easeThis, easeThat) {
+        if (Math.random() < 0.5) {
+          return easeThat;
+        }
+        return easeThis;
+      }
+
+      function spawn(particle) {
+        var wholeDuration = (10 / speed) * (0.7 + Math.random() * 0.4),
+          delay = wholeDuration * Math.random(),
+          partialDuration = (wholeDuration + 1) * (0.2 + Math.random() * 0.3);
+
+        TweenLite.set(particle, {
+          y: range(start, 'y'),
+          x: range(start, 'x'),
+          scaleX: range(start, 'scaleX'),
+          scaleY: range(start, 'scaleY'),
+          scale: range(start, 'scale'),
+          opacity: range(start, 'opacity'),
+          visibility: 'hidden'
+        });
+        // Moving upward
+        TweenLite.to(particle, partialDuration, {
+          delay: delay,
+          y: range(mid, 'y'),
+          ease: randomEase(Linear.easeOut, Back.easeInOut)
+        });
+        TweenLite.to(particle, wholeDuration - partialDuration, {
+          delay: partialDuration + delay,
+          y: range(end, 'y'),
+          ease: Back.easeIn
+        });
+        //Moving on axis X
+        TweenLite.to(particle, partialDuration, {
+          delay: delay,
+          x: range(mid, 'x'),
+          ease: Power1.easeOut
+        });
+        TweenLite.to(particle, wholeDuration - partialDuration, {
+          delay: partialDuration + delay,
+          x: range(end, 'x'),
+          ease: Power1.easeIn
+        });
+        //opacity and scale
+        partialDuration = wholeDuration * (0.5 + Math.random() * 0.3);
+        TweenLite.to(particle, partialDuration, {
+          delay: delay,
+          scale: range(mid, 'scale'),
+          autoAlpha: range(mid, 'opacity'),
+          ease: Linear.easeNone
+        });
+        TweenLite.to(particle, wholeDuration - partialDuration, {
+          delay: partialDuration + delay,
+          scale: range(end, 'scale'),
+          autoAlpha: range(end, 'opacity'),
+          ease: Linear.easeNone,
+          onComplete: spawn,
+          onCompleteParams: [particle]
+        });
+      }
+      window.onload = createParticle;
+
+      function createParticle() {
+        var i, particleSpark;
+        for (i = 0; i < density; i += 1) {
+          particleSpark = document.createElement('div');
+          particleSpark.classList.add('spark');
+          document.body.appendChild(particleSpark);
+          spawn(particleSpark);
+        }
+      }
+
+
+      
+
+
+      // Get the saved volume values from local storage
+      var savedMusicVolume = localStorage.getItem('musicVolume');
+      console.log('Saved music volume:', savedMusicVolume);
+      var savedNarrationVolume = localStorage.getItem('narrationVolume');
+      console.log('Saved narration volume:', savedNarrationVolume);
+
+      // Get the audio elements
+      var music = document.getElementById('music');
+      var narration = document.getElementById('narration');
+
+      // If there is a saved volume value, set the volume of the audio elements to the saved values
+      if (savedMusicVolume !== null) {
+        music.volume = savedMusicVolume / 100;
+      }
+      if (savedNarrationVolume !== null) {
+        narration.volume = savedNarrationVolume / 100;
+      }
+
+      // Get the volume slider elements
+      var musicVolumeSlider = document.getElementById('musicVolume');
+      var narrationVolumeSlider = document.getElementById('narrationVolume');
+
+      // Update the volume slider values when the volume changes
+      music.addEventListener('volumechange', function () {
+        musicVolumeSlider.value = music.volume * 100;
+      });
+      narration.addEventListener('volumechange', function () {
+        narrationVolumeSlider.value = narration.volume * 100;
+      });
+
+      // Update the volume when the sliders are moved
+      musicVolumeSlider.addEventListener('input', function () {
+        music.volume = musicVolumeSlider.value / 100;
+        localStorage.setItem('musicVolume', musicVolumeSlider.value);
+      });
+      narrationVolumeSlider.addEventListener('input', function () {
+        narration.volume = narrationVolumeSlider.value / 100;
+        localStorage.setItem('narrationVolume', narrationVolumeSlider.value);
+      });
+
+      window.addEventListener('load', function () {
+        music.play();
+        narration.play();
+      });
+
+
+
+
+      const brightnessSlider = document.getElementById("brightness");
+
+      brightnessSlider.addEventListener("input", () => {
+        const brightnessValue = brightnessSlider.value;
+        document.body.style.filter = "brightness(" + brightnessValue + "%)";
+      });
+
+      var fontSizeInput = document.getElementById("fontsize");
+      var body = document.querySelector("body");
+
+      fontSizeInput.addEventListener("input", function () {
+        body.style.fontSize = fontSizeInput.value + "px";
+      });
+
+
+
+     
+
+
+
+      const controlsSelect = document.getElementById("controls");
+
+      // Set the initial value of the select element from local storage, if available
+      const storedControls = localStorage.getItem("controls");
+      if (storedControls) {
+        controlsSelect.value = storedControls;
+      }
+
+      // Add event listener to save the selected value to local storage when changed
+      controlsSelect.addEventListener("change", () => {
+        localStorage.setItem("controls", controlsSelect.value);
+      });
+
+
+      const controlsSelect2 = document.getElementById("controls2");
+
+      // Set the initial value of the select element from local storage, if available
+      const storedControls2 = localStorage.getItem("controls2");
+      if (storedControls2) {
+        controlsSelect2.value = storedControls2;
+      }
+
+      // Add event listener to save the selected value to local storage when changed
+      controlsSelect2.addEventListener("change", () => {
+        localStorage.setItem("controls2", controlsSelect2.value);
+      });
+
+
+
+
+
+      const settingsButtons = document.querySelectorAll('.settings-button');
+      const settingsSections = document.querySelectorAll('.settings-section');
+
+      settingsButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const settingsSectionToShow = button.dataset.settings;
+          settingsSections.forEach(section => {
+            if (section.id === settingsSectionToShow) {
+              section.removeAttribute('hidden');
+            } else {
+              section.setAttribute('hidden', '');
+            }
+          });
+
+          settingsButtons.forEach(btn => {
+            btn.classList.remove('active');
+          });
+
+          button.classList.add('active');
+        });
+      });
+
+
+
+      
+
+      $(document).ready(function () {
+        // Get the intro video checkbox element
+        var introVideoCheckbox = $('#intro-video');
+
+        // Retrieve the saved value from Local Storage and set the checkbox state
+        var playIntroVideo = localStorage.getItem('playIntroVideo');
+        console.log('Saved value of intro video checkbox:', playIntroVideo);
+        if (playIntroVideo === 'true') {
+          introVideoCheckbox.prop('checked', true);
+        }
+
+        // Check if the session cookie has been set
+        var playedIntroVideo = sessionStorage.getItem('playedIntroVideo');
+
+        if (playedIntroVideo === null && introVideoCheckbox.is(':checked')) {
+          playIntro();
+        }
+
+        // Add a change event listener to the checkbox to save its state to Local Storage
+        introVideoCheckbox.on('change', function () {
+          localStorage.setItem('playIntroVideo', introVideoCheckbox.is(':checked'));
+          console.log('New value of intro video checkbox:', introVideoCheckbox.is(':checked'));
+        });
+
+        // Function to load the intro video
+        function playIntro() {
+          // Set the session cookie to prevent the intro video from playing again
+          sessionStorage.setItem('playedIntroVideo', 'true');
+          window.location.href = 'intro.html';
+        }
+      });
+
+      $(document).ready(function () {
+        // Stop the intro music
+        $('#narration').get(0).pause();
+      });
+
+      $(document).ready(function () {
+        // Stop the intro music
+        $('#music').get(0).pause();
+      });
+
+
+      // retrieve scores from local storage
+      var scores = JSON.parse(localStorage.getItem("scores")) || [];
+
+      // sort scores by highest to lowest score, and then alphabetically by name in case of a tie
+      scores.sort(function (a, b) {
+        if (b.score !== a.score) {
+          return b.score - a.score;
+        } else {
+          return a.name.localeCompare(b.name);
+        }
+      });
+
+      // display scores in table
+      var table = document.getElementById("leaderboard");
+      for (var i = 0; i < scores.length; i++) {
+        var row = table.insertRow(i);
+        var nameCell = row.insertCell(0);
+        var scoreCell = row.insertCell(1);
+        nameCell.innerHTML = scores[i].name;
+        scoreCell.innerHTML = scores[i].score;
+      }
+
+
+
+
+    });
+
+
+
+  </script>
+
+</head>
+
+<body>
+
+  <video autoplay muted loop id="myVideo">
+    <source src="graphics/menubackground.mp4" type="video/mp4">
+  </video>
+
+
+  <audio id="music" hidden loop src="sounds/menutheme.mp3" allow="autoplay"></audio>
+
+
+  <div id="levelmenu">
+    <h1>Welcome to <img id="menuimage" src="graphics/logo.png" alt=""></h1>
+    <a href="#" onclick="showLevels()">Campaign</a>
+    <a href="endless.html">Continuum</a>
+    <a href="#" onclick="showCinematics()">Cinematics</a>
+    <a href="credits.html">Credits</a>
+    <div class="icon-container">
+      <a href="#" onclick="showSettings()">
+        <i class="material-icons"
+          style="color:lightblue;text-shadow:2px 2px 4px #000000;background-color:rgba(70, 64, 64, 0.8); padding: 10px;">
+          <span class="material-symbols-outlined">
+            settings
+          </span>
+        </i>
+      </a>
+      <a href="#" onclick="showLeaderboards()">
+        <i class="material-icons"
+          style="color:lightblue;text-shadow:2px 2px 4px #000000;background-color:rgba(70, 64, 64, 0.8); padding: 10px;">
+          <span class="material-symbols-outlined">
+            leaderboard
+          </span>
+        </i>
+      </a>
+      <a href="#" onclick="showTutorial()">
+        <i class="material-icons"
+          style="color:lightblue;text-shadow:2px 2px 4px #000000;background-color:rgba(70, 64, 64, 0.8); padding: 10px;">
+          <span class="material-symbols-outlined">
+            help
+          </span>
+        </i>
+      </a>
+    </div>
+  </div>
+
+
+
+  <div id="settingsmenu" hidden>
+    <h1>Settings</h1>
+    <div class="settings-buttons">
+      <button class="settings-button active" data-settings="sounds-settings">Sounds</button>
+      <button class="settings-button" data-settings="controls-settings">Controls</button>
+      <button class="settings-button" data-settings="others-settings">Others</button>
+    </div>
+    <div class="settings-section" id="sounds-settings">
+      <label for="volume">Music:</label>
+      <input type="range" id="musicVolume" name="volume" min="0" max="100" value="50">
+      <br>
+
+      <label for="sounds">Sounds:</label>
+      <input type="range" id="soundsVolume" name="sounds" min="0" max="100" value="50">
+      <br>
+
+      <label for="narrationVolume">Narration:</label>
+      <input type="range" id="narrationVolume" name="narrationVolume" min="0" max="100" value="50">
+      <br>
+    </div>
+
+    <div class="settings-section" id="controls-settings" hidden>
+      <label for="controls">Move:</label>
+      <select id="controls" name="controls">
+        <option value="arrows" selected>Arrows</option>
+        <option value="asdw">ASDW</option>
+      </select>
+      <br>
+
+      <label for="controls2">Shoot:</label>
+      <select id="controls2" name="controls">
+        <option value="spacebar" selected>Spacebar</option>
+        <option value="leftclick">Leftclick</option>
+      </select>
+      <br>
+    </div>
+
+    <div class="settings-section" id="others-settings" hidden>
+      <label for="brightness">Brightness:</label>
+      <input type="range" id="brightness" name="brightness" min="35" max="100" value="85">
+      <br>
+      <label for="fontsize">Font Size:</label>
+      <input type="range" id="fontsize" name="fontsize" min="6" max="19" value="16">
+      <br>
+      <label for="intro-video">Play intro at loading:</label>
+      <input type="checkbox" id="intro-video" name="intro-video">
+      <br>
+      <button onclick="resetLeaderboards()" style="background-color: #2f322f; /* Green */
+      border: none;
+      color: white;
+      padding: 10px 5px;
+      text-align: center;
+      text-decoration: none;
+      margin: 10px;
+      border-radius: 5px;
+      cursor: pointer;">Reset Leaderboards</button>
+      <br>
+      <button onclick="resetSettings()" style="background-color: #2f322f; /* Green */
+        border: none;
+        color: white;
+        padding: 10px 5px;
+        text-align: center;
+        text-decoration: none;
+        margin: 10px;
+        border-radius: 5px;
+        cursor: pointer;">Reset Settings</button>
+    </div>
+    <button onclick="hideSettings()"><i class="material-icons"
+        style="font-size:30px;color:lightblue;text-shadow:2px 2px 4px #000000;background-color:rgba(70, 64, 64, 0.8); padding: 9px;; border-radius: 5px;"><span
+          class="material-symbols-outlined">
+          <span class="material-symbols-outlined">
+            reply
+          </span>
+        </span></i></a></button>
+  </div>
+
+
+
+  <div id="leaderboardsmenu" hidden>
+    <h1><img id="menuimage" src="graphics/logo.png" alt="">RANKINGS</h1>
+    <div id="leaderboard-container" style="overflow-y: scroll;  -ms-overflow-style: none;
+    scrollbar-width: none; max-height: 500px; max-width: 300px; min-width: 300px; margin-bottom: 10px;">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard">
+        </tbody>
+      </table>
+    </div>
+
+
+    <button onclick="hideLeaderboards()"><i class="material-icons"
+        style="font-size:30px;color:lightblue;text-shadow:2px 2px 4px #000000;background-color:rgba(70, 64, 64, 0.8); padding: 9px;; border-radius: 5px;"><span
+          class="material-symbols-outlined">
+          <span class="material-symbols-outlined">
+            reply
+          </span>
+        </span></i></a></button>
+  </div>
+
+
+
+  <div id="tutorialmenu" hidden>
+    <h1><img id="menuimage" src="graphics/logo.png" alt=""></h1>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+    <h2></h2>
+
+    <h1>Game Instructions</h1>
+    <p>Welcome to the far space! Here's how to play:</p>
+    <h2>Controls</h2>
+    <ul>
+      <li>Use the <div class="key-image"><img src="graphics/keys/arrows.png" alt="arrow keys" width="60" height="50">
+        </div> or <div class="key-image"><img src="graphics/keys/wasd.png" alt="WASD keys" width="50" height="50"></div>
+        to move your ship around.</li>
+      <li>Press the <div class="key-image"><img src="graphics/keys/shoot.png" alt="spacebar" width="150" height="50">
+        </div> or <div class="key-image"><img src="graphics/keys/shoot2.png" alt="left mouse click" width="50"
+            height="50"></div> to shoot bullets at the enemies.</li>
+      <li>Press <div class="key-image"><img src="graphics/keys/pause.png" alt="escape key" width="50" height="50"></div>
+        to pause the game.</li>
+      <li>Press <div class="key-image"><img src="graphics/keys/start.png" alt="enter key" width="50" height="50"></div>
+        to start / restart the game.</li>
+      <li>Press <div class="key-image"><img src="graphics/keys/full.png" alt="full key" width="50" height="50"></div> to
+        maximise / minimise the game window.</li>
+      <p>Note that all respective control options can be done in the settings menu. Default settings are arrow movement
+        and spacebar shooting.</p>
+    </ul>
+    <h2>Objectives</h2>
+    <p>As Captain Nick Theodore Vrenna your objective is to save the human
+      race and defeat the alien invasion that poses a great
+      threat, lomming over the horizon.
+      Many enemy battle ships are about to test your skills in combat
+      in open space. You are about to stand against them.
+      Your objective is to shoot down as many enemies as possible
+      and earn points. You start with a score of 0 and a
+      moral level of 0.</p>
+
+    <p>Your star fleet is located at the bottom of the screen.
+      It is represented by a single battle ship.
+      You can move your battle ship around the game screen freely.
+      Enemies are going to come your way.
+      Your main goal is to shoot them with bullets.
+      They are going to try and either hit you, resulting in
+      certain and inevitable defeat straight away,
+      or reach the bottom of the screen, thus making it to their
+      target, on their way to earth and humanity.
+      Each enemy that passes to the bottom of the scren reduces one
+      of your life, which starts usually at 100.
+      The moment it reaches 0, you also face defeat as well.
+      However, there are ways to increase your life.
+      Each level up gains you additional base life.
+      Every level has a certain target you have to reach in
+      order to win, a certain objective.
+      Aside from this however, there is an endless mode,
+      in which you face an endless enemy horde until you are defeated
+      at last. That is your last stand where you can join
+      the hall of fame - as every result in this game mode
+      is then saved into the leaderboards.</p>
+
+    <h2>Scoring</h2>
+    <ul>
+      <li>Each enemy you shoot down earns you a single point. missing with your shots results in a single point
+        reduction.</li>
+      <li>If an enemy reaches the bottom of the screen without being shot down, you lose a life. This is your fort life.
+      </li>
+      <li>If you reach a score of 500, your shoot delay will decrease to 750 milliseconds and your moral level will
+        decrease by 5.</li>
+      <li>If your score is between -150 and -50, your shoot delay will decrease to 600 milliseconds and your moral level
+        will decrease by 4.</li>
+      <li>If you lose all your lives, the game is over.</li>
+      <li>If an enemy hits you, the game is over.</li>
+    </ul>
+    <h2>Ship levels</h2>
+    <p>There are five ship levels in total, each reached upon certain moral standpoint. You get various buffs upon each
+      level up.</p>
+    <div class="icon-container">
+      <button onclick="hideTutorial()"><i class="material-icons"
+          style="font-size:30px;color:lightblue;text-shadow:2px 2px 4px #000000;background-color:rgba(70, 64, 64, 0.8); padding: 9px;; border-radius: 5px;"><span
+            class="material-symbols-outlined">
+            <span class="material-symbols-outlined">
+              reply
+            </span>
+          </span></i></a></button>
+      <a id="sipkadole" href="tutorialvideo.html"><i class="material-icons"
+          style="font-size:30px;color:lightblue;text-shadow:2px 2px 4px #000000;background-color:rgba(70, 64, 64, 0.8); padding: 9px;; border-radius: 5px;"><span
+            class="material-symbols-outlined">
+            <span class="material-symbols-outlined">
+              play_circle
+            </span>
+          </span></i></a>
+      <a id="sipkadole3" href="tutoriallevel.html">
+        <i class="material-icons"
+          style="font-size:30px;color:lightblue;text-shadow:2px 2px 4px #000000;background-color:rgba(70, 64, 64, 0.8); padding: 9px; border-radius: 5px;">
+          <span class="material-symbols-outlined">
+            <span class="material-symbols-outlined">
+              sports_gymnastics
+            </span>
+          </span>
+        </i>
+      </a>
+    </div>
+  </div>
+
+  <div id="levelsmenu" hidden>
+    <h1><img id="menuimage" src="graphics/logo.png" alt=""></h1>
+    <h1>The Emparasyan Invasion</h1>
+    <a href="level1intro.html">Level 1</a>
+    <a href="level2intro.html">Level 2</a>
+    <a href="level3intro.html">Level 3</a>
+    <a href="level4intro.html">Level 4</a>
+    <a href="level5intro.html">Level 5</a>
+    <button onclick="hideLevels()"><i class="material-icons"
+        style="font-size:30px;color:lightblue;text-shadow:2px 2px 4px #000000;background-color:rgba(70, 64, 64, 0.8); padding: 9px;; border-radius: 5px;"><span
+          class="material-symbols-outlined">
+          <span class="material-symbols-outlined">
+            reply
+          </span>
+        </span></i></a></button>
+  </div>
+  <audio id="narration" hidden loop allow="autoplay"></audio>
+  <div id="cinematicsmenu" hidden>
+
+    <h1><img id="menuimage" src="graphics/logo.png" alt=""></h1>
+    <h1>The Emparasyan Invasion</h1>
+
+    <a href="intro.html">Prologue</a>
+    <a href="level1intro.html">Level 1</a>
+    <a href="level2intro.html">Level 2</a>
+    <a href="level3intro.html">Level 3</a>
+    <a href="level4intro.html">Level 4</a>
+    <a href="level5intro.html">Level 5</a>
+    <a href="out	ro.html">Epilogue</a>
+    <button onclick="hideCinematics()"><i class="material-icons"
+        style="font-size:30px;color:lightblue;text-shadow:2px 2px 4px #000000;background-color:rgba(70, 64, 64, 0.8); padding: 9px;; border-radius: 5px;"><span
+          class="material-symbols-outlined">
+          <span class="material-symbols-outlined">
+            reply
+          </span>
+        </span></i></a></button>
+  </div>
+
+  </div>
+
+
+
+  <div id="logos">
+    <a href="https://www.stuba.sk/"><img src="graphics/stu.png" class="logo-image"></a>
+    <a href="https://www.fiit.stuba.sk/"><img src="graphics/fiit.png" class="logo-image"></a>
+    <p>v 1.0</p>
+  </div>
+
+
+
+
+
+
+
+
+</body>
+
+</html>

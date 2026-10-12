@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="levels.css">
+<html>
+
+<head>
+  <title>Star Conquest MISSION TWO</title>
+
+  <script defer src="/controller/level2.js"></script>
+  <script defer src="/controller/fullscreen.js"></script>
+  <script defer src="/model/enemy.js"></script>
+  <script defer src="/model/player.js"></script>
+
+  <script defer>
+
+    function updateTime() {
+      var now = new Date();
+      var hours = now.getHours();
+      var minutes = now.getMinutes();
+      var seconds = now.getSeconds();
+      var timeString = hours + ":" + minutes + ":" + seconds;
+      document.getElementById("time").innerHTML = timeString;
+    }
+    setInterval(updateTime, 1000);
+  </script>
+</head>
+
+<body>
+
+  <div id="leftwindow">
+    <h1><img id="menuimage" src="graphics/logo.png" alt=""></h1>
+    <p>The Emparasyan Invasion</p>
+    <p>Mission Two</p>
+    <a href="game.html"><span class="material-icons">home</span></a>
+    <button onclick="startGame()"><span class="material-icons">local_fire_department</span></button>
+  </div>
+
+
+  <div id="gameContainer">
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <button id="fullscreen-btn"><span class="material-icons">fit_screen</span></button>
+
+    <div class="top-left-container">
+      <div id="time">Current Time</div>
+      <div class="buttons-container">
+        <button id="mute-button"><img src="graphics/muteaudio.jpg" style="width: 25px; height: 25px;"></button>
+        <button id="mute-button2"><img src="graphics/mutemusic.jpg" style="width: 25px; height:  25px;"></button>
+      </div>
+    </div>
+  </div>
+
+  <div id="gameText">
+    <h1>STATS
+    </h1>
+  </div>
+
+  <div id="defeat"></div>
+
+  <div id="victory"></div>
+
+  
+</body>
+
+</html>
