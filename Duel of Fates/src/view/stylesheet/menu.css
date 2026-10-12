@@ -1,0 +1,362 @@
+/* Style for the menu box */
+.menu-box {
+    -fx-spacing: 20px; /* Set spacing between elements */
+    -fx-padding: 20px; /* Add padding */
+   
+    -fx-border-color: #cccccc; /* Border color */
+    -fx-border-radius: 5px; /* Border radius */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 0); /* Add shadow effect */
+
+         
+     
+}
+
+/* Style for the main HBox */
+.hbox {
+    -fx-spacing: 20px; /* Set spacing between elements */
+}
+
+.description-label {
+    -fx-font-size: 24px; /* Increase font size for impact */
+    -fx-text-fill: linear-gradient(to bottom, #ff0000, #ff6600); /* Epic gradient color */
+    -fx-font-family: "Arial Black"; /* A more epic font */
+    -fx-font-weight: bold;
+    -fx-padding: 10px; /* Increase padding for emphasis */
+    -fx-background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background for depth */
+    -fx-background-radius: 10px; /* Rounded corners for elegance */
+    -fx-effect: dropshadow(three-pass-box, #000, 10, 0, 0, 0); /* Add shadow for depth */
+}
+
+
+/* Style for version label */
+.version-label {
+    -fx-text-fill: white; /* Set text color to white */
+    -fx-font-size: 14px; /* Set font size */
+    /* Add more styles as needed */
+}
+
+/* Style for start button */
+.start-button, .quit-button {
+    -fx-background-color: #4CAF50; /* Green */
+    -fx-background-radius: 5px; /* Rounded corners */
+    -fx-padding: 10px 20px; /* Padding */
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-border-color: transparent; /* Transparent border */
+    -fx-font-weight: bold; /* Bold font */
+    -fx-text-fill: white; /* White text color */
+    -fx-font-size: 16px; /* Font size */
+}
+
+/* Style for start button */
+.settings-button, .credits-button, .tutorial-button {
+    -fx-background-color: #4CAF50; /* Green */
+    -fx-background-radius: 4px; /* Rounded corners */
+    -fx-padding: 7px 7px; /* Padding */
+    -fx-border-radius: 3px; /* Rounded corners */
+    -fx-border-color: transparent; /* Transparent border */
+    -fx-font-weight: bold; /* Bold font */
+    -fx-text-fill: white; /* White text color */
+    -fx-font-size: 8px; /* Font size */
+}
+
+/* Style for start button */
+.back-button {
+    -fx-background-color: #4CAF50; /* Green */
+    -fx-background-radius: 4px; /* Rounded corners */
+    -fx-padding: 7px 7px; /* Padding */
+    -fx-border-radius: 3px; /* Rounded corners */
+    -fx-border-color: transparent; /* Transparent border */
+    -fx-font-weight: bold; /* Bold font */
+    -fx-text-fill: white; /* White text color */
+    -fx-font-size: 8px; /* Font size */
+}
+
+.back-button:hover    {
+ -fx-background-color: #45a049; /* Darker green on hover */
+    -fx-text-fill: white; /* White text color on hover */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0); /* Add shadow effect on hover */
+}
+
+
+/* Hover effect for start button */
+.settings-button:hover, .credits-button:hover, .tutorial-button:hover {
+    -fx-background-color: #45a049; /* Darker green on hover */
+    -fx-text-fill: white; /* White text color on hover */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0); /* Add shadow effect on hover */
+}
+
+
+
+/* Hover effect for start button */
+.start-button:hover, .quit-button:hover {
+    -fx-background-color: #45a049; /* Darker green on hover */
+    -fx-text-fill: white; /* White text color on hover */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0); /* Add shadow effect on hover */
+}
+
+/* Style for logo wrapper */
+.logo-wrapper {
+    -fx-max-width: 200px; /* Set maximum width */
+    -fx-max-height: 100px; /* Set maximum height */
+}
+
+/* Style for player name entry fields */
+.player-name-field {
+    -fx-background-color: rgba(0, 0, 0, 0.5); /* Transparent black background */
+    -fx-border-color: #ff9900; /* Orange border */
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-padding: 3px; /* Add smaller padding */
+    -fx-font-size: 19px; /* Smaller font size */
+    -fx-pref-width: 300px; /* Set a specific width */
+    -fx-text-fill: blue; /* Set text color to white */
+}
+
+/* Style for labels */
+.player-name-label {
+    -fx-font-size: 22px; /* Smaller font size */
+    -fx-text-fill: yellow; /* Yellow text */
+    -fx-background-color: rgba(0, 0, 0, 0.5); /* Transparent black background */
+    -fx-border-color: gray;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-padding: 3px; /* Add smaller padding */
+    -fx-font-size: 12px; /* Smaller font size */
+    -fx-pref-width: 150px; /* Set a specific width */
+}
+
+/* Apply styling to the container box */
+.container-box {
+	    -fx-opacity: 1.0; /* Ensure checkbox is fully visible */
+	
+    -fx-padding: 20px; /* Add padding */
+    -fx-spacing: 10px; /* Add spacing between components */
+    -fx-background-color: #ffffff; /* Set background color */
+    -fx-border-color: #cccccc; /* Add border color */
+    -fx-border-width: 2px; /* Add border width */
+    -fx-border-radius: 5px; /* Add border radius */
+}
+
+.bot-checkbox {
+    -fx-opacity: 1.0; /* Ensure checkbox is fully visible */
+    -fx-padding: 5px; /* Add padding */
+    -fx-spacing: 5px; /* Add spacing between components */
+    -fx-background-color: rgba(0, 0, 0, 0.5); /* Transparent black background */
+    -fx-border-color: #cccccc; /* Add border color */
+    -fx-border-width: 1px; /* Add border width */
+    -fx-border-radius: 2px; /* Add border radius */
+    /* Add any other styles you need to make the checkbox visible */
+}
+
+.notification-label {
+    -fx-background-color: red;
+    -fx-padding: 5px;
+    -fx-text-fill: white;
+         -fx-border-color: #cccccc; /* Add border color */
+    -fx-border-width: 1px; /* Add border width */
+    -fx-border-radius: 2px; /* Add border radius */
+    
+}
+.result-text {
+    -fx-font-size: 27px;
+    -fx-fill: white;
+}
+
+.true-option-text {
+    -fx-font-size: 20px;
+    -fx-fill: green;
+}
+
+.players-left-text {
+    -fx-font-size: 14px;
+    -fx-fill: white;
+}
+
+.option-statistics-correct {
+    -fx-font-size: 14px;
+    -fx-fill: green;
+}
+
+.option-statistics-incorrect {
+    -fx-font-size: 14px;
+    -fx-fill: red;
+}
+
+.auto-bot-checkbox {
+    /* Add styles for the checkbox itself */
+    -fx-background-color: rgba(240, 240, 240, 0.5); /* Background color with transparency */
+    -fx-background-radius: 10px; /* Rounded corners for background */
+    -fx-border-color: #ccc; /* Border color */
+    -fx-border-width: 1px; /* Border width */
+    -fx-border-radius: 10px; /* Rounded corners for border */
+    -fx-padding: 10px; /* Padding */
+}
+
+.auto-bot-checkbox .text {
+    /* Add styles for the checkbox text */
+    -fx-fill: #333; /* Text color */
+    -fx-font-size: 14px; /* Font size */
+}
+
+.label-style_selection {
+    -fx-font-size: 16px;
+    -fx-text-fill: white;
+    -fx-background-color: #2e2e2e;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 1px;
+}
+
+.downup-button {
+    -fx-background-color: #4CAF50; /* Green */
+    -fx-background-radius: 4px; /* Rounded corners */
+    -fx-padding: 2px 19px; /* Adjusted padding */
+    -fx-border-radius: 3px; /* Rounded corners */
+    -fx-border-color: transparent; /* Transparent border */
+    -fx-font-weight: bold; /* Bold font */
+    -fx-text-fill: white; /* White text color */
+    -fx-font-size: 8px; /* Adjusted font size */
+}
+
+.downup-button:hover {
+    -fx-background-color: #45a049; /* Darker green on hover */
+    -fx-text-fill: white; /* White text color on hover */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0); /* Add shadow effect on hover */
+}
+
+.special-card-button {
+    -fx-background-color: #ffcc00; /* Yellow background */
+    -fx-text-fill: #333333; /* Dark text color */
+    -fx-font-size: 16px; /* Font size */
+    -fx-font-weight: bold; /* Bold font weight */
+    -fx-padding: 10px 24px; /* Padding */
+    -fx-border-radius: 30px; /* Rounded corners */
+}
+
+.special-card-button:hover {
+    -fx-background-color: #ffdb4d; /* Lighter yellow background on hover */
+}
+
+/* Intro text */
+.intro-text {
+    -fx-font-size: 18px;
+    -fx-fill: white;
+}
+
+/* Prompt number text */
+.prompt-number-text {
+    -fx-font-size: 35px;
+    -fx-fill: white;
+}
+
+/* Player text */
+.player-text {
+    -fx-font-size: 16px;
+    -fx-fill: white;
+}
+
+/* Question text */
+.question-text {
+    -fx-font-size: 16px;
+    -fx-fill: white;
+}
+
+.notification-text {
+    -fx-font-size: 14px;
+    -fx-fill: yellow;
+}
+
+/* Option button */
+.option-button {
+    -fx-background-color: #4CAF50;
+    -fx-border: none;
+    -fx-text-fill: white;
+    -fx-padding: 10px 24px;
+    -fx-font-size: 16px;
+}
+
+.option-button:hover {
+    -fx-background-color: #45a049;
+    -fx-text-fill: white;
+    -fx-padding: 12px 26px;
+    -fx-font-size: 18px;
+}
+
+.styled-button {
+    -fx-background-color: #4CAF50;
+    -fx-border: none;
+    -fx-text-fill: white;
+    -fx-padding: 10px 24px;
+    -fx-font-size: 16px;
+}
+
+.styled-button:hover {
+    -fx-background-color: #45a049;
+    -fx-padding: 12px 26px;
+    -fx-font-size: 18px;
+}
+
+.contentboxinsummary {
+    -fx-border-color: #CCCCCC;
+    -fx-border-width: 2px;
+    -fx-padding: 10px;
+}
+
+.result-text {
+    -fx-font-size: 30px;
+    -fx-fill: white;
+    -fx-font-family: "Arial", sans-serif; /* Use a common sans-serif font */
+    -fx-font-weight: bold; /* Make the text bold */
+    -fx-text-alignment: center; /* Center-align the text */
+    -fx-padding: 20px; /* Add some padding */
+    
+}
+
+.tips-text {
+    -fx-font-size: 16px;
+    -fx-fill: white;
+    -fx-font-family: "Arial", sans-serif; /* Use a common sans-serif font */
+    -fx-text-alignment: center; /* Center-align the text */
+    -fx-padding: 20px; /* Add some padding */
+    
+}
+
+
+.voter-text {
+    -fx-font-size: 12px;
+    -fx-fill: gray;
+}
+
+.scroll-pane-of-voters {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+    -fx-background-radius: 10;
+    -fx-border-color: #aaaaaa;
+    -fx-border-radius: 10;
+    -fx-background-insets: 0;
+    -fx-padding: 10px;
+    -fx-margin: 20px;
+}
+
+.timer-text {
+    -fx-font-size: 16px;
+    -fx-fill: yellow;
+}
+
+.epic-progress-bar {
+    -fx-accent: linear-gradient(to right, #ff0000, #ffcc00, #00ff00, #00ccff, #0000ff); /* Gradient color */
+    -fx-background-color: transparent; /* Transparent background */
+    -fx-background-insets: 0; /* No background insets */
+    -fx-border-color: transparent; /* Transparent border */
+    -fx-border-radius: 5px; /* Border radius */
+    -fx-border-width: 0px; /* No border width */
+    -fx-text-fill: white; /* Text color */
+    -fx-font-size: 14px; /* Font size */
+    -fx-font-weight: bold; /* Font weight */
+    -fx-padding: 5px; /* Padding */
+}
+
+
+
+
