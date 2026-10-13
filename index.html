@@ -249,6 +249,15 @@ h3{font-family:var(--head);font-weight:700;font-size:1.25rem;color:var(--accent)
 .g-msg.show{opacity:1}
 .g-phone{display:block;margin:0 auto 6px;visibility:hidden;background:#B8893A;color:#0D1613;border:none;border-radius:99px;padding:8px 20px;font:700 .92rem var(--body);cursor:pointer}
 .g-phone.ring{visibility:visible;animation:gring .35s infinite}
+.g-evrow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;min-height:44px;padding:0 18px 6px}
+.g-ev{position:relative;overflow:hidden;border:none;border-radius:99px;padding:8px 18px;font:700 .9rem var(--body);cursor:pointer;background:#B8893A;color:#0D1613;animation:gring .35s infinite}
+.g-ev.alarm{background:#ff7b72}
+.g-ev.coin,.g-ev.coffee{animation:none}
+.g-ev.coin{background:#F2B84B}
+.g-ev.coffee{background:#7ee2b0}
+.g-ev i{position:absolute;left:0;bottom:0;height:3px;width:100%;background:rgba(0,0,0,.45)}
+.g-guest.angry{border-color:#ff7b72;cursor:pointer}
+.g-guest.rush{border-color:#58a6ff}
 @keyframes gring{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg) scale(1.05)}}
 .g-board{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:8px 18px 18px}
 .hook{position:relative;min-height:64px;border-radius:10px;border:2px solid #B8893A;background:#1D3A33;color:#F8FAF7;font-family:var(--code);font-weight:600;font-size:1.05rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:transform .12s,background .15s}
@@ -716,7 +725,7 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
     </div>
     <div class="g-guests" id="g-guests"></div>
     <div class="g-msg" id="g-msg"></div>
-    <button class="g-phone" id="g-phone" type="button">📞</button>
+    <div class="g-evrow" id="g-ev"></div>
     <div class="g-board" id="g-board"></div>
     <div class="g-over" id="g-over"></div>
   </div>
@@ -1235,20 +1244,38 @@ function appendTermLine(text, color = '#c9d1d9') {
 }
 
 /* =====================================================================
-   HIDDEN MINIGAME #1: NIGHT SHIFT  (terminal: play)
+   HIDDEN MINIGAME #1: NIGHT SHIFT v2  (terminal: play)
+   Pokojný začiatok, od 2. úrovne náhodné udalosti.
    ===================================================================== */
 const gModal = $('#game-modal'), gWin = $('#game-window'), gBoard = $('#g-board'), gGuests = $('#g-guests'),
-      gPhone = $('#g-phone'), gOver = $('#g-over'), gMsg = $('#g-msg');
+      gEv = $('#g-ev'), gOver = $('#g-over'), gMsg = $('#g-msg');
 const ROOMS = [101,102,103,104,105,106,107,108,109,110,111,112];
 const FACES = ['🧑‍💼','👵','🧔','👩‍🦰','🧑‍🎤','👨‍🦳','🧑‍🍳','👩‍🔬','🧓','👨‍🚀','🧕','👱‍♀️'];
-const gT = k => (T[lang] && T[lang][k]) || k;
+const GL = {
+  sk: {how:'Si na recepcii hotela. Hostia chcú izbu (Ubytovanie) alebo vracajú kľúč (Odchod). Klikni na správny háčik alebo napíš číslo izby (napr. 107). Prvé úrovne sú pokojné, no čím viac hostí obslúžiš, tým viac sa deje: telefóny, prepitné, káva, rekonštrukcie, výpadky prúdu, skupiny turistov, nahnevaní hostia (upokoj ich klikaním na kartu), požiarny alarm aj inšpekcia. Medzerník = vybaví prvú udalosť. 3 chyby = koniec smeny.',
+    start:'Začať smenu', again:'Ďalšia smena', over:'Koniec smeny', final:'Výsledné skóre', neu:'Nový rekord!', hint:'Esc = späť do terminálu', served:'Obslúžených hostí',
+    ev_phone:'Zdvihnúť telefón!', ev_alarm:'Vypnúť alarm!', ev_coin:'Prepitné!', ev_coffee:'Káva (+❤)',
+    miss_phone:'Zmeškaný hovor!', miss_alarm:'Alarm dozvučal, hostia v panike!', black:'Výpadok prúdu: čísla zmizli!', shuffle:'Rekonštrukcia: kľúče sa premiestnili!',
+    rush:'Skupina turistov! Obsluž ich rýchlo!', insp:'Inšpekcia! Dvojnásobné body, hostia sú netrpezliví!', insp_end:'Inšpekcia skončená.', calm:'Najprv upokoj hosťa (klikaj na jeho kartu)!', calmed:'Upokojený 🙂',
+    coin:'+250 prepitné!', coffee:'Dobrá káva: +1 život', alarm_ok:'Alarm vypnutý!', in:'Ubytovanie', out:'Odchod', room:'izba', wrong:'Zlý kľúč!', left:'Hosť odišiel nahnevaný!', lvl:'Úroveň {n}!'},
+  en: {how:'You run a hotel front desk. Guests want a room (Check-in) or are returning a key (Check-out). Click the correct key hook or type the room number (e.g. 107). The first levels are calm, but the more guests you serve the more happens: phone calls, tips, coffee, renovations, power cuts, tour groups, angry guests (calm them by clicking their card), a fire alarm and an inspection. Space = handle the first event. 3 mistakes end your shift.',
+    start:'Start shift', again:'Next shift', over:'Shift over', final:'Final score', neu:'New high score!', hint:'Esc = back to terminal', served:'Guests served',
+    ev_phone:'Pick up the phone!', ev_alarm:'Stop the alarm!', ev_coin:'Tip!', ev_coffee:'Coffee (+❤)',
+    miss_phone:'Missed call!', miss_alarm:'The alarm ran out, guests panic!', black:'Power cut: the numbers vanished!', shuffle:'Renovation: the keys were rearranged!',
+    rush:'A tour group! Serve them fast!', insp:'Inspection! Double points, guests are less patient!', insp_end:'Inspection over.', calm:'Calm the guest first (click their card)!', calmed:'Calmed down 🙂',
+    coin:'+250 tip!', coffee:'Great coffee: +1 life', alarm_ok:'Alarm off!', in:'Check-in', out:'Check-out', room:'room', wrong:'Wrong key!', left:'A guest left angry!', lvl:'Level {n}!'}
+};
+const gT = k => (GL[lang] && GL[lang][k]) || (T[lang] && T[lang][k]) || k;
 let g = null, gRaf = 0, gLast = 0, gBuf = '', gBufT = 0, gMsgT = 0;
 
 function shuf(a) { a = a.slice(); for(let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+const gRnd = (a, b) => a + Math.random() * (b - a);
 function gOpen() { return gModal.classList.contains('open'); }
 function gBest() { return +load('nightShiftBest') || 0; }
+const gMult = () => Math.min(5, 1 + Math.floor(g.combo / 3));
+const gParams = () => ({pat:Math.max(5500, 16000 - 1100 * (g.level - 1)), cap:Math.min(7, 2 + Math.floor(g.level / 2)), gap:Math.max(1800, 6500 - 450 * g.level)});
 
-function gFlash(msg, ms = 1600) {
+function gFlash(msg, ms = 1800) {
   gMsg.textContent = msg; gMsg.classList.add('show');
   clearTimeout(gMsgT); gMsgT = setTimeout(() => gMsg.classList.remove('show'), ms);
 }
@@ -1256,17 +1283,15 @@ function gHud() {
   $('#g-score').textContent = g ? g.score : 0;
   $('#g-lives').textContent = g ? '❤'.repeat(Math.max(0, g.lives)) + '·'.repeat(Math.max(0, 3 - g.lives)) : '❤❤❤';
   $('#g-lvl').textContent = g ? g.level : 1;
-  $('#g-combo').textContent = 'x' + (g ? Math.min(5, 1 + Math.floor(g.combo / 3)) : 1);
+  $('#g-combo').textContent = 'x' + (g ? gMult() : 1) + (g && g.insp > 0 ? ' ×2' : '');
   $('#g-best').textContent = Math.max(gBest(), g ? g.score : 0);
 }
 function gRenderBoard() {
   gBoard.innerHTML = '';
-  const order = g ? g.order : ROOMS;
-  order.forEach(r => {
-    const has = g ? g.has[r] : true;
-    const b = document.createElement('button');
+  (g ? g.order : ROOMS).forEach(r => {
+    const has = g ? g.has[r] : true, b = document.createElement('button');
     b.type = 'button'; b.className = 'hook' + (has ? '' : ' out');
-    b.innerHTML = '<small>' + (has ? '🔑' : '·') + '</small>' + r;
+    b.innerHTML = '<small>' + (has ? '🔑' : '·') + '</small>' + (g && g.black > 0 ? '?' : r);
     b.onclick = () => gServe(r);
     gBoard.appendChild(b);
   });
@@ -1276,15 +1301,14 @@ function gShowOverlay(html) {
   const b = gOver.querySelector('button'); if(b) { b.onclick = gStart; b.focus(); }
 }
 function gShowStart() {
-  gShowOverlay('<h3>' + gT('g_title') + '</h3><p>' + gT('g_how') + '</p><button class="btn" type="button">' + gT('g_start') + '</button><span class="g-hint">' + gT('g_hint') + '</span>');
+  gShowOverlay('<h3>' + gT('g_title') + '</h3><p>' + gT('how') + '</p><button class="btn" type="button">' + gT('start') + '</button><span class="g-hint">' + gT('hint') + '</span>');
 }
 function openGame() {
   if(typeof EX !== 'undefined' && EX.isOpen()) EX.close(true);
-  termModal.classList.remove('open');
-  termInput.blur();
+  termModal.classList.remove('open'); termInput.blur();
   if(g) g.run = false;
   cancelAnimationFrame(gRaf);
-  g = null; gGuests.innerHTML = ''; gPhone.classList.remove('ring'); gMsg.classList.remove('show');
+  g = null; gGuests.innerHTML = ''; gEv.innerHTML = ''; gMsg.classList.remove('show');
   gModal.classList.add('open');
   gRenderBoard(); gHud(); gShowStart();
 }
@@ -1296,38 +1320,37 @@ function closeGame(silent) {
 }
 function gStart() {
   cancelAnimationFrame(gRaf);
-  gGuests.innerHTML = '';
+  gGuests.innerHTML = ''; gEv.innerHTML = '';
   const has = {}; ROOMS.forEach(r => has[r] = true);
-  g = {score:0, lives:3, level:1, served:0, combo:0, has, order:shuf(ROOMS), guests:[], spawn:600, shuffleT:18000, phone:0, phoneT:12000, run:true};
+  g = {score:0, lives:3, level:1, served:0, combo:0, has, order:shuf(ROOMS), guests:[], evs:[], spawn:1200, evT:16000, black:0, insp:0, run:true};
   gOver.style.display = 'none';
-  gPhone.classList.remove('ring');
   gRenderBoard(); gHud();
   gLast = performance.now();
   gRaf = requestAnimationFrame(gLoop);
 }
-function gSpawn() {
+
+/* ---------- hostia ---------- */
+function gSpawn(o) {
+  o = o || {};
   const used = g.guests.map(x => x.room);
-  let c = ROOMS.filter(r => !used.includes(r));
-  if(!c.length) return;
-  const absent = c.filter(r => !g.has[r]);
-  if(absent.length && Math.random() < .5) c = absent;
-  const room = c[Math.floor(Math.random() * c.length)];
-  const type = g.has[room] ? 'in' : 'out';
-  const vip = g.level >= 2 && Math.random() < .16;
-  const max = Math.max(4000, 11000 - g.level * 700) * (vip ? .7 : 1);
-  const el = document.createElement('div');
-  el.className = 'g-guest' + (vip ? ' vip' : '');
-  el.innerHTML = '<span class="face">' + (vip ? '🤵' : FACES[Math.floor(Math.random() * FACES.length)]) + '</span><div class="gtxt"><b>' + (vip ? '★ ' : '') + gT(type === 'in' ? 'g_in' : 'g_out') + ' → ' + gT('g_room') + ' ' + room + '</b><div class="pbar"><i></i></div></div>';
-  gGuests.appendChild(el);
-  g.guests.push({room, type, vip, max, left:max, el, bar:el.querySelector('i')});
+  let c = ROOMS.filter(r => !used.includes(r) && (!o.rush || g.has[r]));
+  if(!c.length) return false;
+  const ab = c.filter(r => !g.has[r]);
+  if(!o.rush && ab.length && Math.random() < .5) c = ab;
+  const room = c[Math.floor(Math.random() * c.length)], type = g.has[room] ? 'in' : 'out';
+  const vip = !o.rush && g.level >= 2 && Math.random() < .14, angry = (!o.rush && g.level >= 3 && Math.random() < .12) ? 2 : 0;
+  const max = gParams().pat * (vip ? .7 : 1) * (o.rush ? .85 : 1), el = document.createElement('div');
+  el.className = 'g-guest' + (vip ? ' vip' : '') + (angry ? ' angry' : '') + (o.rush ? ' rush' : '');
+  const face = vip ? '🤵' : angry ? '😡' : o.rush ? '🧳' : FACES[Math.floor(Math.random() * FACES.length)];
+  el.innerHTML = '<span class="face">' + face + '</span><div class="gtxt"><b>' + (vip ? '★ ' : '') + gT(type) + ' → ' + gT('room') + ' ' + room + '</b><div class="pbar"><i></i></div></div>';
+  const x = {room, type, vip, rush:!!o.rush, angry, max, left:max, el, bar:el.querySelector('i'), face:el.querySelector('.face')};
+  el.onclick = () => { if(x.angry > 0 && g && g.run) { x.angry--; if(x.angry <= 0) { el.classList.remove('angry'); x.face.textContent = '🙂'; gFlash(gT('calmed'), 900); } } };
+  gGuests.appendChild(el); g.guests.push(x);
+  return true;
 }
-function gRemove(x) {
-  x.el.remove();
-  g.guests = g.guests.filter(y => y !== x);
-}
+function gRemove(x) { x.el.remove(); g.guests = g.guests.filter(y => y !== x); }
 function gMistake(msg) {
-  g.lives--; g.combo = 0;
-  gFlash(msg);
+  g.lives--; g.combo = 0; gFlash(msg);
   gWin.classList.remove('g-window-shake'); void gWin.offsetWidth; gWin.classList.add('g-window-shake');
   gHud();
   if(g.lives <= 0) gEnd();
@@ -1336,70 +1359,84 @@ function gServe(room) {
   if(!g || !g.run) return;
   const present = g.has[room];
   const guest = g.guests.find(x => x.room === room && ((x.type === 'in' && present) || (x.type === 'out' && !present)));
-  if(!guest) { gMistake(gT('g_wrong')); return; }
-  g.has[room] = !present;
-  g.combo++;
-  const mult = Math.min(5, 1 + Math.floor(g.combo / 3));
-  g.score += Math.round((100 + (guest.left / guest.max) * 50) * mult * (guest.vip ? 2 : 1));
-  g.served++;
-  gRemove(guest);
-  if(g.served % 8 === 0) { g.level++; gFlash(gT('g_levelup').replace('{n}', g.level)); }
+  if(!guest) { gMistake(gT('wrong')); return; }
+  if(guest.angry > 0) { gFlash(gT('calm')); return; }
+  g.has[room] = !present; g.combo++;
+  g.score += Math.round((100 + (guest.left / guest.max) * 50) * gMult() * (guest.vip ? 2 : 1) * (guest.rush ? 1.5 : 1) * (g.insp > 0 ? 2 : 1));
+  g.served++; gRemove(guest);
+  if(g.served % 7 === 0) { g.level++; gFlash(gT('lvl').replace('{n}', g.level)); }
   gRenderBoard(); gHud();
 }
+
+/* ---------- udalosti ---------- */
+const EVB = {phone:{t:7000, ic:'📞', bad:'miss_phone'}, alarm:{t:7000, ic:'🚨', bad:'miss_alarm'}, coin:{t:4500, ic:'💰'}, coffee:{t:4500, ic:'☕'}};
+const EVS = [{id:'phone', min:2, w:3}, {id:'coin', min:2, w:2}, {id:'shuffle', min:3, w:2}, {id:'coffee', min:3, w:1}, {id:'rush', min:4, w:2}, {id:'black', min:4, w:2}, {id:'alarm', min:5, w:2}, {id:'insp', min:6, w:1}];
+function gAddEv(id) {
+  const d = EVB[id], b = document.createElement('button');
+  b.type = 'button'; b.className = 'g-ev ' + id; b.innerHTML = d.ic + ' ' + gT('ev_' + id) + '<i></i>';
+  const v = {id, t:d.t, max:d.t, el:b, bar:b.querySelector('i')};
+  b.onclick = () => gDoEv(v); gEv.appendChild(b); g.evs.push(v);
+}
+function gDoEv(v) {
+  if(!g || !g.run) return;
+  v.el.remove(); g.evs = g.evs.filter(y => y !== v);
+  if(v.id === 'phone') { g.combo++; g.score += 75 * gMult(); }
+  else if(v.id === 'alarm') { g.score += 100; gFlash(gT('alarm_ok'), 1200); }
+  else if(v.id === 'coin') { g.score += 250; gFlash(gT('coin'), 1200); }
+  else if(v.id === 'coffee') { g.lives = Math.min(5, g.lives + 1); gFlash(gT('coffee'), 1400); }
+  gHud();
+}
+function gEvent() {
+  const busy = id => g.evs.some(v => v.id === id);
+  const pool = EVS.filter(e => g.level >= e.min && !(EVB[e.id] && busy(e.id)) && !(e.id === 'black' && g.black > 0) && !(e.id === 'insp' && g.insp > 0));
+  let r = Math.random() * pool.reduce((a, e) => a + e.w, 0), e = pool[0];
+  for(const p of pool) { r -= p.w; if(r <= 0) { e = p; break; } }
+  if(!e) return;
+  if(EVB[e.id]) { gAddEv(e.id); if(e.id === 'alarm') gFlash(gT('ev_alarm')); }
+  else if(e.id === 'shuffle') { g.order = shuf(g.order); gRenderBoard(); gFlash(gT('shuffle'), 2400); }
+  else if(e.id === 'black') { g.black = 4000; gRenderBoard(); gFlash(gT('black'), 2400); }
+  else if(e.id === 'rush') { for(let i = 0; i < 3; i++) gSpawn({rush:true}); gFlash(gT('rush'), 2400); }
+  else if(e.id === 'insp') { g.insp = 10000; gFlash(gT('insp'), 2600); gHud(); }
+}
+
 function gEnd() {
-  g.run = false;
-  cancelAnimationFrame(gRaf);
-  gPhone.classList.remove('ring');
-  const best = gBest(), isNew = g.score > best;
+  g.run = false; cancelAnimationFrame(gRaf);
+  const isNew = g.score > gBest();
   if(isNew) save('nightShiftBest', String(g.score));
   gHud();
-  gShowOverlay('<h3>' + gT('g_over') + '</h3><p>' + gT('g_final') + '</p><div class="big">' + g.score + '</div>' + (isNew ? '<p>🏆 ' + gT('g_new') + '</p>' : '') + '<button class="btn" type="button">' + gT('g_again') + '</button><span class="g-hint">' + gT('g_hint') + '</span>');
+  gShowOverlay('<h3>' + gT('over') + '</h3><p>' + gT('final') + '</p><div class="big">' + g.score + '</div><p>' + gT('served') + ': <b>' + g.served + '</b> · ' + gT('g_level') + ' <b>' + g.level + '</b></p>' + (isNew ? '<p>🏆 ' + gT('neu') + '</p>' : '') + '<button class="btn" type="button">' + gT('again') + '</button><span class="g-hint">' + gT('hint') + '</span>');
 }
 function gLoop(t) {
   if(!g || !g.run) return;
   const dt = Math.min(100, t - gLast); gLast = t;
+  const p = gParams();
   g.spawn -= dt;
-  if(g.spawn <= 0) {
-    if(g.guests.length < Math.min(6, 2 + Math.floor(g.level / 2))) { gSpawn(); g.spawn = Math.max(1000, 3600 - g.level * 280); }
-    else g.spawn = 300;
-  }
-  const rate = g.phone > 0 ? 1.8 : 1;
+  if(g.spawn <= 0) { if(g.guests.length < p.cap && gSpawn()) g.spawn = p.gap; else g.spawn = 500; }
+  g.evT -= dt;
+  if(g.evT <= 0) { if(g.level >= 2) { gEvent(); g.evT = Math.max(6000, 14000 - 700 * g.level) * gRnd(.7, 1.3); } else g.evT = 4000; }
+  const rate = (g.evs.some(v => v.id === 'alarm') ? 1.8 : 1) * (g.insp > 0 ? 1.4 : 1);
   for(const x of g.guests.slice()) {
     x.left -= dt * rate;
-    const p = Math.max(0, x.left / x.max);
-    x.bar.style.width = (p * 100) + '%';
-    x.el.classList.toggle('low', p < .3);
-    if(x.left <= 0) { gRemove(x); gMistake(gT('g_left')); if(!g.run) return; }
+    const f = Math.max(0, x.left / x.max);
+    x.bar.style.width = (f * 100) + '%'; x.el.classList.toggle('low', f < .3);
+    if(x.left <= 0) { gRemove(x); gMistake(gT('left')); if(!g.run) return; }
   }
-  if(g.phone > 0) {
-    g.phone -= dt;
-    if(g.phone <= 0) { g.phone = 0; gPhone.classList.remove('ring'); gMistake(gT('g_missed')); if(!g.run) return; }
-  } else {
-    g.phoneT -= dt;
-    if(g.phoneT <= 0) {
-      g.phone = 6000; g.phoneT = 10000 + Math.random() * 8000;
-      gPhone.textContent = '📞 ' + gT('g_phone'); gPhone.classList.add('ring');
-    }
+  for(const v of g.evs.slice()) {
+    v.t -= dt; v.bar.style.width = (v.t / v.max * 100) + '%';
+    if(v.t <= 0) { v.el.remove(); g.evs = g.evs.filter(y => y !== v); if(EVB[v.id].bad) { gMistake(gT(EVB[v.id].bad)); if(!g.run) return; } }
   }
-  if(g.level >= 2) {
-    g.shuffleT -= dt;
-    if(g.shuffleT <= 0) { g.order = shuf(g.order); g.shuffleT = 18000; gRenderBoard(); gFlash(gT('g_shuffle'), 2200); }
-  }
+  if(g.black > 0) { g.black -= dt; if(g.black <= 0) { g.black = 0; gRenderBoard(); } }
+  if(g.insp > 0) { g.insp -= dt; if(g.insp <= 0) { g.insp = 0; gFlash(gT('insp_end'), 1400); gHud(); } }
   gRaf = requestAnimationFrame(gLoop);
 }
-gPhone.onclick = () => {
-  if(!g || !g.run || g.phone <= 0) return;
-  g.phone = 0; gPhone.classList.remove('ring');
-  g.combo++; g.score += 75 * Math.min(5, 1 + Math.floor(g.combo / 3));
-  gHud();
-};
 $('#g-close').onclick = () => closeGame();
 gModal.addEventListener('mousedown', e => { if(e.target === gModal) closeGame(); });
-
 addEventListener('keydown', e => {
   if(!gOpen()) return;
   if(e.key === 'Escape') { closeGame(); return; }
-  if(g && g.run && /^\d$/.test(e.key)) {
+  if(!g || !g.run) return;
+  if(e.key === ' ' && e.target.tagName !== 'BUTTON') { e.preventDefault(); if(g.evs[0]) gDoEv(g.evs[0]); return; }
+  if(/^\d$/.test(e.key)) {
     const now = Date.now();
     if(now - gBufT > 1500) gBuf = '';
     gBufT = now; gBuf += e.key;
