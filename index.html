@@ -1244,29 +1244,81 @@ function appendTermLine(text, color = '#c9d1d9') {
 }
 
 /* =====================================================================
-   HIDDEN MINIGAME #1: NIGHT SHIFT v2 + SOUND  (terminal: play)
-   Pokojný začiatok, od 2. úrovne náhodné udalosti. Teraz aj so zvukmi.
+   HIDDEN MINIGAME #1: NIGHT SHIFT v3  (terminal: play)
+   Farebné rozlíšenie Ubytovanie / Odchod (hostia + háčiky), hodiny smeny,
+   nové udalosti (šéf, psík), pauza, hodnosti, štatistiky a zvuky.
    ===================================================================== */
 const gModal = $('#game-modal'), gWin = $('#game-window'), gBoard = $('#g-board'), gGuests = $('#g-guests'),
       gEv = $('#g-ev'), gOver = $('#g-over'), gMsg = $('#g-msg');
 const ROOMS = [101,102,103,104,105,106,107,108,109,110,111,112];
 const FACES = ['🧑‍💼','👵','🧔','👩‍🦰','🧑‍🎤','👨‍🦳','🧑‍🍳','👩‍🔬','🧓','👨‍🚀','🧕','👱‍♀️'];
 const GL = {
-  sk: {how:'Si na recepcii hotela. Hostia chcú izbu (Ubytovanie) alebo vracajú kľúč (Odchod). Klikni na správny háčik alebo napíš číslo izby (napr. 107). Prvé úrovne sú pokojné, no čím viac hostí obslúžiš, tým viac sa deje: telefóny, prepitné, káva, rekonštrukcie, výpadky prúdu, skupiny turistov, nahnevaní hostia (upokoj ich klikaním na kartu), požiarny alarm aj inšpekcia. Medzerník = vybaví prvú udalosť. M = zvuk zap./vyp. 3 chyby = koniec smeny.',
+  sk: {how:'Si na recepcii hotela. ⬇ MODRÍ hostia chcú izbu (Ubytovanie): kľúč visí na MODROM háčiku. ⬆ FIALOVÍ hostia vracajú kľúč (Odchod): háčik je prázdny a FIALOVÝ. Klikni na správny háčik alebo napíš číslo izby (napr. 107). Čím viac hostí obslúžiš, tým viac sa deje: telefóny, prepitné, káva, šéf, psík, rekonštrukcie, výpadky prúdu, skupiny turistov, nahnevaní hostia (upokoj ich klikaním na kartu), alarm aj inšpekcia. Rýchla obsluha dáva bonus. Dotrvaj do 06:00! Medzerník = vybaví prvú udalosť, P = pauza, M = zvuk. 3 chyby = koniec smeny.',
     start:'Začať smenu', again:'Ďalšia smena', over:'Koniec smeny', final:'Výsledné skóre', neu:'Nový rekord!', hint:'Esc = späť do terminálu', served:'Obslúžených hostí',
-    ev_phone:'Zdvihnúť telefón!', ev_alarm:'Vypnúť alarm!', ev_coin:'Prepitné!', ev_coffee:'Káva (+❤)',
+    ev_phone:'Zdvihnúť telefón!', ev_alarm:'Vypnúť alarm!', ev_coin:'Prepitné!', ev_coffee:'Káva (+❤)', ev_manager:'Šéf na pomoc! (spomalí čas)', ev_dog:'Pohladiť psíka',
     miss_phone:'Zmeškaný hovor!', miss_alarm:'Alarm dozvučal, hostia v panike!', black:'Výpadok prúdu: čísla zmizli!', shuffle:'Rekonštrukcia: kľúče sa premiestnili!',
     rush:'Skupina turistov! Obsluž ich rýchlo!', insp:'Inšpekcia! Dvojnásobné body, hostia sú netrpezliví!', insp_end:'Inšpekcia skončená.', calm:'Najprv upokoj hosťa (klikaj na jeho kartu)!', calmed:'Upokojený 🙂',
-    coin:'+250 prepitné!', coffee:'Dobrá káva: +1 život', alarm_ok:'Alarm vypnutý!', in:'Ubytovanie', out:'Odchod', room:'izba', wrong:'Zlý kľúč!', left:'Hosť odišiel nahnevaný!', lvl:'Úroveň {n}!', snd:'Zvuk zap./vyp. (M)'},
-  en: {how:'You run a hotel front desk. Guests want a room (Check-in) or are returning a key (Check-out). Click the correct key hook or type the room number (e.g. 107). The first levels are calm, but the more guests you serve the more happens: phone calls, tips, coffee, renovations, power cuts, tour groups, angry guests (calm them by clicking their card), a fire alarm and an inspection. Space = handle the first event. M = sound on/off. 3 mistakes end your shift.',
+    coin:'+250 prepitné!', coffee:'Dobrá káva: +1 život', alarm_ok:'Alarm vypnutý!', in:'Ubytovanie', out:'Odchod', room:'izba', wrong:'Zlý kľúč!', left:'Hosť odišiel nahnevaný!', lvl:'Úroveň {n}!',
+    manager_on:'Šéf pomáha: hostia čakajú pomalšie!', manager_off:'Šéf odišiel, tempo je späť.', dog_ok:'Psík upokojil nahnevaných hostí! +150', dawn:'Svitá! Smena splnená: +1000. Pokračuješ v nadčasoch!',
+    paused:'Pauza', pause_hint:'P = pokračovať', resume:'Pokračovať', snd:'Zvuk zap./vyp. (M)', pause_btn:'Pauza (P)',
+    legend_in:'Ubytovanie · kľúč na háčiku', legend_out:'Odchod · prázdny háčik',
+    st_combo:'Najlepšie kombo', st_vip:'VIP', st_fast:'Rýchle obsluhy', st_games:'Odohrané smeny', st_total:'Hostí spolu',
+    rank:['Stážista','Recepčný','Vedúci zmeny','Hotelový manažér','Legenda recepcie'],
+    tips:['Modrí hostia chcú kľúč z háčika, fialoví vracajú kľúč na prázdny háčik.','Rýchla obsluha (nad 75 % trpezlivosti) dá bonus +50.','Šéf spomalí čas na 8 sekúnd. Hodí sa pri skupine turistov.','Psík upokojí všetkých nahnevaných hostí naraz.','Nápoveda pri hoveri nad hosťom zmizne od 5. úrovne.','Zdvihnutý telefón predlžuje kombo, nenechaj ho zvoniť.']},
+  en: {how:'You run a hotel front desk. ⬇ BLUE guests want a room (Check-in): the key hangs on a BLUE hook. ⬆ PURPLE guests return a key (Check-out): the hook is empty and PURPLE. Click the correct hook or type the room number (e.g. 107). The more guests you serve the more happens: phone calls, tips, coffee, the boss, a dog, renovations, power cuts, tour groups, angry guests (calm them by clicking their card), an alarm and an inspection. Fast service gives a bonus. Survive until 06:00! Space = handle the first event, P = pause, M = sound. 3 mistakes end your shift.',
     start:'Start shift', again:'Next shift', over:'Shift over', final:'Final score', neu:'New high score!', hint:'Esc = back to terminal', served:'Guests served',
-    ev_phone:'Pick up the phone!', ev_alarm:'Stop the alarm!', ev_coin:'Tip!', ev_coffee:'Coffee (+❤)',
+    ev_phone:'Pick up the phone!', ev_alarm:'Stop the alarm!', ev_coin:'Tip!', ev_coffee:'Coffee (+❤)', ev_manager:'Call the boss! (slows time)', ev_dog:'Pet the dog',
     miss_phone:'Missed call!', miss_alarm:'The alarm ran out, guests panic!', black:'Power cut: the numbers vanished!', shuffle:'Renovation: the keys were rearranged!',
     rush:'A tour group! Serve them fast!', insp:'Inspection! Double points, guests are less patient!', insp_end:'Inspection over.', calm:'Calm the guest first (click their card)!', calmed:'Calmed down 🙂',
-    coin:'+250 tip!', coffee:'Great coffee: +1 life', alarm_ok:'Alarm off!', in:'Check-in', out:'Check-out', room:'room', wrong:'Wrong key!', left:'A guest left angry!', lvl:'Level {n}!', snd:'Sound on/off (M)'}
+    coin:'+250 tip!', coffee:'Great coffee: +1 life', alarm_ok:'Alarm off!', in:'Check-in', out:'Check-out', room:'room', wrong:'Wrong key!', left:'A guest left angry!', lvl:'Level {n}!',
+    manager_on:'The boss helps: guests wait slower!', manager_off:'The boss left, normal pace is back.', dog_ok:'The dog calmed all angry guests! +150', dawn:'Dawn! Shift complete: +1000. You continue in overtime!',
+    paused:'Paused', pause_hint:'P = resume', resume:'Resume', snd:'Sound on/off (M)', pause_btn:'Pause (P)',
+    legend_in:'Check-in · key on the hook', legend_out:'Check-out · empty hook',
+    st_combo:'Best combo', st_vip:'VIPs', st_fast:'Fast services', st_games:'Shifts played', st_total:'Guests total',
+    rank:['Intern','Receptionist','Shift Lead','Hotel Manager','Front Desk Legend'],
+    tips:['Blue guests want a key from a hook, purple guests return a key to an empty hook.','Fast service (over 75% patience) gives a +50 bonus.','The boss slows time for 8 seconds. Great against tour groups.','The dog calms all angry guests at once.','The hover hint over a guest disappears from level 5.','Picking up the phone extends your combo, do not let it ring.']}
 };
 const gT = k => (GL[lang] && GL[lang][k]) || (T[lang] && T[lang][k]) || k;
 let g = null, gRaf = 0, gLast = 0, gBuf = '', gBufT = 0, gMsgT = 0;
+
+/* ---------- štýly (vložené z JS, HTML/CSS netreba meniť) ---------- */
+(() => {
+  const s = document.createElement('style');
+  s.textContent = `
+#game-window{--in:#38bdf8;--out:#c084fc}
+#game-window.g-slow{box-shadow:0 0 0 2px #58a6ff,0 0 40px rgba(88,166,255,.35),0 24px 60px rgba(0,0,0,.6)}
+#game-window.g-insp{box-shadow:0 0 0 2px #D9A84F,0 0 40px rgba(217,168,79,.3),0 24px 60px rgba(0,0,0,.6)}
+.g-legend{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:0 18px;font-family:var(--code);font-size:.74rem}
+.g-legend span{display:inline-flex;align-items:center;gap:6px;padding:3px 12px;border-radius:99px;border:1.5px solid}
+.g-legend .l-in{border-color:var(--in);color:var(--in);background:rgba(56,189,248,.1)}
+.g-legend .l-out{border-color:var(--out);color:var(--out);background:rgba(192,132,252,.1);border-style:dashed}
+#g-guests .g-guest.t-in{background-image:linear-gradient(90deg,rgba(56,189,248,.24),transparent 65%);box-shadow:inset 6px 0 0 var(--in)}
+#g-guests .g-guest.t-out{background-image:linear-gradient(90deg,rgba(192,132,252,.24),transparent 65%);box-shadow:inset 6px 0 0 var(--out)}
+#g-guests .g-guest.rush{border-style:dashed;border-width:2px}
+#g-guests .t-in .face{background:rgba(56,189,248,.22);box-shadow:0 0 0 2px var(--in);border-radius:50%;padding:4px}
+#g-guests .t-out .face{background:rgba(192,132,252,.22);box-shadow:0 0 0 2px var(--out);border-radius:50%;padding:4px}
+.gb{display:inline-block;font-family:var(--code);font-size:.72rem;font-weight:600;padding:1px 9px;border-radius:99px;margin-right:8px;vertical-align:middle}
+.t-in .gb{background:var(--in);color:#06202e}
+.t-out .gb{background:var(--out);color:#25103a}
+.g-guest .rn{font-family:var(--code);font-size:1.05rem;font-weight:600;vertical-align:middle}
+.t-in .rn{color:var(--in)}.t-out .rn{color:var(--out)}
+#g-board .hook.in{border-color:var(--in);background:#0f2a3a;color:#E0F4FF}
+#g-board .hook.in:hover{background:#15405a}
+#g-board .hook.out{border:2px dashed var(--out);background:#24133a;color:#c9a8ef}
+#g-board .hook.out:hover{background:#34205a}
+#g-board .hook.hint{box-shadow:0 0 0 3px #fff,0 0 18px 4px rgba(255,255,255,.55);transform:translateY(-3px)}
+#g-board .hook.ok{animation:ghookok .45s}
+#g-board .hook.bad{animation:gshake .3s;background:#5a1d1d}
+@keyframes ghookok{30%{transform:scale(1.12);background:#10B981}}
+.g-pop{position:absolute;z-index:5;pointer-events:none;font-family:var(--code);font-weight:700;font-size:1rem;text-shadow:0 2px 6px rgba(0,0,0,.7);animation:gpopup 1s ease-out forwards}
+@keyframes gpopup{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,-48px)}}
+.g-ev.manager,.g-ev.dog{animation:none}
+.g-ev.manager{background:#58a6ff}.g-ev.dog{background:#f0abfc}
+.g-over .g-rank{font-family:var(--head);font-weight:800;font-size:1.25rem;color:#D9A84F}
+.g-over .g-tip{max-width:46ch;font-size:.85rem;color:#93B1A5}
+`;
+  document.head.appendChild(s);
+})();
 
 /* ---------- ZVUK (Web Audio, bez súborov) ---------- */
 const gSnd = {on: load('nightShiftSnd') !== '0', ctx: null, master: null};
@@ -1305,17 +1357,18 @@ function gNoise(d, vol, delay, freq) {
 }
 function gSfx(name, n) {
   switch(name) {
-    case 'serve': { // stúpajúci tón podľa komba + cvaknutie kľúča
+    case 'serve': {
       const f = 523 * Math.pow(2, Math.min(n || 0, 10) * 2 / 12);
       gNoise(.05, .04, 0, 4200);
       gTone(f, .09, 'triangle', .06, .02); gTone(f * 1.5, .15, 'triangle', .05, .09); break; }
+    case 'perfect': gTone(1568, .08, 'triangle', .04, .12); gTone(2349, .16, 'triangle', .035, .2); break;
     case 'vip': gTone(1568, .1, 'sine', .04, .12); gTone(2093, .18, 'sine', .035, .2); break;
     case 'wrong': gTone(170, .22, 'sawtooth', .06, 0, 90); gTone(120, .22, 'square', .035, .02, 70); break;
     case 'bell': gTone(880, .22, 'sine', .028); gTone(1320, .3, 'sine', .018, .05); break;
     case 'warn': gTone(330, .08, 'square', .025); gTone(330, .08, 'square', .025, .12); break;
     case 'left': gTone(400, .35, 'sawtooth', .055, 0, 140); gNoise(.12, .03, 0, 900); break;
     case 'lose': gTone(150, .3, 'square', .06, 0, 70); gNoise(.1, .05, 0, 500); break;
-    case 'ring': // zvonenie telefónu
+    case 'ring':
       for(let i = 0; i < 4; i++) { gTone(1318, .05, 'square', .03, i * .075); gTone(1046, .05, 'square', .03, i * .075 + .04); } break;
     case 'pick': gNoise(.04, .05, 0, 3000); gTone(600, .07, 'triangle', .04, .03); gTone(900, .09, 'triangle', .04, .08); break;
     case 'miss': gTone(500, .3, 'sawtooth', .05, 0, 200); gTone(380, .3, 'sawtooth', .04, .12, 150); break;
@@ -1323,6 +1376,8 @@ function gSfx(name, n) {
     case 'alarm_off': gTone(900, .1, 'triangle', .05); gTone(600, .16, 'triangle', .05, .1); break;
     case 'coin': gTone(1319, .08, 'square', .035); gTone(1760, .3, 'square', .035, .08); break;
     case 'coffee': gTone(523, .15, 'sine', .05); gTone(659, .15, 'sine', .05, .1); gTone(784, .3, 'sine', .05, .2); break;
+    case 'manager': gTone(392, .12, 'triangle', .05); gTone(523, .12, 'triangle', .05, .1); gTone(659, .26, 'triangle', .05, .2); break;
+    case 'dog': gTone(320, .09, 'square', .05, 0, 190); gTone(300, .1, 'square', .05, .15, 170); gTone(900, .1, 'sine', .03, .32); break;
     case 'shuffle': for(let i = 0; i < 6; i++) gNoise(.06, .05, i * .06, 1800 + i * 300); break;
     case 'black': gTone(500, .6, 'sawtooth', .05, 0, 60); gNoise(.4, .03, 0, 300); break;
     case 'power': gTone(160, .12, 'square', .03); break;
@@ -1332,46 +1387,82 @@ function gSfx(name, n) {
     case 'calm': gTone(700, .06, 'sine', .035); break;
     case 'calmed': gTone(659, .1, 'sine', .05); gTone(880, .2, 'sine', .05, .08); break;
     case 'level': [523, 659, 784, 1047].forEach((f, i) => gTone(f, .16, 'triangle', .05, .18 + i * .09)); break;
+    case 'dawn': [392, 523, 659, 784, 1047, 1319].forEach((f, i) => gTone(f, .35, 'sine', .05, .2 + i * .14)); break;
+    case 'pause': gTone(660, .06, 'triangle', .04); gTone(440, .08, 'triangle', .04, .07); break;
     case 'start': gTone(523, .12, 'triangle', .05); gTone(784, .22, 'triangle', .05, .1); break;
     case 'over': [440, 392, 330, 262].forEach((f, i) => gTone(f, .28, 'triangle', .06, i * .2)); break;
     case 'record': [523, 659, 784, 1047, 1319].forEach((f, i) => gTone(f, .18, 'triangle', .055, 1 + i * .1)); break;
   }
 }
-// tlačidlo zvuku pridané cez JS (HTML netreba meniť)
-const gSndBtn = (() => {
-  const close = $('#g-close'), wrap = document.createElement('div'), b = document.createElement('button');
-  wrap.className = 'g-btns'; b.type = 'button'; b.className = 'g-close';
-  close.parentNode.insertBefore(wrap, close); wrap.appendChild(b); wrap.appendChild(close);
-  return b;
-})();
-function gSndUi() { gSndBtn.textContent = gSnd.on ? '🔊' : '🔇'; gSndBtn.title = gSndBtn.ariaLabel = gT('snd'); }
-function gToggleSnd() { gSnd.on = !gSnd.on; save('nightShiftSnd', gSnd.on ? '1' : '0'); gSndUi(); if(gSnd.on) gSfx('start'); }
-gSndBtn.onclick = gToggleSnd; gSndUi();
 
+/* ---------- UI vložené cez JS: pauza, zvuk, hodiny, legenda ---------- */
+const gSndBtn = document.createElement('button'), gPauseBtn = document.createElement('button');
+(() => {
+  const close = $('#g-close'), wrap = document.createElement('div');
+  wrap.className = 'g-btns';
+  [gPauseBtn, gSndBtn].forEach(b => { b.type = 'button'; b.className = 'g-close'; wrap.appendChild(b); });
+  close.parentNode.insertBefore(wrap, close); wrap.appendChild(close);
+  $('#game-modal .g-hud').insertAdjacentHTML('afterbegin', '<span>🕙 <b id="g-clock">22:00</b></span>');
+})();
+const gLegend = document.createElement('div');
+gLegend.className = 'g-legend'; gBoard.parentNode.insertBefore(gLegend, gBoard);
+function gLegendUi() { gLegend.innerHTML = '<span class="l-in">⬇ ' + gT('legend_in') + '</span><span class="l-out">⬆ ' + gT('legend_out') + '</span>'; }
+function gSndUi() {
+  gSndBtn.textContent = gSnd.on ? '🔊' : '🔇'; gSndBtn.title = gSndBtn.ariaLabel = gT('snd');
+  gPauseBtn.textContent = g && g.paused ? '▶' : '⏸'; gPauseBtn.title = gPauseBtn.ariaLabel = gT('pause_btn');
+  gLegendUi();
+}
+function gToggleSnd() { gSnd.on = !gSnd.on; save('nightShiftSnd', gSnd.on ? '1' : '0'); gSndUi(); if(gSnd.on) gSfx('start'); }
+gSndBtn.onclick = gToggleSnd; gPauseBtn.onclick = () => gPause(); gSndUi();
+
+/* ---------- pomocné ---------- */
 function shuf(a) { a = a.slice(); for(let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 const gRnd = (a, b) => a + Math.random() * (b - a);
 function gOpen() { return gModal.classList.contains('open'); }
 function gBest() { return +load('nightShiftBest') || 0; }
+function gLife() { try { return Object.assign({games:0, served:0, bestCombo:0}, JSON.parse(load('nightShiftLife')) || {}); } catch(e) { return {games:0, served:0, bestCombo:0}; } }
+const gRank = s => s < 1000 ? 0 : s < 3000 ? 1 : s < 7000 ? 2 : s < 14000 ? 3 : 4;
 const gMult = () => Math.min(5, 1 + Math.floor(g.combo / 3));
 const gParams = () => ({pat:Math.max(5500, 16000 - 1100 * (g.level - 1)), cap:Math.min(7, 2 + Math.floor(g.level / 2)), gap:Math.max(1800, 6500 - 450 * g.level)});
-
+function gClockStr() {
+  const m = 22 * 60 + (g ? g.clock : 0), h = Math.floor(m / 60) % 24, mm = m % 60;
+  return String(h).padStart(2, '0') + ':' + String(mm).padStart(2, '0');
+}
 function gFlash(msg, ms = 1800) {
   gMsg.textContent = msg; gMsg.classList.add('show');
   clearTimeout(gMsgT); gMsgT = setTimeout(() => gMsg.classList.remove('show'), ms);
+}
+function gPop(text, el, color) {
+  if(!el) return;
+  const r = el.getBoundingClientRect(), w = gWin.getBoundingClientRect(), p = document.createElement('div');
+  p.className = 'g-pop'; p.textContent = text; p.style.color = color || '#F2B84B';
+  p.style.left = (r.left - w.left + r.width / 2 + gWin.scrollLeft) + 'px';
+  p.style.top = (r.top - w.top + gWin.scrollTop) + 'px';
+  gWin.appendChild(p); setTimeout(() => p.remove(), 1000);
+}
+function gHookFx(room, kind) {
+  const b = gBoard.querySelector('[data-room="' + room + '"]'); if(!b) return;
+  b.classList.add(kind); setTimeout(() => b.classList.remove(kind), 450);
+}
+function gHint(room, on) {
+  gBoard.querySelectorAll('.hook.hint').forEach(b => b.classList.remove('hint'));
+  if(!on || !g || g.paused || g.level >= 5 || g.black > 0) return;
+  const b = gBoard.querySelector('[data-room="' + room + '"]'); if(b) b.classList.add('hint');
 }
 function gHud() {
   $('#g-score').textContent = g ? g.score : 0;
   $('#g-lives').textContent = g ? '❤'.repeat(Math.max(0, g.lives)) + '·'.repeat(Math.max(0, 3 - g.lives)) : '❤❤❤';
   $('#g-lvl').textContent = g ? g.level : 1;
-  $('#g-combo').textContent = 'x' + (g ? gMult() : 1) + (g && g.insp > 0 ? ' ×2' : '');
+  $('#g-combo').textContent = 'x' + (g ? gMult() : 1) + (g && g.combo >= 3 ? ' 🔥' : '') + (g && g.insp > 0 ? ' ×2' : '');
   $('#g-best').textContent = Math.max(gBest(), g ? g.score : 0);
+  $('#g-clock').textContent = gClockStr();
 }
 function gRenderBoard() {
   gBoard.innerHTML = '';
   (g ? g.order : ROOMS).forEach(r => {
     const has = g ? g.has[r] : true, b = document.createElement('button');
-    b.type = 'button'; b.className = 'hook' + (has ? '' : ' out');
-    b.innerHTML = '<small>' + (has ? '🔑' : '·') + '</small>' + (g && g.black > 0 ? '?' : r);
+    b.type = 'button'; b.className = 'hook ' + (has ? 'in' : 'out'); b.dataset.room = r;
+    b.innerHTML = '<small>' + (has ? '🔑' : '◌') + '</small>' + (g && g.black > 0 ? '?' : r);
     b.onclick = () => gServe(r);
     gBoard.appendChild(b);
   });
@@ -1381,7 +1472,10 @@ function gShowOverlay(html) {
   const b = gOver.querySelector('button'); if(b) { b.onclick = gStart; b.focus(); }
 }
 function gShowStart() {
-  gShowOverlay('<h3>' + gT('g_title') + '</h3><p>' + gT('how') + '</p><button class="btn" type="button">' + gT('start') + '</button><span class="g-hint">' + gT('hint') + '</span>');
+  const L = gLife();
+  gShowOverlay('<h3>' + gT('g_title') + '</h3><p>' + gT('how') + '</p>' +
+    (L.games ? '<span class="g-hint">' + gT('st_games') + ': ' + L.games + ' · ' + gT('st_total') + ': ' + L.served + ' · ' + gT('st_combo') + ': ' + L.bestCombo + '</span>' : '') +
+    '<button class="btn" type="button">' + gT('start') + '</button><span class="g-hint">' + gT('hint') + '</span>');
 }
 function openGame() {
   if(typeof EX !== 'undefined' && EX.isOpen()) EX.close(true);
@@ -1389,6 +1483,7 @@ function openGame() {
   if(g) g.run = false;
   cancelAnimationFrame(gRaf);
   g = null; gGuests.innerHTML = ''; gEv.innerHTML = ''; gMsg.classList.remove('show');
+  gWin.classList.remove('g-slow', 'g-insp');
   gModal.classList.add('open');
   gSndUi(); gAudio();
   gRenderBoard(); gHud(); gShowStart();
@@ -1402,13 +1497,31 @@ function closeGame(silent) {
 function gStart() {
   cancelAnimationFrame(gRaf);
   gGuests.innerHTML = ''; gEv.innerHTML = '';
+  gWin.classList.remove('g-slow', 'g-insp');
   const has = {}; ROOMS.forEach(r => has[r] = true);
-  g = {score:0, lives:3, level:1, served:0, combo:0, has, order:shuf(ROOMS), guests:[], evs:[], spawn:1200, evT:16000, black:0, insp:0, run:true};
+  g = {score:0, lives:3, level:1, served:0, combo:0, has, order:shuf(ROOMS), guests:[], evs:[], spawn:1200, evT:16000, black:0, insp:0, slow:0,
+       clock:0, dawn:false, paused:false, run:true, stats:{vip:0, fast:0, maxCombo:0, phones:0}};
   gOver.style.display = 'none';
-  gSfx('start');
+  gSfx('start'); gSndUi();
   gRenderBoard(); gHud();
   gLast = performance.now();
   gRaf = requestAnimationFrame(gLoop);
+}
+
+/* ---------- pauza ---------- */
+function gPause() {
+  if(!g || !g.run) return;
+  if(g.paused) { gResume(); return; }
+  g.paused = true; cancelAnimationFrame(gRaf); gHint(0, false); gSfx('pause');
+  gOver.innerHTML = '<h3>⏸ ' + gT('paused') + '</h3><p>' + gT('pause_hint') + '</p><button class="btn" type="button">' + gT('resume') + '</button>';
+  gOver.style.display = 'flex';
+  const b = gOver.querySelector('button'); b.onclick = gResume; b.focus();
+  gSndUi();
+}
+function gResume() {
+  if(!g || !g.run || !g.paused) return;
+  g.paused = false; gOver.style.display = 'none'; gSfx('pause'); gSndUi();
+  gLast = performance.now(); gRaf = requestAnimationFrame(gLoop);
 }
 
 /* ---------- hostia ---------- */
@@ -1422,22 +1535,25 @@ function gSpawn(o) {
   const room = c[Math.floor(Math.random() * c.length)], type = g.has[room] ? 'in' : 'out';
   const vip = !o.rush && g.level >= 2 && Math.random() < .14, angry = (!o.rush && g.level >= 3 && Math.random() < .12) ? 2 : 0;
   const max = gParams().pat * (vip ? .7 : 1) * (o.rush ? .85 : 1), el = document.createElement('div');
-  el.className = 'g-guest' + (vip ? ' vip' : '') + (angry ? ' angry' : '') + (o.rush ? ' rush' : '');
+  el.className = 'g-guest t-' + type + (vip ? ' vip' : '') + (angry ? ' angry' : '') + (o.rush ? ' rush' : '');
   const face = vip ? '🤵' : angry ? '😡' : o.rush ? '🧳' : FACES[Math.floor(Math.random() * FACES.length)];
-  el.innerHTML = '<span class="face">' + face + '</span><div class="gtxt"><b>' + (vip ? '★ ' : '') + gT(type) + ' → ' + gT('room') + ' ' + room + '</b><div class="pbar"><i></i></div></div>';
+  el.innerHTML = '<span class="face">' + face + '</span><div class="gtxt"><b>' + (vip ? '★ ' : '') +
+    '<span class="gb">' + (type === 'in' ? '⬇ ' : '⬆ ') + gT(type) + '</span><span class="rn">' + gT('room') + ' ' + room + '</span></b><div class="pbar"><i></i></div></div>';
   const x = {room, type, vip, rush:!!o.rush, angry, max, left:max, el, warned:false, bar:el.querySelector('i'), face:el.querySelector('.face')};
   el.onclick = () => {
-    if(x.angry > 0 && g && g.run) {
+    if(x.angry > 0 && g && g.run && !g.paused) {
       x.angry--;
       if(x.angry <= 0) { el.classList.remove('angry'); x.face.textContent = '🙂'; gFlash(gT('calmed'), 900); gSfx('calmed'); }
       else gSfx('calm');
     }
   };
+  el.onmouseenter = () => gHint(room, true);
+  el.onmouseleave = () => gHint(room, false);
   gGuests.appendChild(el); g.guests.push(x);
   if(!o.rush) gSfx('bell');
   return true;
 }
-function gRemove(x) { x.el.remove(); g.guests = g.guests.filter(y => y !== x); }
+function gRemove(x) { gHint(0, false); x.el.remove(); g.guests = g.guests.filter(y => y !== x); }
 function gMistake(msg, kind) {
   g.lives--; g.combo = 0; gFlash(msg);
   if(g.lives > 0) gSfx(kind || 'lose');
@@ -1446,41 +1562,62 @@ function gMistake(msg, kind) {
   if(g.lives <= 0) gEnd();
 }
 function gServe(room) {
-  if(!g || !g.run) return;
+  if(!g || !g.run || g.paused) return;
   const present = g.has[room];
   const guest = g.guests.find(x => x.room === room && ((x.type === 'in' && present) || (x.type === 'out' && !present)));
-  if(!guest) { gMistake(gT('wrong'), 'wrong'); return; }
+  if(!guest) { gHookFx(room, 'bad'); gMistake(gT('wrong'), 'wrong'); return; }
   if(guest.angry > 0) { gFlash(gT('calm')); gSfx('warn'); return; }
   g.has[room] = !present; g.combo++;
-  g.score += Math.round((100 + (guest.left / guest.max) * 50) * gMult() * (guest.vip ? 2 : 1) * (guest.rush ? 1.5 : 1) * (g.insp > 0 ? 2 : 1));
+  g.stats.maxCombo = Math.max(g.stats.maxCombo, g.combo);
+  const frac = guest.left / guest.max, fast = frac > .75;
+  let pts = Math.round((100 + frac * 50) * gMult() * (guest.vip ? 2 : 1) * (guest.rush ? 1.5 : 1) * (g.insp > 0 ? 2 : 1));
+  if(fast) { pts += 50; g.stats.fast++; }
+  if(guest.vip) g.stats.vip++;
+  g.score += pts;
+  gPop('+' + pts + (fast ? ' ⚡' : ''), guest.el, fast ? '#F2B84B' : (guest.type === 'in' ? '#7dd3fc' : '#d8b4fe'));
   g.served++; gRemove(guest);
-  gSfx('serve', g.combo); if(guest.vip) gSfx('vip');
+  gSfx('serve', g.combo); if(guest.vip) gSfx('vip'); if(fast) gSfx('perfect');
+  g.clock += 12;
+  if(!g.dawn && g.clock >= 480) { g.dawn = true; g.score += 1000; gFlash(gT('dawn'), 3600); gSfx('dawn'); }
   if(g.served % 7 === 0) { g.level++; gFlash(gT('lvl').replace('{n}', g.level)); gSfx('level'); }
-  gRenderBoard(); gHud();
+  gRenderBoard(); gHookFx(room, 'ok'); gHud();
 }
 
 /* ---------- udalosti ---------- */
-const EVB = {phone:{t:7000, ic:'📞', bad:'miss_phone', rep:1100, snd:'ring'}, alarm:{t:7000, ic:'🚨', bad:'miss_alarm', rep:520, snd:'alarm'}, coin:{t:4500, ic:'💰'}, coffee:{t:4500, ic:'☕'}};
-const EVS = [{id:'phone', min:2, w:3}, {id:'coin', min:2, w:2}, {id:'shuffle', min:3, w:2}, {id:'coffee', min:3, w:1}, {id:'rush', min:4, w:2}, {id:'black', min:4, w:2}, {id:'alarm', min:5, w:2}, {id:'insp', min:6, w:1}];
+const EVB = {
+  phone:{t:7000, ic:'📞', bad:'miss_phone', rep:1100, snd:'ring'},
+  alarm:{t:7000, ic:'🚨', bad:'miss_alarm', rep:520, snd:'alarm'},
+  coin:{t:4500, ic:'💰'}, coffee:{t:4500, ic:'☕'}, manager:{t:5500, ic:'⏱️'}, dog:{t:5000, ic:'🐕'}
+};
+const EVS = [{id:'phone', min:2, w:3}, {id:'coin', min:2, w:2}, {id:'shuffle', min:3, w:2}, {id:'coffee', min:3, w:1}, {id:'dog', min:3, w:1},
+             {id:'rush', min:4, w:2}, {id:'black', min:4, w:2}, {id:'manager', min:4, w:1}, {id:'alarm', min:5, w:2}, {id:'insp', min:6, w:1}];
 function gAddEv(id) {
   const d = EVB[id], b = document.createElement('button');
   b.type = 'button'; b.className = 'g-ev ' + id; b.innerHTML = d.ic + ' ' + gT('ev_' + id) + '<i></i>';
   const v = {id, t:d.t, max:d.t, el:b, bar:b.querySelector('i'), snd:d.rep || 0};
   b.onclick = () => gDoEv(v); gEv.appendChild(b); g.evs.push(v);
-  if(d.snd) gSfx(d.snd); else gSfx(id); // coin / coffee: zvuk pri objavení
+  if(d.snd) gSfx(d.snd); else gSfx(id);
 }
 function gDoEv(v) {
-  if(!g || !g.run) return;
-  v.el.remove(); g.evs = g.evs.filter(y => y !== v);
-  if(v.id === 'phone') { g.combo++; g.score += 75 * gMult(); gSfx('pick'); }
-  else if(v.id === 'alarm') { g.score += 100; gFlash(gT('alarm_ok'), 1200); gSfx('alarm_off'); }
-  else if(v.id === 'coin') { g.score += 250; gFlash(gT('coin'), 1200); gSfx('coin'); }
+  if(!g || !g.run || g.paused) return;
+  let pts = 0;
+  if(v.id === 'phone') { g.combo++; g.stats.maxCombo = Math.max(g.stats.maxCombo, g.combo); g.stats.phones++; pts = 75 * gMult(); gSfx('pick'); }
+  else if(v.id === 'alarm') { pts = 100; gFlash(gT('alarm_ok'), 1200); gSfx('alarm_off'); }
+  else if(v.id === 'coin') { pts = 250; gFlash(gT('coin'), 1200); gSfx('coin'); }
   else if(v.id === 'coffee') { g.lives = Math.min(5, g.lives + 1); gFlash(gT('coffee'), 1400); gSfx('coffee'); }
+  else if(v.id === 'manager') { g.slow = 8000; gFlash(gT('manager_on'), 2200); gSfx('manager'); }
+  else if(v.id === 'dog') {
+    pts = 150;
+    g.guests.forEach(x => { if(x.angry > 0) { x.angry = 0; x.el.classList.remove('angry'); x.face.textContent = '🙂'; } });
+    gFlash(gT('dog_ok'), 2000); gSfx('dog');
+  }
+  if(pts) { g.score += pts; gPop('+' + pts, v.el, '#F2B84B'); }
+  v.el.remove(); g.evs = g.evs.filter(y => y !== v);
   gHud();
 }
 function gEvent() {
   const busy = id => g.evs.some(v => v.id === id);
-  const pool = EVS.filter(e => g.level >= e.min && !(EVB[e.id] && busy(e.id)) && !(e.id === 'black' && g.black > 0) && !(e.id === 'insp' && g.insp > 0));
+  const pool = EVS.filter(e => g.level >= e.min && !(EVB[e.id] && busy(e.id)) && !(e.id === 'black' && g.black > 0) && !(e.id === 'insp' && g.insp > 0) && !(e.id === 'manager' && g.slow > 0));
   let r = Math.random() * pool.reduce((a, e) => a + e.w, 0), e = pool[0];
   for(const p of pool) { r -= p.w; if(r <= 0) { e = p; break; } }
   if(!e) return;
@@ -1493,21 +1630,31 @@ function gEvent() {
 
 function gEnd() {
   g.run = false; cancelAnimationFrame(gRaf);
+  gWin.classList.remove('g-slow', 'g-insp'); gHint(0, false);
   const isNew = g.score > gBest();
   if(isNew) save('nightShiftBest', String(g.score));
+  const life = gLife(); life.games++; life.served += g.served; life.bestCombo = Math.max(life.bestCombo, g.stats.maxCombo);
+  save('nightShiftLife', JSON.stringify(life));
   gHud();
   gSfx('over'); if(isNew) gSfx('record');
-  gShowOverlay('<h3>' + gT('over') + '</h3><p>' + gT('final') + '</p><div class="big">' + g.score + '</div><p>' + gT('served') + ': <b>' + g.served + '</b> · ' + gT('g_level') + ' <b>' + g.level + '</b></p>' + (isNew ? '<p>🏆 ' + gT('neu') + '</p>' : '') + '<button class="btn" type="button">' + gT('again') + '</button><span class="g-hint">' + gT('hint') + '</span>');
+  const LL = GL[lang] || GL.sk, tip = LL.tips[Math.floor(Math.random() * LL.tips.length)];
+  gShowOverlay('<h3>' + gT('over') + '</h3><p>' + gT('final') + '</p><div class="big">' + g.score + '</div>' +
+    '<p class="g-rank">🎖 ' + LL.rank[gRank(g.score)] + '</p>' +
+    '<p>' + gT('served') + ': <b>' + g.served + '</b> · ' + gT('g_level') + ' <b>' + g.level + '</b> · 🕙 <b>' + gClockStr() + '</b></p>' +
+    '<p>' + gT('st_combo') + ': <b>' + g.stats.maxCombo + '</b> · ' + gT('st_vip') + ': <b>' + g.stats.vip + '</b> · ' + gT('st_fast') + ': <b>' + g.stats.fast + '</b></p>' +
+    (isNew ? '<p>🏆 ' + gT('neu') + '</p>' : '') +
+    '<p class="g-tip">💡 ' + tip + '</p>' +
+    '<button class="btn" type="button">' + gT('again') + '</button><span class="g-hint">' + gT('hint') + '</span>');
 }
 function gLoop(t) {
-  if(!g || !g.run) return;
+  if(!g || !g.run || g.paused) return;
   const dt = Math.min(100, t - gLast); gLast = t;
   const p = gParams();
   g.spawn -= dt;
   if(g.spawn <= 0) { if(g.guests.length < p.cap && gSpawn()) g.spawn = p.gap; else g.spawn = 500; }
   g.evT -= dt;
   if(g.evT <= 0) { if(g.level >= 2) { gEvent(); g.evT = Math.max(6000, 14000 - 700 * g.level) * gRnd(.7, 1.3); } else g.evT = 4000; }
-  const rate = (g.evs.some(v => v.id === 'alarm') ? 1.8 : 1) * (g.insp > 0 ? 1.4 : 1);
+  const rate = (g.evs.some(v => v.id === 'alarm') ? 1.8 : 1) * (g.insp > 0 ? 1.4 : 1) * (g.slow > 0 ? .4 : 1);
   for(const x of g.guests.slice()) {
     x.left -= dt * rate;
     const f = Math.max(0, x.left / x.max);
@@ -1518,11 +1665,13 @@ function gLoop(t) {
   for(const v of g.evs.slice()) {
     v.t -= dt; v.bar.style.width = (v.t / v.max * 100) + '%';
     const d = EVB[v.id];
-    if(d.rep) { v.snd -= dt; if(v.snd <= 0 && v.t > 0) { v.snd = d.rep; gSfx(d.snd); } } // opakované zvonenie / siréna
+    if(d.rep) { v.snd -= dt; if(v.snd <= 0 && v.t > 0) { v.snd = d.rep; gSfx(d.snd); } }
     if(v.t <= 0) { v.el.remove(); g.evs = g.evs.filter(y => y !== v); if(d.bad) { gSfx('miss'); gMistake(gT(d.bad), 'lose'); if(!g.run) return; } }
   }
   if(g.black > 0) { g.black -= dt; if(g.black <= 0) { g.black = 0; gRenderBoard(); gSfx('power'); } }
   if(g.insp > 0) { g.insp -= dt; if(g.insp <= 0) { g.insp = 0; gFlash(gT('insp_end'), 1400); gSfx('insp_end'); gHud(); } }
+  if(g.slow > 0) { g.slow -= dt; if(g.slow <= 0) { g.slow = 0; gFlash(gT('manager_off'), 1400); } }
+  gWin.classList.toggle('g-slow', g.slow > 0); gWin.classList.toggle('g-insp', g.insp > 0);
   gRaf = requestAnimationFrame(gLoop);
 }
 $('#g-close').onclick = () => closeGame();
@@ -1531,7 +1680,8 @@ addEventListener('keydown', e => {
   if(!gOpen()) return;
   if(e.key === 'Escape') { closeGame(); return; }
   if(e.key === 'm' || e.key === 'M') { gToggleSnd(); return; }
-  if(!g || !g.run) return;
+  if(e.key === 'p' || e.key === 'P') { gPause(); return; }
+  if(!g || !g.run || g.paused) return;
   if(e.key === ' ' && e.target.tagName !== 'BUTTON') { e.preventDefault(); if(g.evs[0]) gDoEv(g.evs[0]); return; }
   if(/^\d$/.test(e.key)) {
     const now = Date.now();
@@ -1540,7 +1690,10 @@ addEventListener('keydown', e => {
     if(gBuf.length === 3) { const r = +gBuf; gBuf = ''; if(ROOMS.includes(r)) gServe(r); }
   }
 });
-document.addEventListener('visibilitychange', () => { if(g) gLast = performance.now(); });
+document.addEventListener('visibilitychange', () => {
+  if(g && g.run && document.hidden && !g.paused && gOpen()) gPause();
+  else if(g) gLast = performance.now();
+});
 
 /* =====================================================================
    HIDDEN MINIGAME #2: WOODSHOP  (terminal: play 2)
