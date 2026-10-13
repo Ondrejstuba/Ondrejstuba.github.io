@@ -171,10 +171,11 @@ h3{font-family:var(--head);font-weight:700;font-size:1.25rem;color:var(--accent)
 /* Contact Section */
 .contact{background:var(--key);color:var(--key-ink);border-top:none}
 .contact h2{color:var(--key-ink)}.contact .sec-head p{color:var(--key-mut)}
+.contact-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:24px;align-items:start}
 .contact-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);padding:30px;border-radius:16px;display:grid;gap:20px}
 .contact-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.08)}
 .contact-row:last-child{border-bottom:none;padding-bottom:0}
-.contact-label{color:var(--key-mut);font-size:.9rem;min-width:120px;font-weight:500}
+.contact-label{color:var(--key-mut);font-size:.9rem;min-width:100px;font-weight:500}
 .contact-val{font-size:1.05rem;font-weight:600}
 .contact-val a{text-decoration-color:var(--brass);text-underline-offset:5px}.contact-val a:hover{color:var(--brass)}
 .copy-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;border-radius:8px;border:1.5px solid var(--key-mut);background:none;color:var(--key-ink);cursor:pointer;transition:all .2s;margin-left:10px;vertical-align:middle}
@@ -183,6 +184,26 @@ h3{font-family:var(--head);font-weight:700;font-size:1.25rem;color:var(--accent)
 .copy-btn:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
 .icon-link{display:inline-flex;align-items:center;gap:7px}
 .plinks a.icon-link{display:inline-flex;align-items:center;gap:7px}
+
+/* Contact form */
+.contact-form{display:grid;gap:16px;position:relative}
+.field{display:grid;gap:6px}
+.field label{font-size:.88rem;color:var(--key-mut);font-weight:500}
+.field input,.field textarea{width:100%;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.18);border-radius:10px;padding:11px 14px;color:var(--key-ink);font:500 1rem var(--body);transition:border-color .2s,background .2s;resize:vertical}
+.field textarea{min-height:130px;line-height:1.5}
+.field input::placeholder,.field textarea::placeholder{color:var(--key-mut);opacity:.55}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--brass);background:rgba(255,255,255,.1)}
+.field.bad input,.field.bad textarea{border-color:#ff7b72}
+.hp{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none}
+.contact .btn{border-color:var(--key-mut);color:var(--key-ink)}
+.contact .btn.primary{background:var(--brass);border-color:var(--brass);color:#14110E}
+.contact .btn.primary:hover{background:#e6bb69;border-color:#e6bb69}
+.contact .btn:disabled{opacity:.6;cursor:wait;transform:none}
+.cf-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.cf-count{margin-left:auto;font:400 .78rem var(--code);color:var(--key-mut)}
+.cf-status{min-height:1.4em;font-size:.93rem;font-weight:500}
+.cf-status.ok{color:#7ee2b0}.cf-status.err{color:#ff9d95}
+.cf-note{font-size:.82rem;color:var(--key-mut)}
 
 /* Interactive Terminal Drawer */
 #terminal-modal{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(5px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
@@ -199,10 +220,55 @@ h3{font-family:var(--head);font-weight:700;font-size:1.25rem;color:var(--accent)
 .term-prompt{color:#58a6ff;font-weight:600}
 #term-input{background:none;border:none;color:#f0f6fc;font-family:var(--code);font-size:.9rem;width:100%;outline:none}
 
+/* Hidden minigames (terminal only): NIGHT SHIFT + WOODSHOP */
+#game-modal,#ws-modal{position:fixed;inset:0;background:rgba(4,9,7,.74);backdrop-filter:blur(6px);z-index:110;display:flex;align-items:center;justify-content:center;padding:14px;opacity:0;pointer-events:none;transition:opacity .3s}
+#game-modal.open,#ws-modal.open{opacity:1;pointer-events:auto}
+.game-window,.ws-window{position:relative;width:100%;max-width:780px;max-height:96vh;overflow:auto;background:#0F1F1A;color:#E4EEE9;border:1px solid #2C5248;border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.6)}
+.ws-window{max-width:820px;background:#14110E;border-color:#5a3d22}
+.game-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 18px;background:#183029;border-bottom:1px solid #2C5248}
+.ws-window .game-head{background:#241a12;border-bottom-color:#5a3d22}
+.game-title{font-family:var(--head);font-weight:800;font-size:1.05rem;color:#D9A84F;letter-spacing:.02em}
+.g-hud{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--code);font-size:.82rem;color:#B9CBC4}
+.g-hud b{color:#F8FAF7;font-weight:600}
+.g-btns{display:flex;gap:8px}
+.g-close{background:none;border:1.5px solid #2C5248;color:#E4EEE9;border-radius:8px;width:34px;height:32px;cursor:pointer;font-size:1.05rem}
+.ws-window .g-close{border-color:#5a3d22}
+.g-close:hover{border-color:#D9A84F}
+.g-guests{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:14px 18px 4px;min-height:170px;align-content:start}
+.g-guest{display:flex;align-items:center;gap:12px;background:#183029;border:1px solid #2C5248;border-radius:12px;padding:10px 14px;animation:gpop .25s ease-out}
+.g-guest .face{font-size:1.8rem;line-height:1}
+.g-guest .gtxt{flex:1;min-width:0;font-size:.9rem}
+.g-guest .gtxt b{display:block;font-family:var(--head);font-weight:700;margin-bottom:6px}
+.pbar{height:6px;background:#24372F;border-radius:9px;overflow:hidden}
+.pbar i{display:block;height:100%;width:100%;background:#10B981;border-radius:9px}
+.g-guest.low .pbar i{background:#ff7b72}
+.g-guest.low{border-color:#ff7b72}
+@keyframes gpop{from{opacity:0;transform:translateY(-10px) scale(.96)}}
+.g-msg{height:26px;text-align:center;font-family:var(--code);font-size:.85rem;color:#D9A84F;opacity:0;transition:opacity .25s}
+.g-msg.show{opacity:1}
+.g-phone{display:block;margin:0 auto 6px;visibility:hidden;background:#B8893A;color:#0D1613;border:none;border-radius:99px;padding:8px 20px;font:700 .92rem var(--body);cursor:pointer}
+.g-phone.ring{visibility:visible;animation:gring .35s infinite}
+@keyframes gring{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg) scale(1.05)}}
+.g-board{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:8px 18px 18px}
+.hook{position:relative;min-height:64px;border-radius:10px;border:2px solid #B8893A;background:#1D3A33;color:#F8FAF7;font-family:var(--code);font-weight:600;font-size:1.05rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:transform .12s,background .15s}
+.hook:hover{transform:translateY(-2px);background:#2C5248}
+.hook small{font-size:1.1rem;line-height:1}
+.hook.out{border-style:dashed;border-color:#3B5249;background:transparent;color:#6C857B}
+.g-window-shake{animation:gshake .3s}
+@keyframes gshake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.g-over{position:absolute;inset:0;background:rgba(15,31,26,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:28px;text-align:center}
+.g-over h3{color:#D9A84F;font-size:1.8rem}
+.g-over p{max-width:52ch;font-size:.95rem;color:#B9CBC4}
+.g-over .big{font-family:var(--head);font-weight:800;font-size:3rem;color:#F8FAF7;line-height:1}
+.g-over .btn{border-color:#D9A84F;color:#0D1613;background:#D9A84F}
+.g-hint{font-family:var(--code);font-size:.75rem;color:#6C857B}
+#ws-canvas{display:block;margin:0 auto;width:min(100%,calc((96vh - 58px) * 760 / 460));height:auto;aspect-ratio:760/460;touch-action:none;cursor:default;outline:none;-webkit-user-select:none;user-select:none}
+@media (max-width:620px){.g-guests{grid-template-columns:1fr;min-height:140px}.g-board{gap:8px}.hook{min-height:56px}}
+
 /* Footer & Extras */
 footer{background:var(--key);color:var(--key-mut);font-size:.85rem;padding-bottom:32px}
 footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-#toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,30px);background:var(--accent);color:var(--on);padding:10px 22px;border-radius:99px;font-weight:600;font-size:.9rem;opacity:0;pointer-events:none;transition:.35s;z-index:40;box-shadow:0 10px 25px rgba(0,0,0,0.2)}
+#toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,30px);background:var(--accent);color:var(--on);padding:10px 22px;border-radius:99px;font-weight:600;font-size:.9rem;opacity:0;pointer-events:none;transition:.35s;z-index:120;box-shadow:0 10px 25px rgba(0,0,0,0.2)}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 #top-btn{position:fixed;right:20px;bottom:24px;width:44px;height:44px;border-radius:50%;border:none;background:var(--accent);color:var(--on);font-size:1.2rem;cursor:pointer;opacity:0;transform:scale(.6);transition:.3s;z-index:20;display:flex;align-items:center;justify-content:center}
 #top-btn.show{opacity:1;transform:none}
@@ -212,7 +278,7 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
   .sec-head{display:flex;align-items:center;justify-content:space-between}
   .info-tip::after{right:auto;left:0}
   .hero{padding:48px 0}.keycard{max-width:100%}
-  .projects,.skills-grid{grid-template-columns:1fr}
+  .projects,.skills-grid,.contact-grid{grid-template-columns:1fr}
   .mini{flex-basis:100%}
   .links{display:none}section{padding:56px 0}
 }
@@ -260,7 +326,7 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
     </p>
     <div class="cta up" style="animation-delay:.45s">
       <a class="btn primary" href="#projects" data-i18n="b_proj">Pozrieť projekty</a>
-      <a class="btn" href="mailto:ondrej.drengubiak1@gmail.com" data-i18n="b_mail">Napísať e-mail</a>
+      <a class="btn" href="#contact" data-i18n="b_mail">Napísať mi</a>
     </div>
   </div>
 
@@ -552,28 +618,50 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
   <div class="sec-head rv">
     <div class="sec-title"><h2 data-i18n="c_h">Kontaktujte ma</h2><button class="info-tip" type="button" data-i18n-attr="aria-label:c_p;data-tip:c_p" aria-label="Info" data-tip="Info">?</button></div>
   </div>
-  <div class="contact-card rv">
-    <div class="contact-row">
-      <span class="contact-label" data-i18n="c_email">E-mail:</span>
-      <div class="contact-val">
-        <a href="mailto:ondrej.drengubiak1@gmail.com">ondrej.drengubiak1@gmail.com</a>
-        <button class="copy-btn" id="copy" type="button" data-i18n-attr="aria-label:c_copy;title:c_copy" aria-live="polite">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3"/></svg>
-        </button>
+
+  <div class="contact-grid rv">
+    <div class="contact-card">
+      <div class="contact-row">
+        <span class="contact-label" data-i18n="c_loc">Lokalita:</span>
+        <div class="contact-val">Bratislava / Zvolen, <span data-i18n="slovak_republic">Slovenská republika</span></div>
+      </div>
+      <div class="contact-row">
+        <span class="contact-label">GitHub:</span>
+        <div class="contact-val">
+          <a href="https://github.com/Ondrejstuba" target="_blank" rel="noopener">github.com/Ondrejstuba</a>
+          <button class="copy-btn" id="copy-github" type="button" data-copy="https://github.com/Ondrejstuba" data-i18n-attr="aria-label:c_copy_github;title:c_copy_github">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="contact-row">
+        <span class="contact-label" data-i18n="c_looking">Hľadám:</span>
+        <div class="contact-val" data-i18n="k_look_v">Brigádu / Part-time dev</div>
       </div>
     </div>
-    <div class="contact-row">
-      <span class="contact-label" data-i18n="c_loc">Lokalita:</span>
-      <div class="contact-val">Bratislava / Zvolen, <span data-i18n="slovak_republic">Slovenská republika</span></div>
-    </div>
-    <div class="contact-row">
-      <span class="contact-label">GitHub:</span>
-      <div class="contact-val">
-        <a href="https://github.com/Ondrejstuba" target="_blank" rel="noopener">github.com/Ondrejstuba</a>
-        <button class="copy-btn" id="copy-github" type="button" data-copy="https://github.com/Ondrejstuba" data-i18n-attr="aria-label:c_copy_github;title:c_copy_github">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3"/></svg>
-        </button>
-      </div>
+
+    <div class="contact-card">
+      <form class="contact-form" id="contact-form" novalidate>
+        <div class="field" id="f-name">
+          <label for="cf-name" data-i18n="cf_name">Vaše meno</label>
+          <input id="cf-name" name="name" type="text" autocomplete="name" maxlength="80" required data-i18n-attr="placeholder:cf_ph_name">
+        </div>
+        <div class="field" id="f-email">
+          <label for="cf-email" data-i18n="cf_email">Váš e-mail (kam odpoviem)</label>
+          <input id="cf-email" name="email" type="email" autocomplete="email" maxlength="120" required data-i18n-attr="placeholder:cf_ph_email">
+        </div>
+        <div class="field" id="f-msg">
+          <label for="cf-msg" data-i18n="cf_msg">Správa</label>
+          <textarea id="cf-msg" name="message" rows="5" maxlength="2000" required data-i18n-attr="placeholder:cf_ph_msg"></textarea>
+        </div>
+        <input type="text" name="_honey" id="cf-honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="cf-actions">
+          <button class="btn primary" type="submit" id="cf-send"><span data-i18n="cf_send">Odoslať správu</span></button>
+          <span class="cf-count" id="cf-count">0 / 2000</span>
+        </div>
+        <p class="cf-status" id="cf-status" role="status" aria-live="polite"></p>
+        <p class="cf-note" data-i18n="cf_note">Správa mi príde priamo do schránky. Vašu adresu použijem len na odpoveď.</p>
+      </form>
     </div>
   </div>
 </div></section>
@@ -606,6 +694,43 @@ footer .wrap{border-top:1px solid rgba(255,255,255,.15);padding-top:20px;display
   </div>
 </div>
 
+<!-- Hidden minigame #1 (terminal: play): NIGHT SHIFT -->
+<div id="game-modal" role="dialog" aria-modal="true" data-i18n-attr="aria-label:g_aria">
+  <div class="game-window" id="game-window">
+    <div class="game-head">
+      <span class="game-title" data-i18n="g_title">NIGHT SHIFT · Nočná zmena</span>
+      <div class="g-hud">
+        <span><span data-i18n="g_score">Skóre</span> <b id="g-score">0</b></span>
+        <span><span data-i18n="g_lives">Životy</span> <b id="g-lives">❤❤❤</b></span>
+        <span><span data-i18n="g_level">Úroveň</span> <b id="g-lvl">1</b></span>
+        <span><span data-i18n="g_combo">Kombo</span> <b id="g-combo">x1</b></span>
+        <span><span data-i18n="g_best">Rekord</span> <b id="g-best">0</b></span>
+      </div>
+      <button class="g-close" id="g-close" type="button" data-i18n-attr="aria-label:g_close;title:g_close">✕</button>
+    </div>
+    <div class="g-guests" id="g-guests"></div>
+    <div class="g-msg" id="g-msg"></div>
+    <button class="g-phone" id="g-phone" type="button">📞</button>
+    <div class="g-board" id="g-board"></div>
+    <div class="g-over" id="g-over"></div>
+  </div>
+</div>
+
+<!-- Hidden minigame #2 (terminal: play 2): WOODSHOP -->
+<div id="ws-modal" role="dialog" aria-modal="true" data-i18n-attr="aria-label:ws_aria">
+  <div class="ws-window">
+    <div class="game-head">
+      <span class="game-title" data-i18n="ws_title">WOODSHOP · Stolárska dielňa</span>
+      <div class="g-hud"><span><span data-i18n="ws_best">Rekord</span> <b id="ws-best">0 €</b></span></div>
+      <div class="g-btns">
+        <button class="g-close" id="ws-snd" type="button" data-i18n-attr="aria-label:ws_snd;title:ws_snd">🔊</button>
+        <button class="g-close" id="ws-close" type="button" data-i18n-attr="aria-label:g_close;title:g_close">✕</button>
+      </div>
+    </div>
+    <canvas id="ws-canvas" width="760" height="460" tabindex="0"></canvas>
+  </div>
+</div>
+
 <div id="toast" role="status"></div>
 <button id="top-btn" type="button" data-i18n-attr="aria-label:back_top" title="Späť nahor">↑</button>
 
@@ -616,7 +741,7 @@ const T = {
     n_about:'O mne', n_projects:'Projekty', n_skills:'Zručnosti', n_bg:'Prax', n_contact:'Kontakt',
     h1:'Softvérový vývojár, ktorý rieši problémy za pochodu.',
     lead:'Študujem Inteligentné softvérové systémy na FIIT STU v Bratislave. Vyvíjam v Pythone, Jave a C/C++, aktívne pracujem s databázami aj webovými technológiami. Už viac ako 3 roky vediem hotelovú recepciu, vďaka čomu skvelo zvládam stresové situácie, komunikáciu a prácu s dátami pod tlakom.',
-    typed_pre:'Pracujem s', b_proj:'Pozrieť projekty', b_mail:'Napísať e-mail',
+    typed_pre:'Pracujem s', b_proj:'Pozrieť projekty', b_mail:'Napísať mi',
     k_label:'Inžinierske štúdium (Ing.)', k_uni:'Univerzita', k_study:'Odbor', k_study_v:'Inteligentné softvérové systémy', k_based:'Lokalita', k_lang:'Jazyky', k_lang_v:'SK (Native), EN (C1), DE (A2)', k_look:'Hľadám', k_look_v:'Brigádu / Part-time dev',
     status_title:'K dispozícii pre vývojársku prácu / brigádu', menu_open:'Otvoriť menu', menu_open_title:'Otvoriť navigáciu', nav_aria:'Hlavná navigácia', tag_en:'Angličtina (C1)', tag_de:'Nemčina (A2)', tag_sk:'Slovenčina (Materinský)', tag_drive:'Vodičský preukaz: Skupina B', meta_desc:'Osobné portfólio Ondreja Drengubiaka - študenta FIIT STU v Bratislave. Vývoj v Python, Java, C/C++, SQL a WebDev.', term_open:'Otvoriť terminál', term_open_title:'Otvoriť vývojársky terminál', lang_label:'Zmeniť jazyk', theme_label:'Prepnúť tmavý režim',
     a_h:'O mne',
@@ -638,7 +763,27 @@ const T = {
     sf_all:'Všetko', sf_prog:'Programovanie', sf_web:'WebDev', sf_db:'Databázy & OS', sf_net:'Siete & Nástroje', sf_other:'Ostatné',
     sk_lang:'Programovacie jazyky', sk_languages:'Jazyky', sk_license:'Vodičský preukaz', sk_prog_core:'Základné programovanie', sk_prog_data:'Dátové & vedecké programovanie', tag_drive_short:'Skupina B', sk_web:'Web Development', sk_db:'Databázové systémy', sk_office:'Office nástroje', sk_net:'Sieťové technológie', sk_net_ccna:'Cisco CCNA v7', sk_net_fund:'Sieťové technológie', sk_net_sec:'Bezpečnosť', sk_net_tools:'Sieťové nástroje', sk_soft:'Mäkké zručnosti', tag_relational:'Relačný dizajn', tag_cyber:'Kybernetická bezpečnosť', soft_comm:'Komunikácia', soft_problem:'Riešenie problémov', soft_stress:'Práca pod tlakom', soft_team:'Tímová spolupráca', sk_os:'Operačné systémy & Nástroje', sk_other:'Jazyky & Vodičský preukaz',
     level_adv:'Pokročilý', level_intermediate:'Mierne pokročilý', level_mixed:'Pokročilý / Základy', level_cert:'Certifikované', slovak_republic:'Slovenská republika',
-    term_aria:'Interaktívny terminál', term_placeholder:'píšte príkaz sem...', term_welcome:'Vítajte v CLI termináli Ondreja Drengubiaka!\nZadajte help pre zoznam dostupných príkazov.', term_help:'Dostupné príkazy:\n - skills : Zobrazí hlavné zručnosti\n - projects : Zobrazí najlepšie projekty\n - contact : Zobrazí kontaktné informácie\n - theme : Prepne svetlý/tmavý režim\n - clear : Vyčistí obrazovku terminálu\n - exit : Zatvorí terminál', term_unknown:'Príkaz nepoznám: "{cmd}". Zadajte "help" pre pomoc.', term_theme:'Téma bola prepnutá na {theme}', term_skills:'Jazyky: Python, Java, C, C++, R\nWeb: HTML, CSS, JavaScript, PHP\nDatabázy: SQL, PostgreSQL, PL/pgSQL, MS Access\nSiete: Cisco CCNA v7, IT Essentials\nOS: Linux, Git', term_projects:'1. Patterna - Webová aplikácia na optimalizáciu postupností vzorov (D3.js, TensorFlow.js, MDP)\n2. Arcana Bellum - RPG bojový systém v PostgreSQL (PL/pgSQL, 16 tabuliek, 8 procedúr)', term_contact:'E-mail: ondrej.drengubiak1@gmail.com\nLokalita: Bratislava / Zvolen\nGitHub: github.com/Ondrejstuba', 
+    term_aria:'Interaktívny terminál', term_placeholder:'píšte príkaz sem...', term_welcome:'Vítajte v CLI termináli Ondreja Drengubiaka!\nZadajte help pre zoznam dostupných príkazov.', term_help:'Dostupné príkazy:\n - skills : Zobrazí hlavné zručnosti\n - projects : Zobrazí najlepšie projekty\n - contact : Zobrazí kontaktné informácie\n - theme : Prepne svetlý/tmavý režim\n - clear : Vyčistí obrazovku terminálu\n - exit : Zatvorí terminál', term_unknown:'Príkaz nepoznám: "{cmd}". Zadajte "help" pre pomoc.', term_theme:'Téma bola prepnutá na {theme}', term_skills:'Jazyky: Python, Java, C, C++, R\nWeb: HTML, CSS, JavaScript, PHP\nDatabázy: SQL, PostgreSQL, PL/pgSQL, MS Access\nSiete: Cisco CCNA v7, IT Essentials\nOS: Linux, Git', term_projects:'1. Patterna - Webová aplikácia na optimalizáciu postupností vzorov (D3.js, TensorFlow.js, MDP)\n2. Arcana Bellum - RPG bojový systém v PostgreSQL (PL/pgSQL, 16 tabuliek, 8 procedúr)', term_contact:'Kontakt: formulár v sekcii Kontakt\nLokalita: Bratislava / Zvolen\nGitHub: github.com/Ondrejstuba', 
+    term_play:'Odomykám tajnú zmenu na recepcii...', term_play2:'Zapínam pílu... otváram stolársku dielňu...',
+    g_aria:'Minihra Night Shift', g_title:'NIGHT SHIFT · Nočná zmena', g_score:'Skóre', g_lives:'Životy', g_level:'Úroveň', g_combo:'Kombo', g_best:'Rekord', g_close:'Zavrieť',
+    g_how:'Si na recepcii. Hostia chcú izbu (Ubytovanie) alebo vracajú kľúč (Odchod). Klikni na správny háčik, alebo napíš číslo izby (napr. 107). Zdvíhaj telefón, kým zvoní, inak sa hostia nahnevajú rýchlejšie. Po 3 chybách je koniec smeny. Pozor: od 2. úrovne sa kľúče občas premiestnia!',
+    g_start:'Začať smenu', g_again:'Ďalšia smena', g_over:'Koniec smeny', g_final:'Výsledné skóre', g_new:'Nový rekord!', g_hint:'Esc = späť do terminálu',
+    g_in:'Ubytovanie', g_out:'Odchod', g_room:'izba', g_wrong:'Zlý kľúč!', g_left:'Hosť odišiel nahnevaný!', g_shuffle:'Rekonštrukcia: kľúče sa premiestnili!', g_phone:'Zdvihnúť telefón!', g_missed:'Zmeškaný hovor!', g_levelup:'Úroveň {n}!',
+    ws_aria:'Minihra Woodshop', ws_title:'WOODSHOP · Stolárska dielňa', ws_snd:'Zvuk zap./vyp.', ws_best:'Rekord',
+    ws_sub:'Nábytok na mieru', ws_desc:'Dostal si zákazky na nábytok na mieru. Každú objednávku prejdeš v 4 fázach: rezanie, brúsenie, kompletizácia a montáž u zákazníka. Čím presnejšie pracuješ, tým vyššia výplata a prepitné.',
+    ws_start:'Začať zmenu', ws_go:'Do toho!', ws_next:'Ďalej', ws_again:'Nová zmena', ws_phase:'Fáza', ws_done:'Objednávka hotová', ws_pay:'Výplata', ws_tip:'Prepitné', ws_avg:'Priemer', ws_over:'Koniec zmeny', ws_total:'Zárobok za zmenu', ws_newbest:'Nový rekord!', ws_rec:'Rekord', ws_esc:'Esc = späť do terminálu',
+    ws_cut:'Rez', ws_placed:'Poskladané', ws_smooth:'Vyhladené', ws_inzone:'V pásme', ws_time:'Čas',
+    f_shelf:'Polica', f_chair:'Stolička', f_table:'Stôl', f_wardrobe:'Skriňa',
+    ws_s0:'Rezanie', ws_s1:'Brúsenie', ws_s2:'Kompletizácia', ws_s3:'Montáž u zákazníka',
+    ws_i0:'Pílka sa kýva nad doskou. Keď je presne nad červenou čiarou, stlač MEDZERNÍK (alebo klikni). Urobíš 3 rezy a počíta sa presnosť.',
+    ws_i1:'Doska je plná hrubých škvŕn. Podrž tlačidlo myši (alebo prst) a brúsením po škvrnách ich vyhlaď skôr, než vyprší čas.',
+    ws_i2:'Poskladaj nábytok. Ťahaj diely z lavice na správne obrysy. Zlé miesto stojí body, počíta sa aj rýchlosť.',
+    ws_i3:'Namontuj policu u zákazníka. Vodováha ukazuje sklon a polica sa neustále vychyľuje. Drž bublinu v zelenom pásme čo najdlhšie.',
+    ws_k0:'Medzerník / klik = rez', ws_k1:'Ťahaj myšou / prstom po doske', ws_k2:'Ťahaj diel a pusti ho na obrys', ws_k3:'← → alebo A / D, alebo tlačidlá dole',
+    ws_h0:'Pílku na červenú čiaru a potom rež!', ws_h1:'Podrž a ťahaj po tmavých škvrnách', ws_h2:'Ťahaj diely na obrysy', ws_h3:'Drž bublinu v zelenom pásme',
+    ws_q0:'Majstrovská práca!', ws_q1:'Slušná robota.', ws_q2:'Dá sa to zlepšiť...', ws_q3:'Toto zákazník neprevezme.',
+    ws_c0:'„Toto sa predať nedá. Reklamácia!“', ws_c1:'„Ujde to, ale nie je to ono.“', ws_c2:'„Pekná práca, som spokojný!“', ws_c3:'„Úžasné! Presne tak som si to predstavoval!“',
+    ws_r0:'Učeň', ws_r1:'Stolár', ws_r2:'Majster', ws_r3:'Legenda dielne',
     bg_h:'Prax a štúdium', bg_sub:'Interaktívny časový prehľad mojich pracovných skúseností, vzdelania a získaných certifikátov.',
     tb_work:'Pracovné skúsenosti', tb_edu:'Vzdelanie', tb_certs:'Kurzy a certifikáty',
     w_title:'Hotelový recepčný',
@@ -655,14 +800,17 @@ const T = {
     e1_title:'Inteligentné softvérové systémy (Ing.)', e1_desc:'Inžinierske štúdium zamerané na pokročilý vývoj softvéru, architektúry a inteligentné systémy.',
     e2_title:'Informatika (Bc.)', e2_desc:'Úspešne ukončené bakalárske štúdium štátnou skúškou a obhajobou bakalárskej práce Patterna.',
     e3_title:'Informačné a sieťové technológie (Maturita)', e3_desc:'Odborné stredoškolské vzdelanie zamerané na sieťové architektúry, hardvér a základy programovania.',
-    c_h:'Kontaktujte ma', c_p:'Hľadám vývojársku brigádu alebo part-time pozíciu (Bratislava / Zvolen / Remote). Neváhajte ma kontaktovať e-mailom.',
-    c_email:'E-mail:', c_loc:'Lokalita:', c_copy:'Kopírovať e-mail', c_copy_github:'Kopírovať GitHub odkaz', c_copied:'Skopírované!', f_top:'Späť nahor ↑', back_top:'Späť nahor', present:'Doteraz'
+    c_h:'Kontaktujte ma', c_p:'Hľadám vývojársku brigádu alebo part-time pozíciu (Bratislava / Zvolen / Remote). Napíšte mi cez formulár a ozvem sa vám.',
+    c_loc:'Lokalita:', c_looking:'Hľadám:', c_copy_github:'Kopírovať GitHub odkaz', c_copied:'Skopírované!', f_top:'Späť nahor ↑', back_top:'Späť nahor', present:'Doteraz',
+    cf_name:'Vaše meno', cf_email:'Váš e-mail (kam odpoviem)', cf_msg:'Správa', cf_ph_name:'Ján Novák', cf_ph_email:'jan@priklad.sk', cf_ph_msg:'Dobrý deň, ozývam sa vám ohľadom...', cf_send:'Odoslať správu', cf_sending:'Odosielam...',
+    cf_ok:'Správa odoslaná! Ozvem sa vám čo najskôr.', cf_err:'Odoslanie sa nepodarilo. Skúste to prosím neskôr.', cf_bad_name:'Zadajte svoje meno.', cf_bad_email:'Zadajte platnú e-mailovú adresu.', cf_bad_msg:'Správa je príliš krátka (aspoň 10 znakov).', cf_wait:'Počkajte chvíľu pred odoslaním ďalšej správy.',
+    cf_note:'Správa mi príde priamo do schránky. Vašu adresu použijem len na odpoveď.'
   },
   en: {
     n_about:'About', n_projects:'Projects', n_skills:'Skills', n_bg:'Experience', n_contact:'Contact',
     h1:'Software developer who solves problems in real time.',
     lead:'I am a Master’s student of Intelligent Software Systems at FIIT STU in Bratislava. I build applications in Python, Java, and C/C++, actively working with databases and web technologies. Managing a hotel front desk for over 3 years taught me to excel under pressure, handle complex data, and communicate clearly.',
-    typed_pre:'I work with', b_proj:'View Projects', b_mail:'Send Email',
+    typed_pre:'I work with', b_proj:'View Projects', b_mail:'Contact me',
     k_label:'Master’s Degree (Ing.)', k_uni:'University', k_study:'Major', k_study_v:'Intelligent Software Systems', k_based:'Location', k_lang:'Languages', k_lang_v:'SK (Native), EN (C1), DE (A2)', k_look:'Looking for', k_look_v:'Part-time / Dev Role',
     status_title:'Available for development work / part-time roles', menu_open:'Open menu', menu_open_title:'Open navigation', nav_aria:'Main navigation', tag_en:'English (C1)', tag_de:'German (A2)', tag_sk:'Slovak (Native)', tag_drive:'Driver’s Licence: Category B', meta_desc:'Personal portfolio of Ondrej Drengubiak, an FIIT STU student in Bratislava. Development in Python, Java, C/C++, SQL, and web technologies.', term_open:'Open terminal', term_open_title:'Open developer terminal', lang_label:'Change language', theme_label:'Toggle dark mode',
     a_h:'About Me',
@@ -684,7 +832,27 @@ const T = {
     sf_all:'All', sf_prog:'Programming', sf_web:'WebDev', sf_db:'Databases & OS', sf_net:'Networking & Tools', sf_other:'Other',
     sk_lang:'Programming Languages', sk_languages:'Languages', sk_license:'Driver’s Licence', sk_prog_core:'Core Programming', sk_prog_data:'Data & Scientific Programming', tag_drive_short:'Category B', sk_web:'Web Development', sk_db:'Database Systems', sk_office:'Office Tools', sk_net:'Networking Technologies', sk_net_ccna:'Cisco CCNA v7', sk_net_fund:'Networking Technologies', sk_net_sec:'Security', sk_net_tools:'Network Tools', sk_soft:'Soft Skills', tag_relational:'Relational Design', tag_cyber:'Cybersecurity', soft_comm:'Communication', soft_problem:'Problem Solving', soft_stress:'Working Under Pressure', soft_team:'Teamwork', sk_os:'Operating Systems & Tools', sk_other:'Languages & Driving',
     level_adv:'Advanced', level_intermediate:'Intermediate', level_mixed:'Advanced / Basics', level_cert:'Certified', slovak_republic:'Slovak Republic',
-    term_aria:'Interactive terminal', term_placeholder:'type a command here...', term_welcome:'Welcome to Ondrej Drengubiak’s CLI terminal!\nType help for a list of available commands.', term_help:'Available commands:\n - skills : Show key skills\n - projects : Show featured projects\n - contact : Show contact information\n - theme : Toggle light/dark mode\n - clear : Clear the terminal\n - exit : Close the terminal', term_unknown:'Unknown command: "{cmd}". Type "help" for help.', term_theme:'Theme switched to {theme}', term_skills:'Languages: Python, Java, C, C++, R\nWeb: HTML, CSS, JavaScript, PHP\nDatabases: SQL, PostgreSQL, PL/pgSQL, MS Access\nNetworks: Cisco CCNA v7, IT Essentials\nOS: Linux, Git', term_projects:'1. Patterna - Web app for optimizing design-pattern sequences (D3.js, TensorFlow.js, MDP)\n2. Arcana Bellum - RPG combat system in PostgreSQL (PL/pgSQL, 16 tables, 8 procedures)', term_contact:'Email: ondrej.drengubiak1@gmail.com\nLocation: Bratislava / Zvolen\nGitHub: github.com/Ondrejstuba', 
+    term_aria:'Interactive terminal', term_placeholder:'type a command here...', term_welcome:'Welcome to Ondrej Drengubiak’s CLI terminal!\nType help for a list of available commands.', term_help:'Available commands:\n - skills : Show key skills\n - projects : Show featured projects\n - contact : Show contact information\n - theme : Toggle light/dark mode\n - clear : Clear the terminal\n - exit : Close the terminal', term_unknown:'Unknown command: "{cmd}". Type "help" for help.', term_theme:'Theme switched to {theme}', term_skills:'Languages: Python, Java, C, C++, R\nWeb: HTML, CSS, JavaScript, PHP\nDatabases: SQL, PostgreSQL, PL/pgSQL, MS Access\nNetworks: Cisco CCNA v7, IT Essentials\nOS: Linux, Git', term_projects:'1. Patterna - Web app for optimizing design-pattern sequences (D3.js, TensorFlow.js, MDP)\n2. Arcana Bellum - RPG combat system in PostgreSQL (PL/pgSQL, 16 tables, 8 procedures)', term_contact:'Contact: use the form in the Contact section\nLocation: Bratislava / Zvolen\nGitHub: github.com/Ondrejstuba', 
+    term_play:'Unlocking the secret front-desk shift...', term_play2:'Powering up the saw... opening the woodshop...',
+    g_aria:'Night Shift minigame', g_title:'NIGHT SHIFT · The Front Desk', g_score:'Score', g_lives:'Lives', g_level:'Level', g_combo:'Combo', g_best:'Best', g_close:'Close',
+    g_how:'You run the front desk. Guests want a room (Check-in) or are returning a key (Check-out). Click the correct key hook, or type the room number (e.g. 107). Answer the phone while it rings, or guests lose patience faster. Three mistakes end your shift. Careful: from level 2 the keys get rearranged now and then!',
+    g_start:'Start shift', g_again:'Next shift', g_over:'Shift over', g_final:'Final score', g_new:'New high score!', g_hint:'Esc = back to terminal',
+    g_in:'Check-in', g_out:'Check-out', g_room:'room', g_wrong:'Wrong key!', g_left:'A guest left angry!', g_shuffle:'Renovation: the keys were rearranged!', g_phone:'Pick up the phone!', g_missed:'Missed call!', g_levelup:'Level {n}!',
+    ws_aria:'Woodshop minigame', ws_title:'WOODSHOP · The Workshop', ws_snd:'Sound on/off', ws_best:'Best',
+    ws_sub:'Custom furniture', ws_desc:'You have custom furniture orders to fill. Each order goes through 4 phases: cutting, sanding, assembly and installation at the customer’s. The more precisely you work, the better the pay and the tip.',
+    ws_start:'Start shift', ws_go:'Let’s go!', ws_next:'Continue', ws_again:'New shift', ws_phase:'Phase', ws_done:'Order complete', ws_pay:'Pay', ws_tip:'Tip', ws_avg:'Average', ws_over:'Shift over', ws_total:'Shift earnings', ws_newbest:'New high score!', ws_rec:'Best', ws_esc:'Esc = back to terminal',
+    ws_cut:'Cut', ws_placed:'Assembled', ws_smooth:'Smoothed', ws_inzone:'In range', ws_time:'Time',
+    f_shelf:'Shelf', f_chair:'Chair', f_table:'Table', f_wardrobe:'Wardrobe',
+    ws_s0:'Cutting', ws_s1:'Sanding', ws_s2:'Assembly', ws_s3:'On-site installation',
+    ws_i0:'The saw swings above the board. When it is exactly over the red line, press SPACE (or click). You make 3 cuts and precision counts.',
+    ws_i1:'The board is covered in rough patches. Hold the mouse button (or your finger) and sand over the patches to smooth them before time runs out.',
+    ws_i2:'Assemble the furniture. Drag the parts from the bench onto the correct outlines. A wrong spot costs points, and speed counts too.',
+    ws_i3:'Mount the shelf at the customer’s. The spirit level shows the tilt and the shelf keeps drifting. Keep the bubble in the green zone as long as you can.',
+    ws_k0:'Space / click = cut', ws_k1:'Drag with mouse / finger over the board', ws_k2:'Drag a part and drop it on its outline', ws_k3:'← → or A / D, or the buttons below',
+    ws_h0:'Line the saw up with the red mark, then cut!', ws_h1:'Hold and drag over the dark patches', ws_h2:'Drag the parts onto the outlines', ws_h3:'Keep the bubble in the green zone',
+    ws_q0:'Master craftsmanship!', ws_q1:'Solid work.', ws_q2:'Room for improvement...', ws_q3:'The customer will not accept this.',
+    ws_c0:'“I cannot sell this. Complaint!”', ws_c1:'“It will do, but it is not quite right.”', ws_c2:'“Nice work, I am happy!”', ws_c3:'“Amazing! Exactly what I imagined!”',
+    ws_r0:'Apprentice', ws_r1:'Carpenter', ws_r2:'Master', ws_r3:'Workshop Legend',
     bg_h:'Experience & Education', bg_sub:'An interactive timeline of my work experience, education, and Cisco certifications.',
     tb_work:'Work Experience', tb_edu:'Education', tb_certs:'Courses & Certifications',
     w_title:'Hotel Receptionist',
@@ -701,8 +869,11 @@ const T = {
     e1_title:'Intelligent Software Systems (Ing. / M.Sc.)', e1_desc:'Master studies focused on advanced software engineering, system architecture, and AI concepts.',
     e2_title:'Informatics (Bc. / B.Sc.)', e2_desc:'Bachelor degree successfully finished with state exams and thesis defense of Patterna.',
     e3_title:'Information & Network Technologies', e3_desc:'High school degree focused on network architecture, hardware, and core programming.',
-    c_h:'Get In Touch', c_p:'I am looking for a part-time developer or trainee position (Bratislava / Zvolen / Remote). Feel free to email me.',
-    c_email:'Email:', c_loc:'Location:', c_copy:'Copy Email', c_copy_github:'Copy GitHub link', c_copied:'Copied to clipboard!', f_top:'Back to top ↑', back_top:'Back to top', present:'Present'
+    c_h:'Get In Touch', c_p:'I am looking for a part-time developer or trainee position (Bratislava / Zvolen / Remote). Send me a message through the form and I will get back to you.',
+    c_loc:'Location:', c_looking:'Looking for:', c_copy_github:'Copy GitHub link', c_copied:'Copied to clipboard!', f_top:'Back to top ↑', back_top:'Back to top', present:'Present',
+    cf_name:'Your name', cf_email:'Your email (where I reply)', cf_msg:'Message', cf_ph_name:'John Smith', cf_ph_email:'john@example.com', cf_ph_msg:'Hi, I am writing to you about...', cf_send:'Send message', cf_sending:'Sending...',
+    cf_ok:'Message sent! I will get back to you soon.', cf_err:'Sending failed. Please try again later.', cf_bad_name:'Please enter your name.', cf_bad_email:'Please enter a valid email address.', cf_bad_msg:'The message is too short (at least 10 characters).', cf_wait:'Please wait a moment before sending another message.',
+    cf_note:'Your message goes straight to my inbox. I will only use your address to reply.'
   }
 };
 
@@ -880,18 +1051,68 @@ if(!reduceMotion) {
 setLang(lang); setTheme(root.dataset.theme || 'light');
 buildDots();
 
-// Copy-to-clipboard actions
+// Toast + copy-to-clipboard
 const toast = $('#toast');
+function toastMsg(message, ms = 2000) {
+  toast.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(toastMsg.t);
+  toastMsg.t = setTimeout(() => toast.classList.remove('show'), ms);
+}
 async function copyValue(value, message) {
   try {
     await navigator.clipboard.writeText(value);
-    toast.textContent = message;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2000);
+    toastMsg(message);
   } catch(e) {}
 }
-$('#copy').onclick = () => copyValue('ondrej.drengubiak1@gmail.com', T[lang].c_copied || 'Copied!');
 $('#copy-github').onclick = () => copyValue('https://github.com/Ondrejstuba', T[lang].c_copied || 'Copied!');
+
+/* =====================================================================
+   CONTACT FORM — the e-mail address is NOT shown anywhere on the page.
+   Messages are delivered through the FormSubmit.co service (AJAX endpoint).
+   The address is only assembled in memory at send time.
+   ===================================================================== */
+(() => {
+  const form = $('#contact-form'), st = $('#cf-status'), btn = $('#cf-send'), cnt = $('#cf-count');
+  const nameI = $('#cf-name'), mailI = $('#cf-email'), msgI = $('#cf-msg'), honey = $('#cf-honey');
+  // address pieces (kept apart so it is not a plain string in the source)
+  const _a = ['ondrej', '.drengubiak1'], _b = ['gmail', '.com'];
+  const endpoint = () => 'https://formsubmit.co/ajax/' + _a.join('') + String.fromCharCode(64) + _b.join('');
+  const tt = k => (T[lang] && T[lang][k]) || k;
+  const say = (msg, cls) => { st.textContent = msg || ''; st.className = 'cf-status' + (cls ? ' ' + cls : ''); };
+  const mark = (id, bad) => $(id).classList.toggle('bad', !!bad);
+  msgI.addEventListener('input', () => { cnt.textContent = msgI.value.length + ' / 2000'; });
+  [nameI, mailI, msgI].forEach(i => i.addEventListener('input', () => i.parentElement.classList.remove('bad')));
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    say('');
+    const name = nameI.value.trim(), email = mailI.value.trim(), message = msgI.value.trim();
+    mark('#f-name'); mark('#f-email'); mark('#f-msg');
+    if(name.length < 2) { mark('#f-name', 1); say(tt('cf_bad_name'), 'err'); nameI.focus(); return; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { mark('#f-email', 1); say(tt('cf_bad_email'), 'err'); mailI.focus(); return; }
+    if(message.length < 10) { mark('#f-msg', 1); say(tt('cf_bad_msg'), 'err'); msgI.focus(); return; }
+    if(honey.value) { say(tt('cf_ok'), 'ok'); form.reset(); return; } // bots: pretend success
+    if(Date.now() - (+load('cfLast') || 0) < 60000) { say(tt('cf_wait'), 'err'); return; }
+
+    btn.disabled = true; say(tt('cf_sending'));
+    try {
+      const r = await fetch(endpoint(), {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+        body: JSON.stringify({name, email, message, _subject: 'Portfólio: nová správa od ' + name, _captcha: 'false', _template: 'table'})
+      });
+      const j = await r.json().catch(() => ({}));
+      if(r.ok && (j.success === true || j.success === 'true')) {
+        say(tt('cf_ok'), 'ok'); form.reset(); cnt.textContent = '0 / 2000'; save('cfLast', String(Date.now()));
+      } else throw new Error('send failed');
+    } catch(err) {
+      say(tt('cf_err'), 'err');
+    } finally {
+      btn.disabled = false;
+    }
+  });
+})();
 
 // Skill Filter
 $$('.filter-btn').forEach(btn => {
@@ -932,10 +1153,11 @@ addEventListener('keydown', e => {
     $('#term-toggle').focus();
   }
 });
+function backToTerminal() { termModal.classList.add('open'); termInput.focus(); }
 
 termInput.onkeydown = (e) => {
   if(e.key === 'Enter') {
-    const val = termInput.value.trim().toLowerCase();
+    const val = termInput.value.trim().toLowerCase().replace(/\s+/g, ' ');
     termInput.value = '';
     appendTermLine('guest@drengubiak:~$ ' + val, '#58a6ff');
     
@@ -954,6 +1176,14 @@ termInput.onkeydown = (e) => {
       termBody.innerHTML = '';
     } else if(val === 'exit') {
       termModal.classList.remove('open');
+    } else if(val === 'play' || val === 'play 1') {
+      // Hidden command (not listed in help): hotel front-desk game
+      appendTermLine(T[lang].term_play, '#D9A84F');
+      setTimeout(() => openGame(), 650);
+    } else if(val === 'play 2') {
+      // Hidden command (not listed in help): furniture workshop game
+      appendTermLine(T[lang].term_play2, '#D9A84F');
+      setTimeout(() => WS.open(), 650);
     } else if(val !== '') {
       appendTermLine(T[lang].term_unknown.replace('{cmd}', val), '#ff7b72');
     }
@@ -968,6 +1198,725 @@ function appendTermLine(text, color = '#c9d1d9') {
   div.textContent = text;
   termBody.appendChild(div);
 }
+
+/* =====================================================================
+   HIDDEN MINIGAME #1: NIGHT SHIFT (hotel front desk)
+   Unlock: open the terminal (>_) and type  play
+   ===================================================================== */
+const gModal = $('#game-modal'), gWin = $('#game-window'), gBoard = $('#g-board'), gGuests = $('#g-guests'),
+      gPhone = $('#g-phone'), gOver = $('#g-over'), gMsg = $('#g-msg');
+const ROOMS = [101,102,103,104,105,106,107,108,109,110,111,112];
+const FACES = ['🧑‍💼','👵','🧔','👩‍🦰','🧑‍🎤','👨‍🦳','🧑‍🍳','👩‍🔬','🧓','👨‍🚀','🧕','👱‍♀️'];
+const gT = k => (T[lang] && T[lang][k]) || k;
+let g = null, gRaf = 0, gLast = 0, gBuf = '', gBufT = 0, gMsgT = 0;
+
+function shuf(a) { a = a.slice(); for(let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function gOpen() { return gModal.classList.contains('open'); }
+function gBest() { return +load('nightShiftBest') || 0; }
+
+function gFlash(msg, ms = 1600) {
+  gMsg.textContent = msg; gMsg.classList.add('show');
+  clearTimeout(gMsgT); gMsgT = setTimeout(() => gMsg.classList.remove('show'), ms);
+}
+function gHud() {
+  $('#g-score').textContent = g ? g.score : 0;
+  $('#g-lives').textContent = g ? '❤'.repeat(Math.max(0, g.lives)) + '·'.repeat(Math.max(0, 3 - g.lives)) : '❤❤❤';
+  $('#g-lvl').textContent = g ? g.level : 1;
+  $('#g-combo').textContent = 'x' + (g ? Math.min(5, 1 + Math.floor(g.combo / 3)) : 1);
+  $('#g-best').textContent = Math.max(gBest(), g ? g.score : 0);
+}
+function gRenderBoard() {
+  gBoard.innerHTML = '';
+  const order = g ? g.order : ROOMS;
+  order.forEach(r => {
+    const has = g ? g.has[r] : true;
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'hook' + (has ? '' : ' out');
+    b.innerHTML = '<small>' + (has ? '🔑' : '·') + '</small>' + r;
+    b.onclick = () => gServe(r);
+    gBoard.appendChild(b);
+  });
+}
+function gShowOverlay(html) {
+  gOver.innerHTML = html; gOver.style.display = 'flex';
+  const b = gOver.querySelector('button'); if(b) b.onclick = gStart, b.focus();
+}
+function gShowStart() {
+  gShowOverlay('<h3>' + gT('g_title') + '</h3><p>' + gT('g_how') + '</p><button class="btn" type="button">' + gT('g_start') + '</button><span class="g-hint">' + gT('g_hint') + '</span>');
+}
+function openGame() {
+  if(typeof WS !== 'undefined' && WS.isOpen()) WS.close(true);
+  termModal.classList.remove('open');
+  termInput.blur();
+  if(g) g.run = false;
+  cancelAnimationFrame(gRaf);
+  g = null; gGuests.innerHTML = ''; gPhone.classList.remove('ring'); gMsg.classList.remove('show');
+  gModal.classList.add('open');
+  gRenderBoard(); gHud(); gShowStart();
+}
+function closeGame(silent) {
+  if(g) g.run = false;
+  cancelAnimationFrame(gRaf);
+  gModal.classList.remove('open');
+  if(!silent) backToTerminal();
+}
+function gStart() {
+  cancelAnimationFrame(gRaf);
+  gGuests.innerHTML = '';
+  const has = {}; ROOMS.forEach(r => has[r] = true);
+  g = {score:0, lives:3, level:1, served:0, combo:0, has, order:shuf(ROOMS), guests:[], spawn:600, shuffleT:18000, phone:0, phoneT:12000, run:true};
+  gOver.style.display = 'none';
+  gPhone.classList.remove('ring');
+  gRenderBoard(); gHud();
+  gLast = performance.now();
+  gRaf = requestAnimationFrame(gLoop);
+}
+function gSpawn() {
+  const used = g.guests.map(x => x.room);
+  let c = ROOMS.filter(r => !used.includes(r));
+  if(!c.length) return;
+  const absent = c.filter(r => !g.has[r]);
+  if(absent.length && Math.random() < .5) c = absent;
+  const room = c[Math.floor(Math.random() * c.length)];
+  const type = g.has[room] ? 'in' : 'out';
+  const max = Math.max(4500, 11000 - g.level * 650);
+  const el = document.createElement('div');
+  el.className = 'g-guest';
+  el.innerHTML = '<span class="face">' + FACES[Math.floor(Math.random() * FACES.length)] + '</span><div class="gtxt"><b>' + gT(type === 'in' ? 'g_in' : 'g_out') + ' → ' + gT('g_room') + ' ' + room + '</b><div class="pbar"><i></i></div></div>';
+  gGuests.appendChild(el);
+  g.guests.push({room, type, max, left:max, el, bar:el.querySelector('i')});
+}
+function gRemove(x) {
+  x.el.remove();
+  g.guests = g.guests.filter(y => y !== x);
+}
+function gMistake(msg) {
+  g.lives--; g.combo = 0;
+  gFlash(msg);
+  gWin.classList.remove('g-window-shake'); void gWin.offsetWidth; gWin.classList.add('g-window-shake');
+  gHud();
+  if(g.lives <= 0) gEnd();
+}
+function gServe(room) {
+  if(!g || !g.run) return;
+  const present = g.has[room];
+  const guest = g.guests.find(x => x.room === room && ((x.type === 'in' && present) || (x.type === 'out' && !present)));
+  if(!guest) { gMistake(gT('g_wrong')); return; }
+  g.has[room] = !present;
+  g.combo++;
+  const mult = Math.min(5, 1 + Math.floor(g.combo / 3));
+  g.score += Math.round((100 + (guest.left / guest.max) * 50) * mult);
+  g.served++;
+  gRemove(guest);
+  if(g.served % 8 === 0) { g.level++; gFlash(gT('g_levelup').replace('{n}', g.level)); }
+  gRenderBoard(); gHud();
+}
+function gEnd() {
+  g.run = false;
+  cancelAnimationFrame(gRaf);
+  gPhone.classList.remove('ring');
+  const best = gBest(), isNew = g.score > best;
+  if(isNew) save('nightShiftBest', String(g.score));
+  gHud();
+  gShowOverlay('<h3>' + gT('g_over') + '</h3><p>' + gT('g_final') + '</p><div class="big">' + g.score + '</div>' + (isNew ? '<p>🏆 ' + gT('g_new') + '</p>' : '') + '<button class="btn" type="button">' + gT('g_again') + '</button><span class="g-hint">' + gT('g_hint') + '</span>');
+}
+function gLoop(t) {
+  if(!g || !g.run) return;
+  const dt = Math.min(100, t - gLast); gLast = t;
+  // spawn
+  g.spawn -= dt;
+  if(g.spawn <= 0) {
+    if(g.guests.length < Math.min(6, 2 + Math.floor(g.level / 2))) { gSpawn(); g.spawn = Math.max(1100, 3600 - g.level * 260); }
+    else g.spawn = 300;
+  }
+  // patience (faster while the phone rings)
+  const rate = g.phone > 0 ? 1.8 : 1;
+  for(const x of g.guests.slice()) {
+    x.left -= dt * rate;
+    const p = Math.max(0, x.left / x.max);
+    x.bar.style.width = (p * 100) + '%';
+    x.el.classList.toggle('low', p < .3);
+    if(x.left <= 0) { gRemove(x); gMistake(gT('g_left')); if(!g.run) return; }
+  }
+  // phone
+  if(g.phone > 0) {
+    g.phone -= dt;
+    if(g.phone <= 0) { g.phone = 0; gPhone.classList.remove('ring'); gMistake(gT('g_missed')); if(!g.run) return; }
+  } else {
+    g.phoneT -= dt;
+    if(g.phoneT <= 0) {
+      g.phone = 6000; g.phoneT = 10000 + Math.random() * 8000;
+      gPhone.textContent = '📞 ' + gT('g_phone'); gPhone.classList.add('ring');
+    }
+  }
+  // renovation: keys get rearranged
+  if(g.level >= 2) {
+    g.shuffleT -= dt;
+    if(g.shuffleT <= 0) { g.order = shuf(g.order); g.shuffleT = 18000; gRenderBoard(); gFlash(gT('g_shuffle'), 2200); }
+  }
+  gRaf = requestAnimationFrame(gLoop);
+}
+gPhone.onclick = () => {
+  if(!g || !g.run || g.phone <= 0) return;
+  g.phone = 0; gPhone.classList.remove('ring');
+  g.combo++; g.score += 75 * Math.min(5, 1 + Math.floor(g.combo / 3));
+  gHud();
+};
+$('#g-close').onclick = () => closeGame();
+gModal.addEventListener('mousedown', e => { if(e.target === gModal) closeGame(); });
+
+// Keyboard: type a 3-digit room number while playing; Esc goes back to the terminal
+addEventListener('keydown', e => {
+  if(!gOpen()) return;
+  if(e.key === 'Escape') { closeGame(); return; }
+  if(g && g.run && /^\d$/.test(e.key)) {
+    const now = Date.now();
+    if(now - gBufT > 1500) gBuf = '';
+    gBufT = now; gBuf += e.key;
+    if(gBuf.length === 3) { const r = +gBuf; gBuf = ''; if(ROOMS.includes(r)) gServe(r); }
+  }
+});
+document.addEventListener('visibilitychange', () => { if(g) gLast = performance.now(); });
+
+/* =====================================================================
+   HIDDEN MINIGAME #2: WOODSHOP (furniture workshop, canvas)
+   Unlock: open the terminal (>_) and type  play 2
+   4 orders x 4 phases: cut (timing) -> sand (scrub) -> assemble (drag) -> install (balance)
+   ===================================================================== */
+const WS = (() => {
+  const W = 760, H = 460, TAU = Math.PI * 2;
+  const modal = $('#ws-modal'), cv = $('#ws-canvas'), ctx = cv.getContext('2d'), sndBtn = $('#ws-snd');
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  cv.width = W * dpr; cv.height = H * dpr;
+  const tx = k => (T[lang] && T[lang][k]) || k;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const hash = n => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+  let st = null, raf = 0, last = 0, snd = load('woodshopSnd') !== '0', actx = null;
+  const keys = {l:false, r:false};
+
+  /* ---------- data ---------- */
+  const S = .7, OX = 380, OY = 150;
+  const WOODS = {
+    plank:['#d2a066','#b17c43'], side:['#c28a50','#9b6a37'], board:['#d7a96f','#b78548'], post:['#b98350','#8f5f31'],
+    rail:['#c9965a','#a46f3b'], seat:['#d4a468','#b38045'], leg:['#b58049','#8b5a2c'], top:['#dcb277','#bb8a4d'], door:['#c99557','#a87238']
+  };
+  const FURN = [
+    {id:'shelf', price:70, parts:[
+      {k:'side',x:-110,y:0,w:16,h:200},{k:'side',x:110,y:0,w:16,h:200},
+      {k:'board',x:0,y:-92,w:204,h:14},{k:'board',x:0,y:0,w:204,h:14},{k:'board',x:0,y:92,w:204,h:14}]},
+    {id:'chair', price:55, parts:[
+      {k:'post',x:-60,y:-40,w:14,h:120},{k:'post',x:60,y:-40,w:14,h:120},
+      {k:'rail',x:0,y:-75,w:134,h:14},{k:'seat',x:0,y:25,w:160,h:16},
+      {k:'leg',x:-60,y:75,w:14,h:84},{k:'leg',x:60,y:75,w:14,h:84}]},
+    {id:'table', price:110, parts:[
+      {k:'top',x:0,y:-30,w:290,h:18},{k:'leg',x:-120,y:40,w:16,h:122},{k:'leg',x:120,y:40,w:16,h:122},{k:'rail',x:0,y:15,w:224,h:10}]},
+    {id:'wardrobe', price:180, parts:[
+      {k:'side',x:-100,y:0,w:16,h:210},{k:'side',x:100,y:0,w:16,h:210},
+      {k:'board',x:0,y:-100,w:184,h:14},{k:'board',x:0,y:100,w:184,h:14},
+      {k:'door',x:-46,y:0,w:90,h:182},{k:'door',x:46,y:0,w:90,h:182}]}
+  ];
+  const BTN = {x:290, y:352, w:180, h:46};
+  const diff = () => 1 + st.order * .3;
+  const fresh = mode => ({mode, modeT:0, order:0, stage:0, scores:[], money:0, parts:[], sd:null, shake:0, pay:0, tip:0, avg:0, newBest:false});
+  const bestVal = () => +load('woodshopBest') || 0;
+
+  /* ---------- sound ---------- */
+  function beep(f, d = .08, type = 'square', vol = .035) {
+    if(!snd) return;
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      const o = actx.createOscillator(), gn = actx.createGain(), t0 = actx.currentTime;
+      o.type = type; o.frequency.value = f;
+      gn.gain.setValueAtTime(vol, t0); gn.gain.exponentialRampToValueAtTime(.0001, t0 + d);
+      o.connect(gn); gn.connect(actx.destination); o.start(t0); o.stop(t0 + d);
+    } catch(e) {}
+  }
+  function dust(x, y, n, col) {
+    for(let i = 0; i < n; i++) st.parts.push({x, y, vx:rnd(-90, 90), vy:rnd(-150, -20), l:rnd(.4, .95), t:0, c:col || '#e8c590', s:rnd(1.5, 3.4)});
+  }
+  function confetti() {
+    const cols = ['#F2B84B','#10B981','#ff7b72','#58a6ff','#f0f6fc'];
+    for(let i = 0; i < 60; i++) st.parts.push({x:rnd(180, 580), y:rnd(60, 120), vx:rnd(-80, 80), vy:rnd(-60, 40), l:rnd(.9, 1.7), t:0, c:cols[i % cols.length], s:rnd(3, 6)});
+  }
+
+  /* ---------- drawing helpers ---------- */
+  function rr(x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+  function wood(x, y, w, h, pal, seed, a) {
+    ctx.save();
+    if(a != null) ctx.globalAlpha = a;
+    const horiz = w >= h;
+    const gr = horiz ? ctx.createLinearGradient(0, y, 0, y + h) : ctx.createLinearGradient(x, 0, x + w, 0);
+    gr.addColorStop(0, pal[0]); gr.addColorStop(1, pal[1]);
+    rr(x, y, w, h, 2); ctx.fillStyle = gr; ctx.fill();
+    ctx.save(); rr(x, y, w, h, 2); ctx.clip();
+    ctx.strokeStyle = 'rgba(60,32,10,.28)'; ctx.lineWidth = 1;
+    const n = Math.max(2, Math.round((horiz ? h : w) / 5));
+    for(let i = 0; i < n; i++) {
+      const p = hash(seed * 7.3 + i) * (horiz ? h : w), j1 = hash(seed + i * 3) * 4 - 2, j2 = hash(seed + i * 5) * 4 - 2;
+      ctx.beginPath();
+      if(horiz) { ctx.moveTo(x, y + p); ctx.bezierCurveTo(x + w * .3, y + p + j1, x + w * .7, y + p + j2, x + w, y + p); }
+      else { ctx.moveTo(x + p, y); ctx.bezierCurveTo(x + p + j1, y + h * .3, x + p + j2, y + h * .7, x + p, y + h); }
+      ctx.stroke();
+    }
+    ctx.restore();
+    rr(x, y, w, h, 2); ctx.strokeStyle = 'rgba(40,20,5,.55)'; ctx.lineWidth = 1.2; ctx.stroke();
+    ctx.restore();
+  }
+  function txt(s, x, y, size, color, align, weight, mono) {
+    ctx.font = (weight || 700) + ' ' + size + 'px ' + (mono ? "'Fira Code',monospace" : "'Bricolage Grotesque',system-ui,sans-serif");
+    ctx.fillStyle = color; ctx.textAlign = align || 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillText(s, x, y);
+  }
+  function wrap(s, x, y, maxW, lh, size, color) {
+    ctx.font = '500 ' + size + "px 'IBM Plex Sans',system-ui,sans-serif"; ctx.fillStyle = color; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    let line = '';
+    for(const w of s.split(' ')) {
+      const t = line ? line + ' ' + w : w;
+      if(ctx.measureText(t).width > maxW && line) { ctx.fillText(line, x, y); y += lh; line = w; } else line = t;
+    }
+    if(line) { ctx.fillText(line, x, y); y += lh; }
+    return y;
+  }
+  function star(x, y, r, on) {
+    ctx.beginPath();
+    for(let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, q = i % 2 ? r * .45 : r; ctx.lineTo(x + Math.cos(a) * q, y + Math.sin(a) * q); }
+    ctx.closePath(); ctx.fillStyle = on ? '#F2B84B' : 'rgba(255,255,255,.14)'; ctx.fill();
+    if(on) { ctx.strokeStyle = '#8a5a12'; ctx.lineWidth = 1.5; ctx.stroke(); }
+  }
+  function stars(cx, cy, r, n) { for(let i = 0; i < 3; i++) star(cx + (i - 1) * r * 2.6, cy, r, i < n); }
+  const starsFor = sc => sc >= 85 ? 3 : sc >= 60 ? 2 : sc >= 30 ? 1 : 0;
+  const qIdx = sc => sc >= 85 ? 0 : sc >= 60 ? 1 : sc >= 30 ? 2 : 3;
+  function bar(frac, col) {
+    ctx.fillStyle = 'rgba(0,0,0,.4)'; rr(14, 47, W - 28, 6, 3); ctx.fill();
+    ctx.fillStyle = col || '#D9A84F'; rr(14, 47, Math.max(0, (W - 28) * clamp(frac, 0, 1)), 6, 3); ctx.fill();
+  }
+  function hint(k) { txt(tx(k), W / 2, 72, 14, '#cdb99a', 'center', 500); }
+  function bg() {
+    const gr = ctx.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#1d1712'); gr.addColorStop(1, '#2b2018');
+    ctx.fillStyle = gr; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = 'rgba(255,255,255,.045)';
+    for(let y = 58; y < H - 80; y += 22) for(let x = 14; x < W; x += 22) { ctx.beginPath(); ctx.arc(x, y, 1.6, 0, TAU); ctx.fill(); }
+    const b2 = ctx.createLinearGradient(0, H - 78, 0, H); b2.addColorStop(0, '#5a3d22'); b2.addColorStop(1, '#3a2512');
+    ctx.fillStyle = b2; ctx.fillRect(0, H - 78, W, 78);
+    ctx.fillStyle = 'rgba(255,220,160,.2)'; ctx.fillRect(0, H - 78, W, 3);
+  }
+  function hud() {
+    ctx.fillStyle = 'rgba(0,0,0,.4)'; ctx.fillRect(0, 0, W, 42);
+    txt((st.order + 1) + '/4 · ' + tx('f_' + FURN[st.order].id), 14, 27, 16, '#F3E3C6');
+    for(let i = 0; i < 4; i++) {
+      ctx.beginPath(); ctx.arc(W / 2 - 45 + i * 30, 21, 8, 0, TAU);
+      ctx.fillStyle = i < st.stage ? '#10B981' : (i === st.stage ? '#D9A84F' : '#4a3b2c'); ctx.fill();
+    }
+    txt(st.money + ' €', W - 14, 27, 16, '#D9A84F', 'right');
+  }
+  function drawFurniture(cx, cy, sc) {
+    FURN[st.order].parts.forEach((p, i) => wood(cx + p.x * sc - p.w * sc / 2, cy + p.y * sc - p.h * sc / 2, p.w * sc, p.h * sc, WOODS[p.k], i + 1));
+  }
+  function card() {
+    ctx.fillStyle = 'rgba(0,0,0,.5)'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = 'rgba(14,9,5,.94)'; rr(150, 64, 460, 350, 18); ctx.fill();
+    ctx.strokeStyle = 'rgba(217,168,79,.65)'; ctx.lineWidth = 2; rr(150, 64, 460, 350, 18); ctx.stroke();
+  }
+  function button(label) {
+    ctx.save(); ctx.globalAlpha = st.modeT >= .35 ? 1 : .5;
+    ctx.fillStyle = '#D9A84F'; rr(BTN.x, BTN.y, BTN.w, BTN.h, 10); ctx.fill();
+    txt(label, BTN.x + BTN.w / 2, BTN.y + 29, 17, '#14110E', 'center'); ctx.restore();
+  }
+  function saw(x, y, rot) {
+    ctx.save(); ctx.translate(x, y); ctx.rotate(rot);
+    ctx.beginPath();
+    for(let i = 0; i < 36; i++) { const a = i / 36 * TAU, r = i % 2 ? 30 : 38; ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r); }
+    ctx.closePath(); ctx.fillStyle = '#b9c2c6'; ctx.fill(); ctx.strokeStyle = '#6b7479'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, 22, 0, TAU); ctx.strokeStyle = 'rgba(0,0,0,.22)'; ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, 9, 0, TAU); ctx.fillStyle = '#555d61'; ctx.fill();
+    ctx.restore();
+  }
+
+  /* ---------- stage flow ---------- */
+  function finish(sc) {
+    st.scores.push(sc); st.mode = 'stageEnd'; st.modeT = 0;
+    if(sc >= 85) confetti();
+    beep(sc >= 60 ? 660 : 200, .22, 'triangle', .05);
+  }
+  function endOrder() {
+    const f = FURN[st.order], avg = Math.round(st.scores.reduce((a, b) => a + b, 0) / st.scores.length);
+    st.avg = avg; st.pay = Math.round(f.price * (.4 + .6 * avg / 100)); st.tip = avg >= 90 ? Math.round(f.price * .2) : 0;
+    st.money += st.pay + st.tip; st.mode = 'orderEnd'; st.modeT = 0;
+    if(avg >= 85) confetti();
+    beep(avg >= 60 ? 784 : 180, .3, 'triangle', .05);
+  }
+  function endRun() {
+    st.mode = 'over'; st.modeT = 0;
+    if(st.money > bestVal()) { save('woodshopBest', String(st.money)); st.newBest = true; confetti(); }
+    $('#ws-best').textContent = bestVal() + ' €';
+  }
+  function advance() {
+    if(!st || st.modeT < .35) return;
+    const m = st.mode;
+    if(m === 'menu' || m === 'over') { st = fresh('intro'); }
+    else if(m === 'intro') { st.mode = 'play'; st.modeT = 0; stg[st.stage].init(); beep(520, .08, 'triangle'); return; }
+    else if(m === 'stageEnd') { if(st.stage < 3) { st.stage++; st.mode = 'intro'; } else { endOrder(); return; } }
+    else if(m === 'orderEnd') { if(st.order < 3) { st.order++; st.stage = 0; st.scores = []; st.mode = 'intro'; } else { endRun(); return; } }
+    st.modeT = 0; beep(440, .06, 'triangle');
+  }
+
+  /* ---------- the four phases ---------- */
+  const PL = {x:110, y:196, w:540, h:62};
+  const BD = {x:130, y:100, w:500, h:240};
+  const LB = {x:150, y:392, w:150, h:46}, RB = {x:460, y:392, w:150, h:46};
+  const inR = (r, x, y, p) => x >= r.x - (p || 0) && x <= r.x + r.w + (p || 0) && y >= r.y - (p || 0) && y <= r.y + r.h + (p || 0);
+
+  const stg = [
+  { /* 0: CUT */
+    init() { st.sd = {n:0, sc:[], x:PL.x + 20, dir:1, speed:220 + 80 * diff(), target:rnd(PL.x + 80, PL.x + PL.w - 80), cuts:[], texts:[], wait:0, rot:0}; },
+    update(dt) {
+      const s = st.sd; s.rot += dt * 14;
+      s.texts.forEach(t => { t.t += dt; t.y -= 26 * dt; }); s.texts = s.texts.filter(t => t.t < 1.1);
+      if(s.wait > 0) { s.wait -= dt; if(s.wait <= 0 && s.n >= 3) finish(Math.round(s.sc.reduce((a, b) => a + b, 0) / 3)); return; }
+      s.x += s.dir * s.speed * dt;
+      if(s.x > PL.x + PL.w - 10) { s.x = PL.x + PL.w - 10; s.dir = -1; }
+      if(s.x < PL.x + 10) { s.x = PL.x + 10; s.dir = 1; }
+    },
+    act() {
+      const s = st.sd; if(!s || s.wait > 0 || s.n >= 3) return;
+      const err = Math.abs(s.x - s.target), sc = Math.round(clamp(100 - err * 1.8, 0, 100));
+      s.sc.push(sc); s.n++; s.cuts.push(s.x);
+      s.texts.push({x:s.x, y:PL.y - 18, t:0, s:sc + ' %', c:sc >= 85 ? '#7ee2b0' : sc >= 55 ? '#F2B84B' : '#ff9d95'});
+      dust(s.x, PL.y + PL.h / 2, 24); st.shake = .12; beep(sc > 60 ? 520 : 220, .1, 'sawtooth', .04);
+      s.wait = .75; if(s.n < 3) s.target = rnd(PL.x + 80, PL.x + PL.w - 80);
+    },
+    down() { this.act(); },
+    draw() {
+      const s = st.sd;
+      ctx.fillStyle = 'rgba(0,0,0,.35)'; rr(PL.x - 30, PL.y + PL.h - 2, PL.w + 60, 18, 5); ctx.fill();
+      wood(PL.x, PL.y, PL.w, PL.h, WOODS.plank, 3);
+      s.cuts.forEach(cx => { ctx.fillStyle = 'rgba(20,10,0,.9)'; ctx.fillRect(cx - 1.5, PL.y, 3, PL.h); });
+      if(s.n < 3) {
+        ctx.save(); ctx.strokeStyle = '#ff6b5e'; ctx.lineWidth = 2; ctx.setLineDash([6, 5]);
+        ctx.beginPath(); ctx.moveTo(s.target, PL.y - 16); ctx.lineTo(s.target, PL.y + PL.h + 12); ctx.stroke(); ctx.restore();
+        ctx.fillStyle = '#ff6b5e'; ctx.beginPath(); ctx.moveTo(s.target - 7, PL.y - 22); ctx.lineTo(s.target + 7, PL.y - 22); ctx.lineTo(s.target, PL.y - 10); ctx.closePath(); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(s.x, 168); ctx.lineTo(s.x, PL.y); ctx.stroke();
+      }
+      saw(s.x, 130, s.rot);
+      s.texts.forEach(t => { ctx.globalAlpha = 1 - t.t / 1.1; txt(t.s, t.x, t.y, 20, t.c, 'center'); ctx.globalAlpha = 1; });
+      txt(tx('ws_cut') + ' ' + Math.min(3, s.n + (s.n < 3 ? 1 : 0)) + '/3', W / 2, PL.y + PL.h + 56, 18, '#F3E3C6', 'center');
+      hint('ws_h0');
+    }
+  },
+  { /* 1: SAND */
+    init() {
+      const n = 13 + st.order * 2, p = [];
+      for(let i = 0; i < n; i++) p.push({x:rnd(BD.x + 40, BD.x + BD.w - 40), y:rnd(BD.y + 36, BD.y + BD.h - 36), r:rnd(26, 38), rough:1, seed:Math.random() * 100});
+      st.sd = {p, time:Math.max(10, 17 - 3.5 * (diff() - 1)), T:0, down:false, has:false, px:0, py:0, lx:0, ly:0, done:false, wait:0, sc:0};
+    },
+    avg() { const p = st.sd.p; return p.reduce((a, b) => a + b.rough, 0) / p.length; },
+    update(dt) {
+      const s = st.sd;
+      if(s.done) { s.wait -= dt; if(s.wait <= 0) finish(s.sc); return; }
+      s.T += dt; const a = this.avg();
+      if(a < .05 || s.T >= s.time) { s.done = true; s.wait = .8; s.sc = a < .05 ? 100 : Math.round((1 - a) * 100); beep(600, .12, 'triangle'); }
+    },
+    down(x, y) { const s = st.sd; s.down = true; s.has = true; s.lx = s.px = x; s.ly = s.py = y; },
+    move(x, y) {
+      const s = st.sd; if(!s) return;
+      if(s.down && s.has && !s.done) {
+        const mv = Math.min(40, Math.hypot(x - s.lx, y - s.ly));
+        if(mv > 0) {
+          s.p.forEach(p => { if(p.rough > 0 && Math.hypot(p.x - x, p.y - y) < p.r + 12) { p.rough = Math.max(0, p.rough - mv * .0085); if(Math.random() < .35) dust(x, y, 1, '#f1dcb0'); } });
+          if(mv > 6 && Math.random() < .12) beep(rnd(900, 1300), .03, 'square', .012);
+        }
+      }
+      if(s.down) { s.lx = x; s.ly = y; s.has = true; }
+      s.px = x; s.py = y;
+    },
+    up() { const s = st.sd; if(s) { s.down = false; s.has = false; } },
+    draw() {
+      const s = st.sd;
+      ctx.fillStyle = 'rgba(0,0,0,.35)'; rr(BD.x + 4, BD.y + 8, BD.w, BD.h, 6); ctx.fill();
+      wood(BD.x, BD.y, BD.w, BD.h, WOODS.top, 11);
+      ctx.save(); rr(BD.x, BD.y, BD.w, BD.h, 2); ctx.clip();
+      s.p.forEach(p => {
+        if(p.rough <= .01) return;
+        ctx.globalAlpha = Math.min(1, p.rough);
+        const gr = ctx.createRadialGradient(p.x, p.y, 2, p.x, p.y, p.r);
+        gr.addColorStop(0, 'rgba(66,34,10,.92)'); gr.addColorStop(1, 'rgba(66,34,10,0)');
+        ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, TAU); ctx.fill();
+        ctx.fillStyle = 'rgba(40,20,5,.85)';
+        for(let i = 0; i < 10; i++) { const a = hash(p.seed + i) * TAU, d = hash(p.seed + i * 2.1) * p.r * .9; ctx.fillRect(p.x + Math.cos(a) * d, p.y + Math.sin(a) * d, 2, 2); }
+      });
+      ctx.restore(); ctx.globalAlpha = 1;
+      if(s.px) {
+        ctx.save(); ctx.translate(s.px, s.py); ctx.rotate(s.down ? Math.sin(s.T * 40) * .06 : 0);
+        ctx.globalAlpha = s.down ? 1 : .6;
+        ctx.fillStyle = '#c8b27a'; rr(-32, -14, 64, 30, 6); ctx.fill();
+        ctx.fillStyle = '#6f7f84'; rr(-32, -24, 64, 16, 6); ctx.fill();
+        ctx.strokeStyle = 'rgba(0,0,0,.4)'; ctx.lineWidth = 1.2; rr(-32, -24, 64, 40, 6); ctx.stroke();
+        ctx.restore();
+      }
+      const a = this.avg();
+      bar(1 - s.T / s.time, '#D9A84F');
+      txt(tx('ws_smooth') + ': ' + Math.round((1 - a) * 100) + ' %', W / 2, BD.y + BD.h + 40, 18, '#F3E3C6', 'center');
+      hint('ws_h1');
+    }
+  },
+  { /* 2: ASSEMBLE */
+    init() {
+      const f = FURN[st.order];
+      const slots = f.parts.map((p, i) => ({k:p.k, x:OX + p.x * S, y:OY + p.y * S, w:p.w * S, h:p.h * S, filled:false, i}));
+      const loose = slots.map(sl => ({k:sl.k, w:sl.w, h:sl.h, x:0, y:0, hx:0, hy:0, placed:false, seed:sl.i + 5}));
+      for(let i = loose.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [loose[i], loose[j]] = [loose[j], loose[i]]; }
+      const gap = 22, total = loose.reduce((a, p) => a + p.w, 0) + gap * (loose.length - 1);
+      let x = (W - total) / 2;
+      loose.forEach(p => { p.x = p.hx = x + p.w / 2; p.y = p.hy = H - 16 - p.h / 2; x += p.w + gap; });
+      st.sd = {slots, loose, drag:null, ox:0, oy:0, T:0, limit:60, par:6 * loose.length + 4, wrong:0, placed:0, done:false, wait:0, sc:0};
+    },
+    update(dt) {
+      const s = st.sd;
+      if(s.done) { s.wait -= dt; if(s.wait <= 0) finish(s.sc); return; }
+      s.T += dt;
+      if(s.T >= s.limit) { s.done = true; s.wait = .6; s.drag = null; s.sc = clamp(Math.round(55 * s.placed / s.loose.length - s.wrong * 5), 0, 55); }
+    },
+    down(x, y) {
+      const s = st.sd; if(s.done) return;
+      for(let i = s.loose.length - 1; i >= 0; i--) {
+        const p = s.loose[i];
+        if(!p.placed && Math.abs(x - p.x) <= p.w / 2 + 8 && Math.abs(y - p.y) <= p.h / 2 + 8) {
+          s.drag = p; s.ox = p.x - x; s.oy = p.y - y;
+          s.loose.splice(i, 1); s.loose.push(p); beep(330, .04, 'triangle', .025); return;
+        }
+      }
+    },
+    move(x, y) { const s = st.sd; if(s && s.drag) { s.drag.x = clamp(x + s.ox, 10, W - 10); s.drag.y = clamp(y + s.oy, 56, H - 8); } },
+    up() {
+      const s = st.sd; if(!s || !s.drag) return;
+      const p = s.drag; s.drag = null; if(s.done) return;
+      let best = null, bd = 1e9, wrongNear = false;
+      s.slots.forEach(sl => {
+        if(sl.filled) return;
+        const d = Math.hypot(sl.x - p.x, sl.y - p.y);
+        if(sl.k === p.k) { if(d < bd) { bd = d; best = sl; } } else if(d < 34) wrongNear = true;
+      });
+      if(best && bd < 44) {
+        p.x = best.x; p.y = best.y; p.placed = true; best.filled = true; s.placed++;
+        dust(best.x, best.y, 12); beep(520 + s.placed * 45, .08, 'triangle', .04);
+        if(s.placed === s.loose.length) {
+          s.done = true; s.wait = .9; s.sc = clamp(Math.round(100 - Math.max(0, s.T - s.par) * 2.2 - s.wrong * 8), 35, 100);
+          confetti(); beep(880, .25, 'triangle', .05);
+        }
+      } else if(wrongNear) {
+        s.wrong++; p.x = p.hx; p.y = p.hy; st.shake = .25; beep(150, .18, 'sawtooth', .04);
+      }
+    },
+    draw() {
+      const s = st.sd;
+      s.slots.forEach(sl => {
+        if(sl.filled) return;
+        let near = false;
+        if(s.drag && s.drag.k === sl.k && Math.hypot(sl.x - s.drag.x, sl.y - s.drag.y) < 60) near = true;
+        ctx.save(); ctx.setLineDash([6, 5]);
+        ctx.fillStyle = near ? 'rgba(16,185,129,.28)' : 'rgba(255,255,255,.05)';
+        ctx.strokeStyle = near ? '#10B981' : 'rgba(217,168,79,.65)'; ctx.lineWidth = 2;
+        rr(sl.x - sl.w / 2, sl.y - sl.h / 2, sl.w, sl.h, 3); ctx.fill(); ctx.stroke(); ctx.restore();
+      });
+      s.loose.forEach(p => { if(p.placed) wood(p.x - p.w / 2, p.y - p.h / 2, p.w, p.h, WOODS[p.k], p.seed); });
+      s.loose.forEach(p => {
+        if(p.placed) return;
+        ctx.save();
+        if(s.drag === p) { ctx.shadowColor = 'rgba(0,0,0,.6)'; ctx.shadowBlur = 14; ctx.shadowOffsetY = 6; }
+        wood(p.x - p.w / 2, p.y - p.h / 2, p.w, p.h, WOODS[p.k], p.seed);
+        ctx.restore();
+      });
+      bar(1 - s.T / s.limit, s.T > s.limit * .75 ? '#ff7b72' : '#D9A84F');
+      txt(tx('ws_placed') + ': ' + s.placed + '/' + s.loose.length, 14, 72, 14, '#F3E3C6', 'left', 600);
+      hint('ws_h2');
+    }
+  },
+  { /* 3: INSTALL (spirit level) */
+    init() {
+      const d = diff();
+      st.sd = {a:(Math.random() < .5 ? -1 : 1) * rnd(5, 9), v:0, T:0, dur:14, inT:0, tol:clamp(1.7 - .35 * (d - 1), 1, 1.7), btn:0, wob:20 + 12 * d, done:false, wait:0, sc:0};
+    },
+    update(dt) {
+      const s = st.sd;
+      if(s.done) { s.wait -= dt; if(s.wait <= 0) finish(s.sc); return; }
+      s.T += dt;
+      const dir = (keys.r ? 1 : 0) - (keys.l ? 1 : 0) + s.btn;
+      s.v += (clamp(dir, -1, 1) * 34 + rnd(-1, 1) * s.wob + s.a * .4) * dt;
+      s.v *= Math.exp(-1.1 * dt);
+      s.a += s.v * dt;
+      if(Math.abs(s.a) > 22) { s.a = clamp(s.a, -22, 22); s.v = 0; }
+      if(Math.abs(s.a) <= s.tol) s.inT += dt;
+      if(s.T >= s.dur) { s.done = true; s.wait = .7; s.sc = Math.round(s.inT / s.dur * 100); beep(600, .12, 'triangle'); }
+    },
+    down(x, y) { const s = st.sd; if(inR(LB, x, y, 10)) s.btn = -1; else if(inR(RB, x, y, 10)) s.btn = 1; },
+    up() { if(st.sd) st.sd.btn = 0; },
+    draw() {
+      const s = st.sd, zone = Math.abs(s.a) <= s.tol;
+      // wall
+      const wg = ctx.createLinearGradient(0, 42, 0, H - 78); wg.addColorStop(0, '#d8cdb8'); wg.addColorStop(1, '#c4b79d');
+      ctx.fillStyle = wg; ctx.fillRect(0, 42, W, H - 120);
+      ctx.fillStyle = 'rgba(0,0,0,.035)'; for(let x = 0; x < W; x += 40) ctx.fillRect(x, 42, 20, H - 120);
+      // reference line
+      ctx.save(); ctx.setLineDash([8, 6]); ctx.strokeStyle = 'rgba(0,0,0,.28)'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(100, 215); ctx.lineTo(660, 215); ctx.stroke(); ctx.restore();
+      // rotating shelf + level
+      ctx.save(); ctx.translate(380, 215); ctx.rotate(s.a * Math.PI / 180);
+      ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(-186, 14, 372, 6);
+      wood(-190, -13, 380, 26, WOODS.board, 9);
+      ctx.fillStyle = '#4a4f52'; ctx.beginPath(); ctx.moveTo(-130, 13); ctx.lineTo(-90, 13); ctx.lineTo(-130, 48); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(130, 13); ctx.lineTo(90, 13); ctx.lineTo(130, 48); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#E0A824'; rr(-130, -52, 260, 38, 6); ctx.fill(); ctx.strokeStyle = '#8a6410'; ctx.lineWidth = 2; rr(-130, -52, 260, 38, 6); ctx.stroke();
+      ctx.fillStyle = zone ? '#a7ecb2' : '#eef6cf'; rr(-80, -43, 160, 20, 10); ctx.fill(); ctx.strokeStyle = '#6a5a1a'; ctx.lineWidth = 1.5; rr(-80, -43, 160, 20, 10); ctx.stroke();
+      ctx.strokeStyle = '#3a6b2a'; ctx.lineWidth = 1.5;
+      [-1, 1].forEach(m => { ctx.beginPath(); ctx.moveTo(m * s.tol * 7, -43); ctx.lineTo(m * s.tol * 7, -23); ctx.stroke(); });
+      const bx = clamp(-s.a * 7, -68, 68);
+      ctx.beginPath(); ctx.arc(bx, -33, 8, 0, TAU); ctx.fillStyle = 'rgba(255,255,255,.88)'; ctx.fill(); ctx.strokeStyle = '#6a5a1a'; ctx.lineWidth = 1.2; ctx.stroke();
+      ctx.restore();
+      ctx.beginPath(); ctx.arc(380, 215, 5, 0, TAU); ctx.fillStyle = '#333'; ctx.fill();
+      txt(s.a.toFixed(1) + '°', W / 2, 118, 26, zone ? '#1d7a4a' : '#7a2a22', 'center');
+      // buttons
+      [[LB, '◀  A', keys.l || s.btn === -1], [RB, 'D  ▶', keys.r || s.btn === 1]].forEach(([r, label, on]) => {
+        ctx.fillStyle = on ? 'rgba(217,168,79,.9)' : 'rgba(0,0,0,.4)'; rr(r.x, r.y, r.w, r.h, 10); ctx.fill();
+        ctx.strokeStyle = 'rgba(217,168,79,.7)'; ctx.lineWidth = 1.5; rr(r.x, r.y, r.w, r.h, 10); ctx.stroke();
+        txt(label, r.x + r.w / 2, r.y + 30, 18, on ? '#14110E' : '#F3E3C6', 'center', 700, true);
+      });
+      bar(1 - s.T / s.dur, zone ? '#10B981' : '#D9A84F');
+      txt(tx('ws_inzone') + ': ' + Math.round(s.inT / Math.max(.01, s.T) * 100) + ' %', W / 2, 345, 16, '#3b2f1e', 'center', 700);
+      hint('ws_h3');
+    }
+  }];
+
+  /* ---------- main loop ---------- */
+  function update(dt) {
+    st.modeT += dt; if(st.shake > 0) st.shake -= dt;
+    if(st.mode === 'play') stg[st.stage].update(dt);
+    st.parts.forEach(p => { p.t += dt; p.vy += 420 * dt; p.x += p.vx * dt; p.y += p.vy * dt; });
+    st.parts = st.parts.filter(p => p.t < p.l);
+  }
+  function draw() {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.save();
+    if(st.shake > 0) ctx.translate(rnd(-3, 3), rnd(-3, 3));
+    bg();
+    const m = st.mode;
+    if(m === 'play' || m === 'stageEnd' || (m === 'intro' && false)) stg[st.stage].draw();
+    st.parts.forEach(p => { ctx.globalAlpha = clamp(1 - p.t / p.l, 0, 1); ctx.fillStyle = p.c; ctx.fillRect(p.x, p.y, p.s, p.s); });
+    ctx.globalAlpha = 1;
+    if(m !== 'menu' && m !== 'over') hud();
+    ctx.restore();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const cx = W / 2;
+    if(m === 'menu') {
+      card();
+      txt('WOODSHOP', cx, 128, 44, '#D9A84F', 'center', 800);
+      txt(tx('ws_sub'), cx, 156, 15, '#cdb99a', 'center', 500);
+      wrap(tx('ws_desc'), cx, 192, 400, 22, 15, '#F3E3C6');
+      txt(tx('ws_rec') + ': ' + bestVal() + ' €', cx, 326, 14, '#D9A84F', 'center', 600, true);
+      button(tx('ws_start'));
+    } else if(m === 'intro') {
+      card();
+      txt(tx('ws_phase') + ' ' + (st.stage + 1) + '/4 · ' + tx('f_' + FURN[st.order].id), cx, 104, 14, '#cdb99a', 'center', 600, true);
+      txt(tx('ws_s' + st.stage), cx, 150, 32, '#D9A84F', 'center', 800);
+      wrap(tx('ws_i' + st.stage), cx, 196, 390, 22, 15, '#F3E3C6');
+      txt(tx('ws_k' + st.stage), cx, 318, 13, '#cdb99a', 'center', 400, true);
+      button(tx('ws_go'));
+    } else if(m === 'stageEnd') {
+      card();
+      const sc = st.scores[st.scores.length - 1];
+      txt(tx('ws_s' + st.stage), cx, 108, 20, '#cdb99a', 'center', 700);
+      txt(sc + ' %', cx, 190, 58, sc >= 85 ? '#7ee2b0' : sc >= 60 ? '#F2B84B' : '#ff9d95', 'center', 800);
+      stars(cx, 236, 16, starsFor(sc));
+      txt(tx('ws_q' + qIdx(sc)), cx, 296, 18, '#F3E3C6', 'center', 600);
+      button(tx('ws_next'));
+    } else if(m === 'orderEnd') {
+      card();
+      txt(tx('ws_done'), cx, 104, 22, '#D9A84F', 'center', 800);
+      drawFurniture(270, 215, .75);
+      txt(tx('ws_avg') + ': ' + st.avg + ' %', 490, 150, 17, '#F3E3C6', 'center', 600);
+      stars(490, 184, 14, starsFor(st.avg));
+      txt(tx('ws_pay') + ': +' + st.pay + ' €', 490, 228, 17, '#7ee2b0', 'center', 700);
+      if(st.tip) txt(tx('ws_tip') + ': +' + st.tip + ' €', 490, 250, 15, '#F2B84B', 'center', 700);
+      wrap(tx('ws_c' + (st.avg >= 90 ? 3 : st.avg >= 70 ? 2 : st.avg >= 45 ? 1 : 0)), 490, 284, 200, 17, 13, '#cdb99a');
+      button(tx('ws_next'));
+    } else if(m === 'over') {
+      card();
+      const t = st.money, ri = t >= 440 ? 3 : t >= 330 ? 2 : t >= 200 ? 1 : 0;
+      txt(tx('ws_over'), cx, 108, 24, '#D9A84F', 'center', 800);
+      txt(tx('ws_total'), cx, 146, 14, '#cdb99a', 'center', 500);
+      txt(t + ' €', cx, 212, 60, '#F3E3C6', 'center', 800);
+      txt(tx('ws_r' + ri), cx, 256, 22, '#F2B84B', 'center', 700);
+      txt(st.newBest ? '🏆 ' + tx('ws_newbest') : tx('ws_rec') + ': ' + bestVal() + ' €', cx, 296, 15, st.newBest ? '#7ee2b0' : '#cdb99a', 'center', 600, true);
+      button(tx('ws_again'));
+    }
+    if(m === 'menu' || m === 'intro' || m === 'stageEnd' || m === 'orderEnd' || m === 'over') txt(tx('ws_esc'), cx, 438, 11, 'rgba(205,185,154,.5)', 'center', 400, true);
+  }
+  function loop(t) {
+    if(!modal.classList.contains('open')) return;
+    const dt = Math.min(.05, (t - last) / 1000); last = t;
+    update(dt); draw();
+    raf = requestAnimationFrame(loop);
+  }
+
+  /* ---------- input ---------- */
+  const pos = e => { const r = cv.getBoundingClientRect(); return {x:(e.clientX - r.left) * W / r.width, y:(e.clientY - r.top) * H / r.height}; };
+  cv.addEventListener('pointerdown', e => {
+    if(!st) return; e.preventDefault(); try { cv.setPointerCapture(e.pointerId); } catch(_) {}
+    const p = pos(e);
+    if(st.mode === 'play') stg[st.stage].down && stg[st.stage].down(p.x, p.y);
+    else if(inR(BTN, p.x, p.y, 14)) advance();
+  });
+  cv.addEventListener('pointermove', e => { if(st && st.mode === 'play' && stg[st.stage].move) { const p = pos(e); stg[st.stage].move(p.x, p.y); } });
+  const release = () => { if(st && st.mode === 'play' && stg[st.stage].up) stg[st.stage].up(); };
+  cv.addEventListener('pointerup', release); cv.addEventListener('pointercancel', release);
+  cv.addEventListener('contextmenu', e => e.preventDefault());
+
+  addEventListener('keydown', e => {
+    if(!modal.classList.contains('open') || !st) return;
+    const k = e.key;
+    if(k === 'Escape') { close(); return; }
+    const onBtn = e.target && e.target.tagName === 'BUTTON';
+    if((k === ' ' || k === 'Enter') && !onBtn) {
+      e.preventDefault();
+      if(st.mode === 'play') { if(st.stage === 0 && !e.repeat) stg[0].act(); }
+      else if(!e.repeat) advance();
+      return;
+    }
+    if(k === 'ArrowLeft' || k === 'a' || k === 'A') { keys.l = true; if(k.startsWith('Arrow')) e.preventDefault(); }
+    if(k === 'ArrowRight' || k === 'd' || k === 'D') { keys.r = true; if(k.startsWith('Arrow')) e.preventDefault(); }
+  });
+  addEventListener('keyup', e => {
+    const k = e.key;
+    if(k === 'ArrowLeft' || k === 'a' || k === 'A') keys.l = false;
+    if(k === 'ArrowRight' || k === 'd' || k === 'D') keys.r = false;
+  });
+
+  /* ---------- open / close ---------- */
+  function open() {
+    if(gOpen()) closeGame(true);
+    termModal.classList.remove('open'); termInput.blur();
+    keys.l = keys.r = false;
+    st = fresh('menu');
+    $('#ws-best').textContent = bestVal() + ' €';
+    sndBtn.textContent = snd ? '🔊' : '🔇';
+    modal.classList.add('open');
+    cancelAnimationFrame(raf); last = performance.now(); raf = requestAnimationFrame(loop);
+    cv.focus({preventScroll:true});
+  }
+  function close(silent) {
+    modal.classList.remove('open'); cancelAnimationFrame(raf); keys.l = keys.r = false;
+    if(!silent) backToTerminal();
+  }
+  $('#ws-close').onclick = () => close();
+  sndBtn.onclick = () => { snd = !snd; save('woodshopSnd', snd ? '1' : '0'); sndBtn.textContent = snd ? '🔊' : '🔇'; if(snd) beep(660, .08, 'triangle'); };
+  modal.addEventListener('mousedown', e => { if(e.target === modal) close(); });
+  document.addEventListener('visibilitychange', () => { last = performance.now(); });
+  return {open, close, isOpen: () => modal.classList.contains('open')};
+})();
 </script>
 </body>
 </html>
