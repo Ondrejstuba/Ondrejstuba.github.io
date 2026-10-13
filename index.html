@@ -1245,15 +1245,15 @@ function appendTermLine(text, color = '#c9d1d9') {
 
 /* =====================================================================
    HIDDEN MINIGAME #1: NIGHT SHIFT v3  (terminal: play)
-   Farebné rozlíšenie Ubytovanie / Odchod (hostia + háčiky), hodiny smeny,
-   nové udalosti (šéf, psík), pauza, hodnosti, štatistiky a zvuky.
+   Hostia majú farbu podľa háčikov (kľúč = Ubytovanie, prázdny háčik = Odchod),
+   hodiny smeny, nové udalosti (šéf, psík), pauza, hodnosti, štatistiky a zvuky.
    ===================================================================== */
 const gModal = $('#game-modal'), gWin = $('#game-window'), gBoard = $('#g-board'), gGuests = $('#g-guests'),
       gEv = $('#g-ev'), gOver = $('#g-over'), gMsg = $('#g-msg');
 const ROOMS = [101,102,103,104,105,106,107,108,109,110,111,112];
 const FACES = ['🧑‍💼','👵','🧔','👩‍🦰','🧑‍🎤','👨‍🦳','🧑‍🍳','👩‍🔬','🧓','👨‍🚀','🧕','👱‍♀️'];
 const GL = {
-  sk: {how:'Si na recepcii hotela. ⬇ MODRÍ hostia chcú izbu (Ubytovanie): kľúč visí na MODROM háčiku. ⬆ FIALOVÍ hostia vracajú kľúč (Odchod): háčik je prázdny a FIALOVÝ. Klikni na správny háčik alebo napíš číslo izby (napr. 107). Čím viac hostí obslúžiš, tým viac sa deje: telefóny, prepitné, káva, šéf, psík, rekonštrukcie, výpadky prúdu, skupiny turistov, nahnevaní hostia (upokoj ich klikaním na kartu), alarm aj inšpekcia. Rýchla obsluha dáva bonus. Dotrvaj do 06:00! Medzerník = vybaví prvú udalosť, P = pauza, M = zvuk. 3 chyby = koniec smeny.',
+  sk: {how:'Si na recepcii hotela. Hostia chcú izbu (Ubytovanie) alebo vracajú kľúč (Odchod). Klikni na správny háčik alebo napíš číslo izby (napr. 107). Čím viac hostí obslúžiš, tým viac sa deje: telefóny, prepitné, káva, šéf, psík, rekonštrukcie, výpadky prúdu, skupiny turistov, nahnevaní hostia (upokoj ich klikaním na kartu), alarm aj inšpekcia. Rýchla obsluha dáva bonus. Dotrvaj do 06:00! Medzerník = vybaví prvú udalosť, P = pauza, M = zvuk. 3 chyby = koniec smeny.',
     start:'Začať smenu', again:'Ďalšia smena', over:'Koniec smeny', final:'Výsledné skóre', neu:'Nový rekord!', hint:'Esc = späť do terminálu', served:'Obslúžených hostí',
     ev_phone:'Zdvihnúť telefón!', ev_alarm:'Vypnúť alarm!', ev_coin:'Prepitné!', ev_coffee:'Káva (+❤)', ev_manager:'Šéf na pomoc! (spomalí čas)', ev_dog:'Pohladiť psíka',
     miss_phone:'Zmeškaný hovor!', miss_alarm:'Alarm dozvučal, hostia v panike!', black:'Výpadok prúdu: čísla zmizli!', shuffle:'Rekonštrukcia: kľúče sa premiestnili!',
@@ -1261,11 +1261,10 @@ const GL = {
     coin:'+250 prepitné!', coffee:'Dobrá káva: +1 život', alarm_ok:'Alarm vypnutý!', in:'Ubytovanie', out:'Odchod', room:'izba', wrong:'Zlý kľúč!', left:'Hosť odišiel nahnevaný!', lvl:'Úroveň {n}!',
     manager_on:'Šéf pomáha: hostia čakajú pomalšie!', manager_off:'Šéf odišiel, tempo je späť.', dog_ok:'Psík upokojil nahnevaných hostí! +150', dawn:'Svitá! Smena splnená: +1000. Pokračuješ v nadčasoch!',
     paused:'Pauza', pause_hint:'P = pokračovať', resume:'Pokračovať', snd:'Zvuk zap./vyp. (M)', pause_btn:'Pauza (P)',
-    legend_in:'Ubytovanie · kľúč na háčiku', legend_out:'Odchod · prázdny háčik',
     st_combo:'Najlepšie kombo', st_vip:'VIP', st_fast:'Rýchle obsluhy', st_games:'Odohrané smeny', st_total:'Hostí spolu',
     rank:['Stážista','Recepčný','Vedúci zmeny','Hotelový manažér','Legenda recepcie'],
-    tips:['Modrí hostia chcú kľúč z háčika, fialoví vracajú kľúč na prázdny háčik.','Rýchla obsluha (nad 75 % trpezlivosti) dá bonus +50.','Šéf spomalí čas na 8 sekúnd. Hodí sa pri skupine turistov.','Psík upokojí všetkých nahnevaných hostí naraz.','Nápoveda pri hoveri nad hosťom zmizne od 5. úrovne.','Zdvihnutý telefón predlžuje kombo, nenechaj ho zvoniť.']},
-  en: {how:'You run a hotel front desk. ⬇ BLUE guests want a room (Check-in): the key hangs on a BLUE hook. ⬆ PURPLE guests return a key (Check-out): the hook is empty and PURPLE. Click the correct hook or type the room number (e.g. 107). The more guests you serve the more happens: phone calls, tips, coffee, the boss, a dog, renovations, power cuts, tour groups, angry guests (calm them by clicking their card), an alarm and an inspection. Fast service gives a bonus. Survive until 06:00! Space = handle the first event, P = pause, M = sound. 3 mistakes end your shift.',
+    tips:['Hosťom s červeným pásikom dochádza trpezlivosť, obsluhuj ich prednostne.','Rýchla obsluha (nad 75 % trpezlivosti) dá bonus +50.','Šéf spomalí čas na 8 sekúnd. Hodí sa pri skupine turistov.','Psík upokojí všetkých nahnevaných hostí naraz.','Nápoveda pri hoveri nad hosťom zmizne od 5. úrovne.','Zdvihnutý telefón predlžuje kombo, nenechaj ho zvoniť.']},
+  en: {how:'You run a hotel front desk. Guests want a room (Check-in) or are returning a key (Check-out). Click the correct hook or type the room number (e.g. 107). The more guests you serve the more happens: phone calls, tips, coffee, the boss, a dog, renovations, power cuts, tour groups, angry guests (calm them by clicking their card), an alarm and an inspection. Fast service gives a bonus. Survive until 06:00! Space = handle the first event, P = pause, M = sound. 3 mistakes end your shift.',
     start:'Start shift', again:'Next shift', over:'Shift over', final:'Final score', neu:'New high score!', hint:'Esc = back to terminal', served:'Guests served',
     ev_phone:'Pick up the phone!', ev_alarm:'Stop the alarm!', ev_coin:'Tip!', ev_coffee:'Coffee (+❤)', ev_manager:'Call the boss! (slows time)', ev_dog:'Pet the dog',
     miss_phone:'Missed call!', miss_alarm:'The alarm ran out, guests panic!', black:'Power cut: the numbers vanished!', shuffle:'Renovation: the keys were rearranged!',
@@ -1273,10 +1272,9 @@ const GL = {
     coin:'+250 tip!', coffee:'Great coffee: +1 life', alarm_ok:'Alarm off!', in:'Check-in', out:'Check-out', room:'room', wrong:'Wrong key!', left:'A guest left angry!', lvl:'Level {n}!',
     manager_on:'The boss helps: guests wait slower!', manager_off:'The boss left, normal pace is back.', dog_ok:'The dog calmed all angry guests! +150', dawn:'Dawn! Shift complete: +1000. You continue in overtime!',
     paused:'Paused', pause_hint:'P = resume', resume:'Resume', snd:'Sound on/off (M)', pause_btn:'Pause (P)',
-    legend_in:'Check-in · key on the hook', legend_out:'Check-out · empty hook',
     st_combo:'Best combo', st_vip:'VIPs', st_fast:'Fast services', st_games:'Shifts played', st_total:'Guests total',
     rank:['Intern','Receptionist','Shift Lead','Hotel Manager','Front Desk Legend'],
-    tips:['Blue guests want a key from a hook, purple guests return a key to an empty hook.','Fast service (over 75% patience) gives a +50 bonus.','The boss slows time for 8 seconds. Great against tour groups.','The dog calms all angry guests at once.','The hover hint over a guest disappears from level 5.','Picking up the phone extends your combo, do not let it ring.']}
+    tips:['Guests with a red bar are running out of patience, serve them first.','Fast service (over 75% patience) gives a +50 bonus.','The boss slows time for 8 seconds. Great against tour groups.','The dog calms all angry guests at once.','The hover hint over a guest disappears from level 5.','Picking up the phone extends your combo, do not let it ring.']}
 };
 const gT = k => (GL[lang] && GL[lang][k]) || (T[lang] && T[lang][k]) || k;
 let g = null, gRaf = 0, gLast = 0, gBuf = '', gBufT = 0, gMsgT = 0;
@@ -1285,27 +1283,23 @@ let g = null, gRaf = 0, gLast = 0, gBuf = '', gBufT = 0, gMsgT = 0;
 (() => {
   const s = document.createElement('style');
   s.textContent = `
-#game-window{--in:#38bdf8;--out:#c084fc}
+#game-window{--kin:#B8893A;--kout:#3B5249}
 #game-window.g-slow{box-shadow:0 0 0 2px #58a6ff,0 0 40px rgba(88,166,255,.35),0 24px 60px rgba(0,0,0,.6)}
 #game-window.g-insp{box-shadow:0 0 0 2px #D9A84F,0 0 40px rgba(217,168,79,.3),0 24px 60px rgba(0,0,0,.6)}
-.g-legend{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:0 18px;font-family:var(--code);font-size:.74rem}
-.g-legend span{display:inline-flex;align-items:center;gap:6px;padding:3px 12px;border-radius:99px;border:1.5px solid}
-.g-legend .l-in{border-color:var(--in);color:var(--in);background:rgba(56,189,248,.1)}
-.g-legend .l-out{border-color:var(--out);color:var(--out);background:rgba(192,132,252,.1);border-style:dashed}
-#g-guests .g-guest.t-in{background-image:linear-gradient(90deg,rgba(56,189,248,.24),transparent 65%);box-shadow:inset 6px 0 0 var(--in)}
-#g-guests .g-guest.t-out{background-image:linear-gradient(90deg,rgba(192,132,252,.24),transparent 65%);box-shadow:inset 6px 0 0 var(--out)}
-#g-guests .g-guest.rush{border-style:dashed;border-width:2px}
-#g-guests .t-in .face{background:rgba(56,189,248,.22);box-shadow:0 0 0 2px var(--in);border-radius:50%;padding:4px}
-#g-guests .t-out .face{background:rgba(192,132,252,.22);box-shadow:0 0 0 2px var(--out);border-radius:50%;padding:4px}
+/* hostia v rovnakých farbách ako háčiky: Ubytovanie = háčik s kľúčom, Odchod = prázdny háčik */
+#g-guests .g-guest.t-in{border-color:var(--kin);background-color:#1D3A33;box-shadow:inset 6px 0 0 var(--kin)}
+#g-guests .g-guest.t-out{border-style:dashed;border-color:var(--kout);background-color:transparent;box-shadow:inset 6px 0 0 var(--kout)}
+#g-guests .g-guest.vip{border-color:#D9A84F;background-color:#2a2a1c}
+#g-guests .g-guest.rush{border-color:#58a6ff;border-style:dashed}
+#g-guests .g-guest.angry{border-color:#ff7b72}
+#g-guests .g-guest.low{border-color:#ff7b72}
+#g-guests .t-in .face{background:rgba(184,137,58,.2);box-shadow:0 0 0 2px var(--kin);border-radius:50%;padding:4px}
+#g-guests .t-out .face{background:rgba(59,82,73,.35);box-shadow:0 0 0 2px var(--kout);border-radius:50%;padding:4px}
 .gb{display:inline-block;font-family:var(--code);font-size:.72rem;font-weight:600;padding:1px 9px;border-radius:99px;margin-right:8px;vertical-align:middle}
-.t-in .gb{background:var(--in);color:#06202e}
-.t-out .gb{background:var(--out);color:#25103a}
+.t-in .gb{background:var(--kin);color:#14110E}
+.t-out .gb{background:var(--kout);color:#E4EEE9}
 .g-guest .rn{font-family:var(--code);font-size:1.05rem;font-weight:600;vertical-align:middle}
-.t-in .rn{color:var(--in)}.t-out .rn{color:var(--out)}
-#g-board .hook.in{border-color:var(--in);background:#0f2a3a;color:#E0F4FF}
-#g-board .hook.in:hover{background:#15405a}
-#g-board .hook.out{border:2px dashed var(--out);background:#24133a;color:#c9a8ef}
-#g-board .hook.out:hover{background:#34205a}
+.t-in .rn{color:#E3B866}.t-out .rn{color:#9DB5AB}
 #g-board .hook.hint{box-shadow:0 0 0 3px #fff,0 0 18px 4px rgba(255,255,255,.55);transform:translateY(-3px)}
 #g-board .hook.ok{animation:ghookok .45s}
 #g-board .hook.bad{animation:gshake .3s;background:#5a1d1d}
@@ -1395,7 +1389,7 @@ function gSfx(name, n) {
   }
 }
 
-/* ---------- UI vložené cez JS: pauza, zvuk, hodiny, legenda ---------- */
+/* ---------- UI vložené cez JS: pauza, zvuk, hodiny ---------- */
 const gSndBtn = document.createElement('button'), gPauseBtn = document.createElement('button');
 (() => {
   const close = $('#g-close'), wrap = document.createElement('div');
@@ -1404,13 +1398,9 @@ const gSndBtn = document.createElement('button'), gPauseBtn = document.createEle
   close.parentNode.insertBefore(wrap, close); wrap.appendChild(close);
   $('#game-modal .g-hud').insertAdjacentHTML('afterbegin', '<span>🕙 <b id="g-clock">22:00</b></span>');
 })();
-const gLegend = document.createElement('div');
-gLegend.className = 'g-legend'; gBoard.parentNode.insertBefore(gLegend, gBoard);
-function gLegendUi() { gLegend.innerHTML = '<span class="l-in">⬇ ' + gT('legend_in') + '</span><span class="l-out">⬆ ' + gT('legend_out') + '</span>'; }
 function gSndUi() {
   gSndBtn.textContent = gSnd.on ? '🔊' : '🔇'; gSndBtn.title = gSndBtn.ariaLabel = gT('snd');
   gPauseBtn.textContent = g && g.paused ? '▶' : '⏸'; gPauseBtn.title = gPauseBtn.ariaLabel = gT('pause_btn');
-  gLegendUi();
 }
 function gToggleSnd() { gSnd.on = !gSnd.on; save('nightShiftSnd', gSnd.on ? '1' : '0'); gSndUi(); if(gSnd.on) gSfx('start'); }
 gSndBtn.onclick = gToggleSnd; gPauseBtn.onclick = () => gPause(); gSndUi();
@@ -1461,8 +1451,8 @@ function gRenderBoard() {
   gBoard.innerHTML = '';
   (g ? g.order : ROOMS).forEach(r => {
     const has = g ? g.has[r] : true, b = document.createElement('button');
-    b.type = 'button'; b.className = 'hook ' + (has ? 'in' : 'out'); b.dataset.room = r;
-    b.innerHTML = '<small>' + (has ? '🔑' : '◌') + '</small>' + (g && g.black > 0 ? '?' : r);
+    b.type = 'button'; b.className = 'hook' + (has ? '' : ' out'); b.dataset.room = r;
+    b.innerHTML = '<small>' + (has ? '🔑' : '·') + '</small>' + (g && g.black > 0 ? '?' : r);
     b.onclick = () => gServe(r);
     gBoard.appendChild(b);
   });
@@ -1574,7 +1564,7 @@ function gServe(room) {
   if(fast) { pts += 50; g.stats.fast++; }
   if(guest.vip) g.stats.vip++;
   g.score += pts;
-  gPop('+' + pts + (fast ? ' ⚡' : ''), guest.el, fast ? '#F2B84B' : (guest.type === 'in' ? '#7dd3fc' : '#d8b4fe'));
+  gPop('+' + pts + (fast ? ' ⚡' : ''), guest.el, fast ? '#F2B84B' : (guest.type === 'in' ? '#E3B866' : '#9DB5AB'));
   g.served++; gRemove(guest);
   gSfx('serve', g.combo); if(guest.vip) gSfx('vip'); if(fast) gSfx('perfect');
   g.clock += 12;
@@ -1695,6 +1685,7 @@ document.addEventListener('visibilitychange', () => {
   else if(g) gLast = performance.now();
 });
 
+                          
 /* =====================================================================
    HIDDEN MINIGAME #2: WOODSHOP  (terminal: play 2)
    6 random orders, each harder than the last (furniture is generated by tier).
