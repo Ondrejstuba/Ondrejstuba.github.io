@@ -1233,7 +1233,7 @@ termInput.onkeydown = (e) => {
     } else if(val === 'play 4') {
       appendTermLine(lang === 'sk' ? 'Beriem ruksak a idem na lov plechoviek...' : 'Grabbing my backpack and going can hunting...', '#D9A84F');
       setTimeout(() => CN.open(), 650);
-    else if(val !== '') appendTermLine(T[lang].term_unknown.replace('{cmd}', val), '#ff7b72');
+    } else if(val !== '') appendTermLine(T[lang].term_unknown.replace('{cmd}', val), '#ff7b72');
     termBody.scrollTop = termBody.scrollHeight;
   }
 };
