@@ -277,6 +277,7 @@ h3{font-family:var(--head);font-weight:700;font-size:1.25rem;color:var(--accent)
 
 /* Hidden minigame #3: EXAM */
 #ex-modal{position:fixed;inset:0;background:rgba(4,9,7,.78);backdrop-filter:blur(6px);z-index:110;display:flex;align-items:center;justify-content:center;padding:14px;opacity:0;pointer-events:none;transition:opacity .3s}
+<div id="st-modal" role="dialog" aria-modal="true" aria-label="Striptease minigame"></div>
 #ex-modal.open{opacity:1;pointer-events:auto}
 .ex-window{position:relative;width:100%;max-width:820px;max-height:96vh;overflow:auto;background:#10161c;color:#E4EEE9;border:1px solid #3a4a5a;border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.6)}
 .ex-window .game-head{background:#18222c;border-bottom-color:#3a4a5a}
@@ -2334,9 +2335,9 @@ const WS = (() => {
    ===================================================================== */
 const EX = (() => {
   const W = 760, H = 400, TAU = Math.PI * 2, MAXLV = 10;
-  const modal = $('#ex-modal'), cv = $('#ex-canvas'), c = cv.getContext('2d'), over = $('#ex-over');
-  const dpr = Math.min(2, window.devicePixelRatio || 1); cv.width = W * dpr; cv.height = H * dpr;
-
+  const modal = $('#st-modal');
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  
   /* ---------- štýly vložené z JS ---------- */
   (() => {
     const s = document.createElement('style');
@@ -3557,8 +3558,9 @@ const ST = (() => {
     '<canvas id="st-canvas" width="760" height="460" tabindex="0"></canvas>' +
     '<div class="st-ui"><button class="st-btn" id="st-act" type="button"></button><button class="st-btn" id="st-tease" type="button"></button><button class="st-btn" id="st-wink" type="button"></button></div>' +
     '<div class="g-over" id="st-over"></div></div>';
-  const cvEl = $('#st-canvas'), ctx2 = cvEl.getContext('2d'), overEl = $('#st-over'), hudEl = $('#st-hud'), btnsEl = $('#st-btns'),
-        bAct = $('#st-act'), bTease = $('#st-tease'), bWink = $('#st-wink');
+  const cvEl = $('#st-canvas'), cv = cvEl, c = cvEl.getContext('2d'), overEl = $('#st-over'), hudEl = $('#st-hud'), btnsEl = $('#st-btns'),
+      bAct = $('#st-act'), bTease = $('#st-tease'), bWink = $('#st-wink');
+  cvEl.width = W * dpr; cvEl.height = H * dpr;
   const stSnd = document.createElement('button'), stPause = document.createElement('button'), stClose = document.createElement('button');
   [stPause, stSnd, stClose].forEach(b => { b.type = 'button'; b.className = 'g-close'; btnsEl.appendChild(b); });
   stClose.textContent = '✕';
