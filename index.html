@@ -3517,13 +3517,8 @@ const CN = (() => {
 })();
 
 /* =====================================================================
-   HIDDEN MINIGAME #5: STRIPTEASE v4  (terminal: play 5)
-   Rytmická hra: 3 dráhy (tlieskať / flirt / mrknúť), 5 tanečníc,
-   6 levelov = 6 vrstiev kostýmu dole (až po úplné odhalenie s cenzúrou).
-   DOM si vytvára sám, nič netreba pridávať do HTML.
-
-   v4 – vizuálny redizajn: realistickejšie proporcie, definované poprsie,
-   pás, boky a zadok, jemné tieňovanie, lesk kože, zmyselnejšie pózy.
+   HIDDEN MINIGAME #5: STRIPTEASE v4 (Sexy & Realistic Edition)
+   Rytmická hra: 3 dráhy, 5 tanečníc, 6 levelov vrstiev kostýmu.
    ===================================================================== */
 const ST = (() => {
   const W = 760, H = 460, TAU = Math.PI * 2, MAXLV = 6;
@@ -3533,11 +3528,11 @@ const ST = (() => {
   const KEYMAP = {' ': 0, 'a': 0, 'arrowleft': 0, 's': 1, 't': 1, 'arrowdown': 1, 'd': 2, 'w': 2, 'arrowright': 2};
 
   const GIRLS = [
-    {id:'lola', name:'Lola', em:'💃🏻', skin:'#f1c9a5', skinShade:'#d9a97f', hair:'#8a2323', hairHi:'#c0563f', style:'long',  suit:'#c2185b', accent:'#ffd54f', coat:'#5b1a46', skirt:'#8e2a6a', glove:'#ffd54f', perk:'wide',  bust:1.10, hip:1.12, waist:.86},
-    {id:'mina', name:'Mina', em:'💃🏽', skin:'#dcab84', skinShade:'#bf8a63', hair:'#14100f', hairHi:'#4a3b34', style:'bob',   suit:'#00897b', accent:'#80deea', coat:'#12433f', skirt:'#1b7a70', glove:'#b2ebf2', perk:'score', bust:1.02, hip:1.08, waist:.88},
-    {id:'zara', name:'Zara', em:'💃🏿', skin:'#8a5a3c', skinShade:'#6b432b', hair:'#1a0f0a', hairHi:'#5a3a26', style:'puff',  suit:'#f9a825', accent:'#fff59d', coat:'#4a2f10', skirt:'#a8741c', glove:'#fff59d', perk:'mood',  bust:1.14, hip:1.16, waist:.84},
-    {id:'nika', name:'Nika', em:'💃🏼', skin:'#f6dcc4', skinShade:'#dcbba0', hair:'#e8c86a', hairHi:'#fff0b0', style:'pony',  suit:'#5e35b1', accent:'#b39ddb', coat:'#2a1a52', skirt:'#4527a0', glove:'#d1c4e9', perk:'slow',  bust:1.06, hip:1.10, waist:.85},
-    {id:'eva',  name:'Eva',  em:'💃',  skin:'#c68b64', skinShade:'#a56f4c', hair:'#d94a8c', hairHi:'#ff8fbd', style:'pixie', suit:'#1e88e5', accent:'#90caf9', coat:'#10294a', skirt:'#1565c0', glove:'#bbdefb', perk:'life',  bust:1.04, hip:1.06, waist:.87}
+    {id:'lola', name:'Lola', em:'💃🏻', skin:'#f1c9a5', hair:'#8a2323', style:'long',  suit:'#c2185b', accent:'#ffd54f', coat:'#5b1a46', skirt:'#8e2a6a', glove:'#ffd54f', perk:'wide'},
+    {id:'mina', name:'Mina', em:'💃🏽', skin:'#dcab84', hair:'#14100f', style:'bob',   suit:'#00897b', accent:'#80deea', coat:'#12433f', skirt:'#1b7a70', glove:'#b2ebf2', perk:'score'},
+    {id:'zara', name:'Zara', em:'💃🏿', skin:'#8a5a3c', hair:'#1a0f0a', style:'puff',  suit:'#f9a825', accent:'#fff59d', coat:'#4a2f10', skirt:'#a8741c', glove:'#fff59d', perk:'mood'},
+    {id:'nika', name:'Nika', em:'💃🏼', skin:'#f6dcc4', hair:'#e8c86a', style:'pony',  suit:'#5e35b1', accent:'#b39ddb', coat:'#2a1a52', skirt:'#4527a0', glove:'#d1c4e9', perk:'slow'},
+    {id:'eva',  name:'Eva',  em:'💃',  skin:'#c68b64', hair:'#d94a8c', style:'pixie', suit:'#1e88e5', accent:'#90caf9', coat:'#10294a', skirt:'#1565c0', glove:'#bbdefb', perk:'life'}
   ];
 
   /* ---------- štýly ---------- */
@@ -3575,7 +3570,7 @@ const ST = (() => {
     document.head.appendChild(s);
   })();
 
-  /* ---------- DOM (vytvorí sa samo) ---------- */
+  /* ---------- DOM ---------- */
   const modal = document.createElement('div');
   modal.id = 'st-modal'; modal.setAttribute('role', 'dialog'); modal.setAttribute('aria-modal', 'true');
   modal.innerHTML = '<div class="st-window"><div class="game-head"><span class="game-title" id="st-title"></span><div class="g-hud"><span id="st-hud"></span></div><div class="g-btns" id="st-btns"></div></div>' +
@@ -3594,16 +3589,16 @@ const ST = (() => {
   /* ---------- texty ---------- */
   const L = {
     sk: {
-      title:'STRIPTEASE · Kabaret show',
-      how:'Noty padajú po troch dráhach. Keď dosiahnu svetelnú líniu, stlač správne tlačidlo: 👏 Tlieskať (A / ← / MEDZERNÍK), 💋 Flirt (S / ↓ / T), 😉 Mrknúť (D / → / W). Čím presnejšie, tým viac bodov a lepšia nálada publika. Combo zvyšuje násobič a odhaľuje čoraz viac. Ak nálada klesne na nulu, show sa pokazí a stratíš život. Každý splnený level zhodí jednu vrstvu kostýmu, až ostane len cenzúra a hviezdičky ✨. P = pauza, M = zvuk.',
-      pick:'Vyber tanečnicu', pickd:'Každá má inú výhodu. Show môže začať!',
+      title:'STRIPTEASE · Kabaret show (Sexy Edition)',
+      how:'Noty padajú po troch dráhach. Keď dosiahnu svetelnú líniu, stlač správne tlačidlo: 👏 Tlieskať (A / ← / MEDZERNÍK), 💋 Flirt (S / ↓ / T), 😉 Mrknúť (D / → / W). Čím presnejšie, tým viac bodov a vzrušujúcejšia show. Combo zvyšuje násobič a odhaľuje čoraz viac. Ak nálada klesne na nulu, show sa pokazí a stratíš život. Každý splnený level zhodí vrstvu kostýmu až po úplné odhalenie s cenzúrou ✨. P = pauza, M = zvuk.',
+      pick:'Vyber tanečnicu', pickd:'Každá má inú výhodu. Nech sa show začne!',
       perk_wide:'Širšie okno na zásah', perk_score:'+25 % bodov', perk_mood:'Nálada klesá pomalšie', perk_slow:'Pomalšie padajúce noty', perk_life:'4 životy',
       lv:'Level', layer:'Vrstva', lives:'Životy', score:'Skóre', combo:'Combo', mood:'Nálada publika', notes:'Noty', bpm:'Tempo',
       start:'Začať show', next:'Ďalšia vrstva', retry:'Skúsiť znova', again:'Nová show', change:'Zmeniť tanečnicu',
       cleared:'Vrstva dole! 💃', gameover:'Show skončila', win:'Veľké finále! Úplné odhalenie! ✨🎉',
       flop:'Publikum sa nudí. Show sa pokazila.',
       reached:'Dosiahnutý level', best:'Rekord', newrec:'Nový rekord!', hint:'Esc = späť do terminálu',
-      rank:'Hodnosť', ranks:['Divák','Zvedavec','Obdivovateľ','Mecenáš','Legenda klubu'],
+      rank:'Hodność', ranks:['Divák','Zvedavec','Obdivovateľ','Mecenáš','Legenda klubu'],
       paused:'Pauza', pause_hint:'P = pokračovať', resume:'Pokračovať', snd:'Zvuk zap./vyp. (M)', pause_btn:'Pauza (P)',
       b0:'👏 Tlieskať', b1:'💋 Flirt', b2:'😉 Mrknúť',
       perfect:'PERFEKTNÉ!', good:'Dobré', miss:'Vedľa!', stray:'Mimo rytmu', tip:'Prepitné!',
@@ -3612,8 +3607,8 @@ const ST = (() => {
       tips:['Noty majú farbu dráhy: modrá = tlieskať, ružová = flirt, žltá = mrknúť.','Combo násobí body a odhaľuje viac.','Mimo rytmu stlačené tlačidlo ti zníži náladu.','Zara je ideálna, ak často chybuješ. Nika, ak nestíhaš.','Poslúchaj bubon, noty sedia na údery.']
     },
     en: {
-      title:'STRIPTEASE · Cabaret Show',
-      how:'Notes fall down three lanes. When they reach the glowing line, press the matching button: 👏 Clap (A / ← / SPACE), 💋 Flirt (S / ↓ / T), 😉 Wink (D / → / W). The more precise you are, the more points and the better the crowd mood. Combo raises your multiplier and reveals more. If the mood hits zero the show flops and you lose a life. Each cleared level drops one costume layer until only censorship stars are left ✨. P = pause, M = sound.',
+      title:'STRIPTEASE · Cabaret Show (Sexy Edition)',
+      how:'Notes fall down three lanes. When they reach the glowing line, press the matching button: 👏 Clap (A / ← / SPACE), 💋 Flirt (S / ↓ / T), 😉 Wink (D / → / W). Precise hits make the show hotter. Combo raises multiplier and reveals more. If mood hits zero, show flops. P = pause, M = sound.',
       pick:'Choose your dancer', pickd:'Each one has a different perk. Let the show begin!',
       perk_wide:'Wider hit window', perk_score:'+25% points', perk_mood:'Mood drops slower', perk_slow:'Slower falling notes', perk_life:'4 lives',
       lv:'Level', layer:'Layer', lives:'Lives', score:'Score', combo:'Combo', mood:'Crowd mood', notes:'Notes', bpm:'Tempo',
@@ -3627,14 +3622,14 @@ const ST = (() => {
       perfect:'PERFECT!', good:'Good', miss:'Miss!', stray:'Off beat', tip:'Tip!',
       layers:['Coat','Feather boa','Long skirt','Gloves','Hat','Bra'],
       stars:'Stars', acc:'Accuracy', perfectN:'Perfect', maxc:'Best combo',
-      tips:['Notes use the lane colour: blue = clap, pink = flirt, yellow = wink.','Combo multiplies points and reveals more.','Pressing off-beat lowers the crowd mood.','Zara is great if you miss often. Nika if you are too slow.','Listen to the kick drum, notes sit on the beats.']
+      tips:['Notes use lane color.','Combo multiplies points.','Listen to the kick drum.']
     }
   };
   const tr = k => { const d = L[lang] || L.sk; return d[k] !== undefined ? d[k] : (L.sk[k] !== undefined ? L.sk[k] : k); };
   const rnd = (a, b) => a + Math.random() * (b - a), clamp = (v, a, b) => Math.max(a, Math.min(b, v)), pick = a => a[Math.floor(Math.random() * a.length)];
   const best = () => +load('stripBest') || 0;
 
-  /* ---------- zvuk (využíva gTone / gNoise z Night Shift) ---------- */
+  /* ---------- zvuk ---------- */
   function sfx(n, a) {
     switch(n) {
       case 'kick': gTone(120, .14, 'sine', .08, 0, 42); break;
@@ -3668,7 +3663,7 @@ const ST = (() => {
 
   /* ---------- stav ---------- */
   let S = null, G = null, raf = 0, last = 0;
-  const fx = {t:0, parts:[], pops:[], react:{k:-1, t:9}, armL:[-52, -48], armR:[52, -48], flash:[0, 0, 0], pulse:0, shake:0, tease:0, undress:0, hip:0};
+  const fx = {t:0, parts:[], pops:[], react:{k:-1, t:9}, armL:[-52, -48], armR:[52, -48], flash:[0, 0, 0], pulse:0, shake:0, tease:0, undress:0};
   const girl = () => GIRLS[S && S.girl != null ? S.girl : 0];
   const perk = () => (S && S.girl != null) ? GIRLS[S.girl].perk : '';
   const wide = () => perk() === 'wide' ? 1.25 : 1;
@@ -3706,7 +3701,7 @@ const ST = (() => {
   }
   function portrait(cn, g) {
     c = cn.getContext('2d'); c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, cn.width, cn.height);
-    c.save(); c.translate(cn.width / 2, cn.height / 2 + 10); c.scale(1.15, 1.15);
+    c.save(); c.translate(cn.width / 2, cn.height / 2 + 4); c.scale(1.25, 1.25);
     hairBack(g); face(g, 0); hairFront(g); c.restore(); c = MAINCTX;
   }
   function show(html) {
@@ -3867,10 +3862,10 @@ const ST = (() => {
   function fxStep(dt) {
     const r = fx.react; r.t += dt;
     const t = fx.t, age = r.t;
-    let Lh = [-56 + Math.sin(t * 3) * 12, -48 + Math.cos(t * 3) * 16], Rh = [56 - Math.sin(t * 3) * 12, -48 + Math.cos(t * 3 + 1) * 16];
-    if(r.k === 0 && age < .35) { Lh = [-9, -78]; Rh = [9, -78]; }
-    else if(r.k === 1 && age < .5) { Rh = [22, -112]; Lh = [-34, -22]; }
-    else if(r.k === 2 && age < .5) { Rh = [56, -154]; Lh = [-38, -32]; }
+    let Lh = [-52 + Math.sin(t * 3) * 12, -48 + Math.cos(t * 3) * 16], Rh = [52 - Math.sin(t * 3) * 12, -48 + Math.cos(t * 3 + 1) * 16];
+    if(r.k === 0 && age < .35) { Lh = [-7, -72]; Rh = [7, -72]; }
+    else if(r.k === 1 && age < .5) { Rh = [20, -104]; Lh = [-30, -20]; }
+    else if(r.k === 2 && age < .5) { Rh = [52, -146]; Lh = [-34, -30]; }
     if(fx.tease > 0) {
       const tt = Math.sin(t * 8) * fx.tease * 10;
       Lh[0] += tt; Rh[0] -= tt;
@@ -3914,230 +3909,176 @@ const ST = (() => {
   function em(s, x, y, size) { c.font = size + 'px serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#fff'; c.fillText(s, x, y); }
   const hsh = n => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
 
-  /* ---------- kreslenie: realistickejšie tvary ---------- */
-  function sphere(x, y, rx, ry, col, hi, sh) {
-    const g = c.createRadialGradient(x - rx * .35, y - ry * .4, rx * .1, x, y, rx * 1.15);
-    g.addColorStop(0, hi || '#fff'); g.addColorStop(.45, col); g.addColorStop(1, sh || 'rgba(0,0,0,.4)');
-    c.fillStyle = g; c.beginPath(); c.ellipse(x, y, rx, ry, 0, 0, TAU); c.fill();
-  }
-  function torsoShape(pts, col, hi, sh) {
-    c.beginPath(); c.moveTo(pts[0][0], pts[0][1]);
-    for(let i = 1; i < pts.length; i++) c.lineTo(pts[i][0], pts[i][1]);
-    c.closePath();
-    const g = c.createLinearGradient(-40, -110, 40, 20);
-    g.addColorStop(0, sh || 'rgba(0,0,0,.35)'); g.addColorStop(.4, col); g.addColorStop(.65, hi || col); g.addColorStop(1, sh || 'rgba(0,0,0,.35)');
-    c.fillStyle = g; c.fill();
-  }
-
-  /* ---------- kreslenie: vlasy ---------- */
+  /* ---------- kreslenie: tanečnica (Sexy & Realistic Anatomy) ---------- */
   function hairBack(g) {
     c.fillStyle = g.hair;
-    if(g.style === 'long') { c.beginPath(); c.ellipse(0, 22, 31, 52, 0, 0, TAU); c.fill(); c.fillStyle = g.hairHi; c.beginPath(); c.ellipse(-8, 14, 12, 34, .2, 0, TAU); c.fill(); }
-    else if(g.style === 'bob') { c.beginPath(); c.ellipse(0, 6, 33, 32, 0, 0, TAU); c.fill(); c.fillStyle = g.hairHi; c.beginPath(); c.ellipse(-8, 2, 10, 20, .1, 0, TAU); c.fill(); }
+    if(g.style === 'long') { c.beginPath(); c.ellipse(0, 20, 29, 46, 0, 0, TAU); c.fill(); }
+    else if(g.style === 'bob') { c.beginPath(); c.ellipse(0, 6, 31, 30, 0, 0, TAU); c.fill(); }
     else if(g.style === 'pony') {
-      c.beginPath(); c.ellipse(0, -2, 26, 26, 0, 0, TAU); c.fill();
+      c.beginPath(); c.ellipse(0, -2, 25, 25, 0, 0, TAU); c.fill();
       const sw = Math.sin(fx.t * 3.2) * 7;
-      c.strokeStyle = g.hair; c.lineWidth = 15; c.lineCap = 'round';
-      c.beginPath(); c.moveTo(22, -18); c.quadraticCurveTo(44 + sw, -2, 40 + sw * 1.4, 30); c.stroke();
-      c.strokeStyle = g.hairHi; c.lineWidth = 4; c.beginPath(); c.moveTo(24, -18); c.quadraticCurveTo(42 + sw, 0, 38 + sw * 1.3, 26); c.stroke();
-      c.fillStyle = g.accent; c.beginPath(); c.arc(23, -17, 4.5, 0, TAU); c.fill();
+      c.strokeStyle = g.hair; c.lineWidth = 13; c.lineCap = 'round';
+      c.beginPath(); c.moveTo(20, -18); c.quadraticCurveTo(40 + sw, -2, 36 + sw * 1.4, 28); c.stroke();
+      c.fillStyle = g.accent; c.beginPath(); c.arc(22, -17, 4, 0, TAU); c.fill();
     }
     else if(g.style === 'puff') {
-      c.beginPath(); c.arc(0, -30, 33, 0, TAU); c.fill();
-      c.beginPath(); c.ellipse(0, 0, 28, 28, 0, 0, TAU); c.fill();
-      c.fillStyle = g.hairHi; c.beginPath(); c.arc(-8, -34, 12, 0, TAU); c.fill();
+      c.beginPath(); c.arc(0, -28, 31, 0, TAU); c.fill();
+      c.beginPath(); c.ellipse(0, 0, 27, 27, 0, 0, TAU); c.fill();
     }
   }
   function face(g, ex) {
-    const g2 = c.createRadialGradient(-6, -8, 4, 0, 0, 26);
-    g2.addColorStop(0, '#fff'); g2.addColorStop(.25, g.skin); g2.addColorStop(1, g.skinShade);
-    c.fillStyle = g2; c.beginPath(); c.ellipse(0, 0, 23, 25, 0, 0, TAU); c.fill();
-    c.fillStyle = 'rgba(255,100,130,.28)'; c.beginPath(); c.arc(-14, 7, 6, 0, TAU); c.fill(); c.beginPath(); c.arc(14, 7, 6, 0, TAU); c.fill();
+    c.fillStyle = g.skin; c.beginPath(); c.arc(0, 0, 23, 0, TAU); c.fill();
+    c.fillStyle = 'rgba(255,100,130,.4)'; c.beginPath(); c.arc(-14, 7, 5.5, 0, TAU); c.fill(); c.beginPath(); c.arc(14, 7, 5.5, 0, TAU); c.fill();
     c.fillStyle = '#1a1214';
-    c.beginPath(); c.ellipse(-8, -2, 3.2, 4.6, 0, 0, TAU); c.fill();
-    c.beginPath(); c.ellipse(-6.8, -2.8, 1.2, 1.6, 0, 0, TAU); c.fillStyle = '#fff'; c.fill();
-    c.fillStyle = '#1a1214';
+    c.beginPath(); c.ellipse(-8, -2, 3, 4.2, 0, 0, TAU); c.fill();
     if(ex === 2) { c.strokeStyle = '#1a1214'; c.lineWidth = 2.2; c.beginPath(); c.arc(8, -2, 4, .15 * Math.PI, .85 * Math.PI); c.stroke(); }
-    else { c.beginPath(); c.ellipse(8, -2, 3.2, 4.6, 0, 0, TAU); c.fill(); c.beginPath(); c.ellipse(9.2, -2.8, 1.2, 1.6, 0, 0, TAU); c.fillStyle = '#fff'; c.fill(); c.fillStyle = '#1a1214'; }
-    c.strokeStyle = '#1a1214'; c.lineWidth = 1.4; c.beginPath(); c.moveTo(-11, -7); c.lineTo(-15, -10); c.moveTo(11, -7); c.lineTo(15, -10); c.stroke();
+    else { c.beginPath(); c.ellipse(8, -2, 3, 4.2, 0, 0, TAU); c.fill(); }
+    c.strokeStyle = '#1a1214'; c.lineWidth = 1.4; c.beginPath(); c.moveTo(-11, -6); c.lineTo(-14, -9); c.moveTo(11, -6); c.lineTo(14, -9); c.stroke();
     c.fillStyle = '#d63a52'; c.beginPath();
-    if(ex === 1) { c.arc(0, 10, 4.2, 0, TAU); c.fill(); }
-    else { c.moveTo(-7, 9); c.quadraticCurveTo(0, ex ? 20 : 16, 7, 9); c.quadraticCurveTo(0, 11, -7, 9); c.fill(); }
+    if(ex === 1) { c.arc(0, 10, 4.5, 0, TAU); c.fill(); }
+    else { c.moveTo(-7, 9); c.quadraticCurveTo(0, ex ? 20 : 17, 7, 9); c.quadraticCurveTo(0, 12, -7, 9); c.fill(); }
   }
   function hairFront(g) {
     c.fillStyle = g.hair;
     if(g.style === 'pixie') { c.beginPath(); c.arc(0, -3, 25, Math.PI * 1.02, TAU - .02); c.lineTo(22, -4); c.quadraticCurveTo(10, -16, -4, -12); c.quadraticCurveTo(-18, -8, -23, 2); c.closePath(); c.fill(); }
     else { c.beginPath(); c.arc(0, -2, 25, Math.PI * 1.02, TAU - .02); c.closePath(); c.fill(); }
-    c.fillStyle = g.hairHi; c.beginPath(); c.ellipse(-8, -17, 17, 8, -.35, 0, TAU); c.fill();
-    if(g.style === 'bob') { c.fillStyle = g.hair; c.beginPath(); c.ellipse(-23, 8, 7, 18, .1, 0, TAU); c.fill(); c.beginPath(); c.ellipse(23, 8, 7, 18, -.1, 0, TAU); c.fill(); }
-    if(g.style === 'long') { c.fillStyle = g.hair; c.beginPath(); c.ellipse(-24, 14, 6, 26, .08, 0, TAU); c.fill(); c.beginPath(); c.ellipse(24, 14, 6, 26, -.08, 0, TAU); c.fill(); }
+    c.beginPath(); c.ellipse(-8, -17, 17, 8, -.35, 0, TAU); c.fill();
+    if(g.style === 'bob') { c.beginPath(); c.ellipse(-22, 8, 7, 18, .1, 0, TAU); c.fill(); c.beginPath(); c.ellipse(22, 8, 7, 18, -.1, 0, TAU); c.fill(); }
+    if(g.style === 'long') { c.beginPath(); c.ellipse(-23, 14, 6, 26, .08, 0, TAU); c.fill(); c.beginPath(); c.ellipse(23, 14, 6, 26, -.08, 0, TAU); c.fill(); }
   }
-
-  /* ---------- kreslenie: telo tanečnice ---------- */
   function dancer(cx, cy, g, removed) {
-    const t = fx.t, sw = Math.sin(t * 2.4) * 8, bob = Math.abs(Math.sin(t * 4.8)) * 3, vis = i => i >= removed;
+    const t = fx.t, sw = Math.sin(t * 2.4) * 9, bob = Math.abs(Math.sin(t * 4.8)) * 3.5, vis = i => i >= removed;
     const r = fx.react, act = r.t < .45 ? r.k : -1;
-    const hipSway = Math.sin(t * 2.4) * 5;
-    const headT = fn => { c.save(); c.translate(hipSway * .1, -124); c.rotate(Math.sin(t * 2.4) * .05); fn(); c.restore(); };
-    const bust = g.bust, hip = g.hip, waist = g.waist;
-
+    const headT = fn => { c.save(); c.translate(0, -118); c.rotate(Math.sin(t * 2.4) * .05); fn(); c.restore(); };
     c.save(); c.translate(cx, cy); c.lineCap = 'round'; c.lineJoin = 'round';
+    
+    // Pódium a osvetlenie
+    const pg = c.createRadialGradient(0, 128, 10, 0, 128, 120); pg.addColorStop(0, 'rgba(255,107,181,.4)'); pg.addColorStop(1, 'rgba(255,107,181,0)');
+    c.fillStyle = pg; c.beginPath(); c.ellipse(0, 128, 125, 24, 0, 0, TAU); c.fill();
+    c.fillStyle = 'rgba(0,0,0,.5)'; c.beginPath(); c.ellipse(0, 128, 96, 15, 0, 0, TAU); c.fill();
 
-    // pódium
-    const pg = c.createRadialGradient(0, 128, 10, 0, 128, 120);
-    pg.addColorStop(0, 'rgba(255,107,181,.35)'); pg.addColorStop(1, 'rgba(255,107,181,0)');
-    c.fillStyle = pg; c.beginPath(); c.ellipse(0, 128, 120, 22, 0, 0, TAU); c.fill();
-    c.fillStyle = 'rgba(0,0,0,.45)'; c.beginPath(); c.ellipse(0, 128, 92, 14, 0, 0, TAU); c.fill();
-
-    // nohy – realistickejšie, s lýtkami a stehenami
+    // Nohy (štíhle, realistické s vytvarovanými stehnami)
+    c.strokeStyle = g.skin; c.lineWidth = 15;
     [-1, 1].forEach(s => {
-      const knee = [s * 16 + sw * .3 + hipSway * .4, 58];
-      const foot = [s * 18 - sw * .4 + hipSway * .6, 112];
-      const thighW = 15, calfW = 12;
-      c.strokeStyle = g.skin; c.lineWidth = thighW;
-      c.beginPath(); c.moveTo(s * 12 + hipSway * .3, 4); c.quadraticCurveTo(s * 18 + sw * .2 + hipSway * .4, 34, knee[0], knee[1]); c.stroke();
-      c.lineWidth = calfW;
-      c.beginPath(); c.moveTo(knee[0], knee[1]); c.quadraticCurveTo(knee[0] + s * 3, 84, foot[0], foot[1]); c.stroke();
-      // lesk na stehne
-      c.strokeStyle = 'rgba(255,255,255,.10)'; c.lineWidth = 4;
-      c.beginPath(); c.moveTo(s * 10 + hipSway * .3, 10); c.quadraticCurveTo(s * 15 + hipSway * .4, 34, knee[0] - s * 2, knee[1] - 4); c.stroke();
-      // topánka
-      c.fillStyle = g.accent; c.beginPath(); c.ellipse(foot[0] + s * 3, foot[1] + 5, 13, 6, 0, 0, TAU); c.fill();
-      c.fillStyle = 'rgba(0,0,0,.25)'; c.beginPath(); c.ellipse(foot[0] + s * 3, foot[1] + 8, 11, 3, 0, 0, TAU); c.fill();
+      c.beginPath(); c.moveTo(s * 12 + sw * .8, 6); c.quadraticCurveTo(s * 20 + sw * .2, 62, s * 19 - sw * .5, 114); c.stroke();
+      // topánky / opätky
+      c.fillStyle = g.accent; c.beginPath(); c.ellipse(s * 19 - sw * .5 + s * 3, 118, 13, 6, 0, 0, TAU); c.fill();
     });
 
-    c.save(); c.translate(sw * .35 + hipSway * .3, -bob);
-
-    // zadok / boky (vidno pri odhalených vrstvách)
-    const hipY = 2, hipW = 34 * hip;
-    c.save();
-    c.beginPath(); c.ellipse(0, hipY, hipW, 26, 0, 0, TAU);
-    const hg = c.createRadialGradient(-8, hipY - 4, 4, 0, hipY, hipW);
-    hg.addColorStop(0, 'rgba(255,255,255,.18)'); hg.addColorStop(.4, g.skin); hg.addColorStop(1, g.skinShade);
-    c.fillStyle = hg; c.fill();
-    // zádová ryha
-    c.strokeStyle = 'rgba(0,0,0,.18)'; c.lineWidth = 2; c.beginPath(); c.moveTo(0, hipY + 2); c.lineTo(0, hipY + 18); c.stroke();
-    c.restore();
-
+    c.save(); c.translate(sw * .35, -bob);
     headT(() => hairBack(g));
 
-    // torzo – definovaný pás a poprsie
-    const shoulderY = -90, chestY = -62, waistY = -32;
-    const shoulderW = 27, chestW = 28 * bust, waistW = 18 * waist, hipTopW = 25 * hip;
-    torsoShape([
-      [-shoulderW, shoulderY], [0, shoulderY - 6], [shoulderW, shoulderY],
-      [chestW, chestY], [chestW * .9, chestY + 18], [waistW, waistY],
-      [hipTopW, waistY + 30], [hipTopW * 1.1, hipY - 8], [-hipTopW * 1.1, hipY - 8],
-      [-hipTopW, waistY + 30], [-waistW, waistY], [-chestW * .9, chestY + 18], [-chestW, chestY]
-    ], g.suit, 'rgba(255,255,255,.10)', 'rgba(0,0,0,.42)');
-
-    // poprsie – dve gule s tieňom a leskom
+    // -- SEKCIA TELA, PÁSU, PRSIÍ A ZADKU --
     if(removed < 6) {
-      // outfit zakrýva, ale tvar je viditeľný
-      sphere(-12 * bust, chestY + 2, 13 * bust, 12 * bust, g.suit, 'rgba(255,255,255,.28)', 'rgba(0,0,0,.35)');
-      sphere(12 * bust, chestY + 2, 13 * bust, 12 * bust, g.suit, 'rgba(255,255,255,.22)', 'rgba(0,0,0,.35)');
-      c.strokeStyle = 'rgba(0,0,0,.20)'; c.lineWidth = 1.6;
-      c.beginPath(); c.moveTo(0, chestY - 10); c.quadraticCurveTo(0, chestY + 12, 0, chestY + 22); c.stroke();
-    } else {
-      // úplne odhalené – koža, bradavky naznačené jemným tieňom
-      sphere(-12 * bust, chestY + 2, 13 * bust, 12 * bust, g.skin, 'rgba(255,255,255,.35)', 'rgba(0,0,0,.25)');
-      sphere(12 * bust, chestY + 2, 13 * bust, 12 * bust, g.skin, 'rgba(255,255,255,.30)', 'rgba(0,0,0,.25)');
-      c.fillStyle = 'rgba(160,90,80,.45)'; c.beginPath(); c.arc(-12 * bust, chestY + 6, 3.2, 0, TAU); c.fill(); c.beginPath(); c.arc(12 * bust, chestY + 6, 3.2, 0, TAU); c.fill();
-      c.strokeStyle = 'rgba(0,0,0,.15)'; c.lineWidth = 1.4;
-      c.beginPath(); c.moveTo(0, chestY - 10); c.quadraticCurveTo(0, chestY + 12, 0, chestY + 22); c.stroke();
-    }
+      // Oblečené štádiá s telom
+      c.fillStyle = g.suit; 
+      c.beginPath(); c.moveTo(-26, -92); c.quadraticCurveTo(0, -100, 26, -92); c.lineTo(20, -44); c.quadraticCurveTo(28, -20, 24, 10); c.quadraticCurveTo(0, 24, -24, 10); c.quadraticCurveTo(-28, -20, -20, -44); c.closePath(); c.fill();
+      
+      // Výrazné zvýraznenie poprsia a dekoltu v kostýme
+      c.fillStyle = 'rgba(0,0,0,.2)';
+      c.beginPath(); c.arc(-11, -62, 11, 0, TAU); c.fill();
+      c.beginPath(); c.arc(11, -62, 11, 0, TAU); c.fill();
+      c.fillStyle = g.accent;
+      c.beginPath(); c.arc(-11, -64, 7, 0, TAU); c.fill();
+      c.beginPath(); c.arc(11, -64, 7, 0, TAU); c.fill();
 
-    // krk
-    c.fillStyle = g.skin; c.beginPath(); c.moveTo(-6, shoulderY - 2); c.lineTo(6, shoulderY - 2); c.lineTo(5, shoulderY - 14); c.lineTo(-5, shoulderY - 14); c.fill();
-    c.fillStyle = 'rgba(0,0,0,.12)'; c.beginPath(); c.ellipse(0, shoulderY - 10, 7, 3, 0, 0, TAU); c.fill();
-
-    // sukňa – realistickejšia, s pohybom
-    if(vis(2) && removed < 6) {
-      const skirtTop = waistY + 22, skirtBot = 98;
-      c.beginPath(); c.moveTo(-hipTopW, skirtTop); c.lineTo(hipTopW, skirtTop);
-      c.quadraticCurveTo(52 + sw * .5, 40, 64 + sw * .6, skirtBot);
-      c.quadraticCurveTo(0, 114 + Math.sin(t * 5) * 4, -64 + sw * .6, skirtBot);
-      c.quadraticCurveTo(-52 + sw * .5, 40, -hipTopW, skirtTop);
-      const sg = c.createLinearGradient(-40, skirtTop, 40, skirtBot);
-      sg.addColorStop(0, 'rgba(0,0,0,.35)'); sg.addColorStop(.4, g.skirt); sg.addColorStop(.7, g.skirt); sg.addColorStop(1, 'rgba(0,0,0,.4)');
-      c.fillStyle = sg; c.fill();
-      c.strokeStyle = 'rgba(255,255,255,.18)'; c.lineWidth = 2;
-      [-30, -12, 8, 28].forEach(x => { c.beginPath(); c.moveTo(x * .35, skirtTop - 2); c.quadraticCurveTo(x * 1.3, 40, x * 1.6 + sw * .4, skirtBot + 4); c.stroke(); });
-      c.fillStyle = g.accent; c.fillRect(-hipTopW - 1, skirtTop - 4, hipTopW * 2 + 2, 6);
-    } else if(removed >= 6) {
-      // odhalené nohy a boky – cenzúra
-      c.fillStyle = g.skin;
-      c.beginPath(); c.moveTo(-hipTopW, hipY - 10); c.quadraticCurveTo(-hipTopW - 4, hipY + 20, -hipTopW * .9, hipY + 38);
-      c.lineTo(hipTopW * .9, hipY + 38); c.quadraticCurveTo(hipTopW + 4, hipY + 20, hipTopW, hipY - 10); c.fill();
-      c.fillStyle = '#F2B84B'; c.font = '22px serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
-      c.fillText('✨', 0, hipY + 6); c.fillText('✨', -13, hipY + 6); c.fillText('✨', 13, hipY + 6);
-      c.fillText('✨', 0, hipY + 22); c.fillText('✨', -13, hipY + 22); c.fillText('✨', 13, hipY + 22);
-    }
-
-    // ruky – realistickejšie s ramenami a lakťami
-    const arm = (sx, h, s) => {
-      const shoulder = [sx, shoulderY - 2];
-      const elbow = [(sx + h[0]) / 2 + s * 10, (shoulderY + h[1]) / 2 + 14];
-      const hand = h;
-      const sleeve = vis(0);
-      c.strokeStyle = sleeve ? g.coat : g.skin;
-      c.lineWidth = sleeve ? 15 : 11;
-      c.beginPath(); c.moveTo(shoulder[0], shoulder[1]); c.lineTo(elbow[0], elbow[1]); c.stroke();
-      c.lineWidth = sleeve ? 13 : 9;
-      c.beginPath(); c.moveTo(elbow[0], elbow[1]); c.lineTo(hand[0], hand[1]); c.stroke();
-      // lesk
-      c.strokeStyle = 'rgba(255,255,255,.12)'; c.lineWidth = 3;
-      c.beginPath(); c.moveTo(shoulder[0] - s * 2, shoulder[1] + 4); c.lineTo(elbow[0] - s * 2, elbow[1] - 2); c.stroke();
-      if(vis(3)) {
-        c.strokeStyle = g.glove; c.lineWidth = 12;
-        c.beginPath(); c.moveTo(elbow[0], elbow[1]); c.lineTo(hand[0], hand[1]); c.stroke();
+      c.save(); c.beginPath(); c.moveTo(-26, -92); c.quadraticCurveTo(0, -100, 26, -92); c.lineTo(20, -44); c.quadraticCurveTo(28, -20, 24, 10); c.quadraticCurveTo(0, 24, -24, 10); c.quadraticCurveTo(-28, -20, -20, -44); c.closePath(); c.clip();
+      for(let i = 0; i < 24; i++) {
+        c.globalAlpha = .4 + .6 * Math.abs(Math.sin(t * 5 + i * 1.7));
+        c.fillStyle = i % 3 ? g.accent : '#fff';
+        c.fillRect(-28 + hsh(i) * 56, -94 + hsh(i + 9) * 110, 2.8, 2.8);
       }
-      c.fillStyle = vis(3) ? g.glove : g.skin; c.beginPath(); c.arc(hand[0], hand[1], 6.5, 0, TAU); c.fill();
-      c.fillStyle = 'rgba(255,255,255,.12)'; c.beginPath(); c.arc(hand[0] - 2, hand[1] - 2, 2.5, 0, TAU); c.fill();
+      c.restore(); c.globalAlpha = 1;
+    } else {
+      // Úplne nahá - realistické tvary tela, definovaný štíhly pás, plnšie boky, vytvarovaný zadok a reálnejšie prsia
+      c.fillStyle = g.skin; 
+      c.beginPath(); 
+      c.moveTo(-25, -92); 
+      c.quadraticCurveTo(0, -100, 25, -92); 
+      c.lineTo(21, -50); 
+      c.quadraticCurveTo(31, -58, 34, -48); // Pravé prso (veľké, oblé, sexi)
+      c.quadraticCurveTo(31, -38, 22, -40); 
+      c.lineTo(16, -30);
+      c.quadraticCurveTo(24, -10, 27, 12);  // Pravý bok a boky/zadok
+      c.quadraticCurveTo(0, 26, -27, 12);   // Ľavý bok a zadok
+      c.quadraticCurveTo(-24, -10, -16, -30);
+      c.lineTo(-22, -40);
+      c.quadraticCurveTo(-31, -38, -34, -48); // Ľavé prso
+      c.quadraticCurveTo(-31, -58, -21, -50);
+      c.closePath(); 
+      c.fill();
+
+      // Hlbšie vytieňovanie a realistická definícia poprsia a bradaviek
+      c.fillStyle = 'rgba(0,0,0,.18)'; 
+      c.beginPath(); c.arc(-13, -52, 9.5, 0, TAU); c.fill(); 
+      c.beginPath(); c.arc(13, -52, 9.5, 0, TAU); c.fill();
+      c.fillStyle = 'rgba(210,80,110,.5)';
+      c.beginPath(); c.arc(-13, -52, 4, 0, TAU); c.fill();
+      c.beginPath(); c.arc(13, -52, 4, 0, TAU); c.fill();
+
+      // Cenzúra hviezdičkami na prsiach
+      c.fillStyle = '#F2B84B'; c.font = '22px serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.fillText('✨', 0, -54); c.fillText('✨', -15, -54); c.fillText('✨', 15, -54);
+      // Cenzúra spodnej časti
+      c.fillText('✨', 0, 4); c.fillText('✨', -13, 4); c.fillText('✨', 13, 4);
+    }
+
+    // Krk
+    c.fillStyle = g.skin; c.fillRect(-5.5, -102, 11, 14);
+
+    // Sukňa / Odhalené boky
+    if(vis(2) && removed < 6) {
+      c.fillStyle = g.skirt; c.beginPath(); c.moveTo(-22, -40); c.lineTo(22, -40);
+      c.quadraticCurveTo(48 + sw * .5, 42, 62 + sw * .6, 100); c.quadraticCurveTo(0, 116 + Math.sin(t * 5) * 4, -62 + sw * .6, 100); c.quadraticCurveTo(-48 + sw * .5, 42, -22, -40); c.fill();
+      c.strokeStyle = 'rgba(255,255,255,.2)'; c.lineWidth = 2;
+      [-32, -14, 8, 30].forEach(x => { c.beginPath(); c.moveTo(x * .35, -38); c.quadraticCurveTo(x * 1.3, 42, x * 1.6 + sw * .4, 104); c.stroke(); });
+      c.fillStyle = g.accent; c.fillRect(-23, -43, 46, 6);
+    } else if(removed >= 6) {
+      c.fillStyle = g.skin; c.beginPath(); c.moveTo(-20, -28); c.quadraticCurveTo(-25, 12, -28, 32); c.lineTo(28, 32); c.quadraticCurveTo(25, 12, 20, -28); c.fill();
+    }
+
+    // Ruky
+    const arm = (sx, h, s) => {
+      const el = [(sx + h[0]) / 2 + s * 8.5, (-86 + h[1]) / 2 + 14];
+      c.strokeStyle = vis(0) ? g.coat : g.skin; c.lineWidth = vis(0) ? 15.5 : 11;
+      c.beginPath(); c.moveTo(sx, -86); c.lineTo(el[0], el[1]); c.lineTo(h[0], h[1]); c.stroke();
+      if(vis(3)) { c.strokeStyle = g.glove; c.lineWidth = 12.5; c.beginPath(); c.moveTo(el[0], el[1]); c.lineTo(h[0], h[1]); c.stroke(); }
+      c.fillStyle = vis(3) ? g.glove : g.skin; c.beginPath(); c.arc(h[0], h[1], 7, 0, TAU); c.fill();
     };
     arm(-27, fx.armL, -1); arm(27, fx.armR, 1);
 
-    // kabát
+    // Kabát
     if(vis(0)) {
       [-1, 1].forEach(s => {
-        c.beginPath(); c.moveTo(s * 28, shoulderY - 3); c.lineTo(s * 4, shoulderY - 3); c.lineTo(s * 4, 98); c.lineTo(s * 52 + sw * .5, 102);
-        c.quadraticCurveTo(s * 44, 20, s * 28, shoulderY - 3); c.closePath();
-        const cg = c.createLinearGradient(s * 28, shoulderY, s * 4, 100);
-        cg.addColorStop(0, 'rgba(0,0,0,.4)'); cg.addColorStop(.4, g.coat); cg.addColorStop(1, 'rgba(0,0,0,.45)');
-        c.fillStyle = cg; c.fill();
+        c.fillStyle = g.coat; c.beginPath(); c.moveTo(s * 30, -95); c.lineTo(s * 4, -95); c.lineTo(s * 4, 100); c.lineTo(s * 52 + sw * .5, 104); c.quadraticCurveTo(s * 44, 20, s * 30, -95); c.fill();
       });
-      c.fillStyle = g.accent; c.beginPath(); c.moveTo(-26, shoulderY - 4); c.lineTo(-4, shoulderY - 4); c.lineTo(-12, shoulderY + 24); c.closePath(); c.fill();
-      c.beginPath(); c.moveTo(26, shoulderY - 4); c.lineTo(4, shoulderY - 4); c.lineTo(12, shoulderY + 24); c.closePath(); c.fill();
-      c.fillStyle = g.accent; [-50, -20, 10, 40].forEach(y => { c.beginPath(); c.arc(-9, y, 2.6, 0, TAU); c.fill(); });
+      c.fillStyle = g.accent; c.beginPath(); c.moveTo(-28, -96); c.lineTo(-4, -96); c.lineTo(-13, -66); c.closePath(); c.fill();
+      c.beginPath(); c.moveTo(28, -96); c.lineTo(4, -96); c.lineTo(13, -66); c.closePath(); c.fill();
+      c.fillStyle = g.accent; [-52, -22, 10, 42].forEach(y => { c.beginPath(); c.arc(-9, y, 2.8, 0, TAU); c.fill(); });
     }
-
-    // boa
+    // Boa z peria
     if(vis(1)) {
-      for(let i = 0; i < 12; i++) { c.fillStyle = i % 2 ? g.accent : '#fff'; c.beginPath(); c.arc(-30 + i * 5.5, shoulderY - 2 + Math.sin(i * .6) * 4 + 6, 8, 0, TAU); c.fill(); }
+      for(let i = 0; i < 12; i++) { c.fillStyle = i % 2 ? g.accent : '#fff'; c.beginPath(); c.arc(-30 + i * 5.5, -92 + Math.sin(i * .6) * 4 + 6, 8.5, 0, TAU); c.fill(); }
       for(let i = 0; i < 9; i++) {
         const sx = Math.sin(t * 2 + i * .5) * 3;
         c.fillStyle = i % 2 ? g.accent : '#fff';
-        c.beginPath(); c.arc(-31 + sx, shoulderY + 4 + i * 9, 8 - i * .2, 0, TAU); c.fill();
-        c.beginPath(); c.arc(31 - sx, shoulderY + 4 + i * 9, 8 - i * .2, 0, TAU); c.fill();
+        c.beginPath(); c.arc(-31 + sx, -86 + i * 9, 8.5 - i * .2, 0, TAU); c.fill();
+        c.beginPath(); c.arc(31 - sx, -86 + i * 9, 8.5 - i * .2, 0, TAU); c.fill();
       }
     }
-
-    // hlava
+    // Hlava
     headT(() => {
       face(g, act === 2 ? 2 : act === 1 ? 1 : act === 0 ? 3 : 0);
       hairFront(g);
       if(vis(4) && removed < 5) {
-        c.fillStyle = '#17101c'; c.beginPath(); c.ellipse(0, -18, 31, 7, 0, 0, TAU); c.fill();
-        c.fillRect(-17, -50, 34, 34);
-        c.fillStyle = g.accent; c.fillRect(-17, -26, 34, 7);
+        c.fillStyle = '#17101c'; c.beginPath(); c.ellipse(0, -18, 32, 7.5, 0, 0, TAU); c.fill();
+        c.fillRect(-18, -52, 36, 35);
+        c.fillStyle = g.accent; c.fillRect(-18, -27, 36, 7.5);
         c.strokeStyle = g.accent; c.lineWidth = 3; c.beginPath(); c.moveTo(14, -44); c.quadraticCurveTo(34, -62, 30, -30); c.stroke();
       }
     });
-
     c.restore();
-
-    // trblietky po poslednej vrstve
-    if(removed >= 6) for(let i = 0; i < 9; i++) { const a = t * 2 + i * TAU / 9; em('✨', Math.cos(a) * 105, -20 + Math.sin(a * 1.3) * 80, 18); }
+    if(removed >= 6) for(let i = 0; i < 9; i++) { const a = t * 2 + i * TAU / 9; em('✨', Math.cos(a) * 110, -20 + Math.sin(a * 1.3) * 85, 18); }
     c.restore();
   }
 
