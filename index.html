@@ -2323,138 +2323,368 @@ const WS = (() => {
 })();
 
 /* =====================================================================
-   HIDDEN MINIGAME #3: EXAM  (terminal: play 3)
+   HIDDEN MINIGAME #3: EXAM v2  (terminal: play 3)
+   10 levelov, 5 učiteľov, rastúci počet príkladov, zvuky, pauza, životy.
    ===================================================================== */
 const EX = (() => {
-  const W = 760, H = 400, TAU = Math.PI * 2, modal = $('#ex-modal'), cv = $('#ex-canvas'), c = cv.getContext('2d'), over = $('#ex-over');
+  const W = 760, H = 400, TAU = Math.PI * 2, MAXLV = 10;
+  const modal = $('#ex-modal'), cv = $('#ex-canvas'), c = cv.getContext('2d'), over = $('#ex-over');
   const dpr = Math.min(2, window.devicePixelRatio || 1); cv.width = W * dpr; cv.height = H * dpr;
+
+  /* ---------- štýly vložené z JS ---------- */
+  (() => {
+    const s = document.createElement('style');
+    s.textContent = `
+.ex-act{position:relative;overflow:hidden;flex:1 1 140px;min-height:42px;border-radius:10px;border:1.5px solid #3a4a5a;background:#18222c;color:#E4EEE9;font:600 .82rem var(--body);cursor:pointer;padding:6px 8px;-webkit-user-select:none;user-select:none}
+.ex-act i{position:absolute;left:0;bottom:0;height:4px;width:0;background:#58a6ff}
+.ex-act.cd{opacity:.45}
+#ex-over{padding:16px;gap:10px;overflow:auto;justify-content:flex-start}
+#ex-over>*:first-child{margin-top:auto}
+#ex-over>*:last-child{margin-bottom:auto}
+#ex-over .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+#ex-over .tcard{display:flex;align-items:center;gap:14px;background:#183029;border:1px solid #D9A84F;border-radius:12px;padding:10px 16px;max-width:52ch;text-align:left;font-size:.9rem}
+#ex-over .tcard .em{font-size:2.4rem;line-height:1}
+#ex-over .big{font-size:2.6rem}
+`;
+    document.head.appendChild(s);
+  })();
+
+  /* ---------- texty ---------- */
   const L = {
-    sk: {title:'PÍSOMKA · Matematika', board:'MATEMATIKA · doc. Kováčová 🐈', tasks:['Limity','Derivácie','Integrály','Matice','Rady','Dif. rovnice'], tools:['Písať','Rukáv','Telefón','Peter'], subs:['poctivo, pomaly','kryje len 📄 úlohy','rýchly, hlučný','kryje 👦, mýli sa'],
-      how:'Ťažká písomka z matematiky. Docentka Kováčová zbožňuje mačky, no dozor je všade. Vyber úlohu (kliknutím alebo 1–6) a píš poctivo (MEDZERNÍK, pomaly), alebo ťahaj: Z = ťaháčik v rukáve, X = telefón, C = sused Peter. Pusti kláves a ťaháčik zmizne. Ak ťa pri ťahaní vidí žltý kužeľ dozoru, rastie podozrenie. M = pusti na telefóne mňaukanie: Kováčová sa rozplynie nad mačkou a chvíľu je bezpečno. Telefón je hlučný aj pre dozor bez priameho pohľadu.',
-      susp:'Podozrenie', time:'Čas', start:'Začať písomku', again:'Opravný termín', caught:'CHYTILI ťa! Dozor ti zobral písomku.', up:'Čas vypršal, odovzdávaš.', done:'Odovzdané pred časom!', cat:'🐈 Mačka v aule! Kováčová je preč...', meow:'Mňau! 🐈 Kováčová letí k mačke', cd:'Mňaukanie sa ešte dobíja', empty:'Ťaháčik je vybitý', grade:'Známka', best:'Rekord', hint:'Esc = späť do terminálu', bad:'Peter sa zmýlil! ✗', ok:'Hotovo ✓', nope:'Toto v rukáve nie je...'},
-    en: {title:'EXAM · Mathematics', board:'MATHEMATICS · Doc. Kováčová 🐈', tasks:['Limits','Derivatives','Integrals','Matrices','Series','Diff. equations'], tools:['Write','Sleeve','Phone','Peter'], subs:['honest, slow','covers 📄 tasks only','fast, noisy','covers 👦, error-prone'],
-      how:'A brutal maths exam. Doc. Kováčová adores cats, but proctors are everywhere. Pick a task (click or 1–6) and write honestly (SPACE, slow), or cheat: Z = cheat sheet in your sleeve, X = phone, C = neighbour Peter. Release the key and the cheat sheet vanishes. If a yellow vision cone catches you cheating, suspicion rises. M = play a meow on your phone: Kováčová melts over the cat and you are safe for a moment. The phone is noisy even for proctors who do not see you.',
-      susp:'Suspicion', time:'Time', start:'Start the exam', again:'Retake', caught:'BUSTED! The proctor took your paper.', up:'Time is up, handing in.', done:'Handed in early!', cat:'🐈 A cat in the hall! Kováčová is gone...', meow:'Meow! 🐈 Kováčová rushes to the cat', cd:'Meow is still recharging', empty:'Cheat is used up', grade:'Grade', best:'Best', hint:'Esc = back to terminal', bad:'Peter was wrong! ✗', ok:'Done ✓', nope:'It is not in the sleeve...'}
+    sk: {title:'PÍSOMKA · Matematika', board:'MATEMATIKA · doc. Kováčová 🐈',
+      tasks:['Limity','Derivácie','Integrály','Matice','Rady','Dif. rovnice','Komplexné čísla','Pravdepodobnosť','Vektory','Fourier'],
+      tools:['Písať','Rukáv','Telefón','Peter'], subs:['poctivo, pomaly','kryje len 📄 úlohy','rýchly, hlučný','kryje 👦, mýli sa'],
+      how:'Ťažká písomka z matematiky. Vyber úlohu (klik alebo 1–9, 0) a píš poctivo (MEDZERNÍK, pomaly), alebo ťahaj: Z = ťaháčik v rukáve, X = telefón, C = sused Peter. Pusti kláves a ťaháčik zmizne. Ak ťa pri ťahaní vidí kužeľ dozoru, rastie podozrenie. M = mňaukanie (mačka), F = jedlo, V = dezodorant. P = pauza, S = zvuk. Máš 3 životy a 10 levelov.',
+      susp:'Podozrenie', stinkL:'Zápach', time:'Čas', lv:'Level', tasksN:'Príkladov', newT:'Nový dozor', start:'Začať písomku', next:'Ďalší level', retry:'Skúsiť level znova', again:'Nová písomka',
+      caught:'CHYTILI ťa! Dozor ti zobral písomku.', up:'Čas vypršal, nestihol si to.', cleared:'Level splnený!', gameover:'Prepadol si', win:'Prešiel si celú písomku! 🎓',
+      reached:'Dosiahnutý level', total:'Skóre', lives:'Životy', grade:'Známka', best:'Rekord', newrec:'Nový rekord!', hint:'Esc = späť do terminálu', hard:'Všetci dozorovia sú tu a každý level sú ostrejší.',
+      cat:'🐈 Mačka v aule! Kováčová je preč...', meow:'Mňau! 🐈 Kováčová letí k mačke', cd:'Ešte sa to dobíja', empty:'Ťaháčik je vybitý', bad:'Peter sa zmýlil! ✗', ok:'Hotovo ✓', nope:'Toto v rukáve nie je...',
+      a_meow:'Mňau', a_food:'Jedlo', a_spray:'Dezodorant', fd:'🍔 Desiatko cíti jedlo a ide papať...', sp:'🧴 Dezodorant: zápach ťa chvíľu nechytí', stink:'Fuj, ten smrad! Úlohy idú pomalšie...', nofood:'Jedlo sa ešte pripravuje',
+      paused:'Pauza', pause_hint:'P = pokračovať', resume:'Pokračovať', snd:'Zvuk zap./vyp. (S)', pause_btn:'Pauza (P)', pts:'Body za level',
+      d_K:'Pomalá hliadka, ale vidí ďaleko. Zbožňuje mačky: stlač M a rozplynie sa nad nimi.',
+      d_O:'Lieta po triede na kolobežke a náhodne križuje uličky medzi lavicami. Je rýchla a nevieš, kde sa zjaví!',
+      d_H:'Stále plače a je smutná. Chvíľami si zakryje oči od sĺz, vtedy nevidí nič. Využi to!',
+      d_D:'Tučný a večne hladný. Hoď mu jedlo (F) a bude papať, dá ti pokoj, kým neje.',
+      d_M:'Strašne smrdí. Keď je blízko, jeho aura ťa spomaľuje pri riešení úloh. Dezodorant (V) ťa na chvíľu ochráni.',
+      tips:['Hutirová si zakrýva oči pravidelne, počkaj na ten moment.','Kováčová aj Desiatko sa dajú odlákať, ale majú cooldown.','Telefón je rýchly, ale počujú ho aj dozory bez priameho pohľadu.','Omachelová je rýchla, drž sa mimo jej uličky.','Pri Mastiľákovi radšej píš v inej časti triedy alebo použi dezodorant.']},
+    en: {title:'EXAM · Mathematics', board:'MATHEMATICS · Doc. Kováčová 🐈',
+      tasks:['Limits','Derivatives','Integrals','Matrices','Series','Diff. equations','Complex numbers','Probability','Vectors','Fourier'],
+      tools:['Write','Sleeve','Phone','Peter'], subs:['honest, slow','covers 📄 tasks only','fast, noisy','covers 👦, error-prone'],
+      how:'A brutal maths exam. Pick a task (click or 1–9, 0) and write honestly (SPACE, slow), or cheat: Z = cheat sheet in your sleeve, X = phone, C = neighbour Peter. Release the key and the cheat sheet vanishes. If a vision cone catches you cheating, suspicion rises. M = meow (cat), F = food, V = deodorant. P = pause, S = sound. You have 3 lives and 10 levels.',
+      susp:'Suspicion', stinkL:'Stench', time:'Time', lv:'Level', tasksN:'Tasks', newT:'New proctor', start:'Start the exam', next:'Next level', retry:'Retry level', again:'New exam',
+      caught:'BUSTED! The proctor took your paper.', up:'Time is up, you did not make it.', cleared:'Level cleared!', gameover:'You failed', win:'You passed the whole exam! 🎓',
+      reached:'Level reached', total:'Score', lives:'Lives', grade:'Grade', best:'Best', newrec:'New record!', hint:'Esc = back to terminal', hard:'All proctors are here and get sharper every level.',
+      cat:'🐈 A cat in the hall! Kováčová is gone...', meow:'Meow! 🐈 Kováčová rushes to the cat', cd:'Still recharging', empty:'Cheat is used up', bad:'Peter was wrong! ✗', ok:'Done ✓', nope:'It is not in the sleeve...',
+      a_meow:'Meow', a_food:'Food', a_spray:'Deodorant', fd:'🍔 Desiatko smells food and goes to eat...', sp:'🧴 Deodorant: the stench cannot reach you for a while', stink:'Ugh, the smell! Tasks go slower...', nofood:'Food is still being prepared',
+      paused:'Paused', pause_hint:'P = resume', resume:'Resume', snd:'Sound on/off (S)', pause_btn:'Pause (P)', pts:'Level points',
+      d_K:'Slow patrol, but sees far. Adores cats: press M and she melts over them.',
+      d_O:'Zooms around the hall on a scooter, crossing the aisles between desks at random. Fast, and you never know where she shows up!',
+      d_H:'Always crying and sad. Now and then she covers her eyes from tears and sees nothing. Use it!',
+      d_D:'Fat and always hungry. Throw him food (F) and he eats and leaves you alone while he does.',
+      d_M:'Smells terrible. When he is close, his aura slows down your work. Deodorant (V) protects you for a moment.',
+      tips:['Hutirová covers her eyes regularly, wait for that moment.','Kováčová and Desiatko can be lured away, but there is a cooldown.','The phone is fast, but even proctors without a direct view hear it.','Omachelová is fast, stay out of her aisle.','Near Mastiľák, write elsewhere in the room or use the deodorant.']}
   };
-  const x = k => (L[lang] || L.sk)[k];
+  const tr = k => (L[lang] || L.sk)[k];
   const rnd = (a, b) => a + Math.random() * (b - a), clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const angD = (a, b) => { let d = a - b; while(d > Math.PI) d -= TAU; while(d < -Math.PI) d += TAU; return d; };
-  const best = () => +load('examBest') || 0;
-  const P = {x:380, y:345}, ROWS = [90, 170, 250], XS = [100, 200, 300, 460, 560, 660], AIS = [130, 210, 295], FACE = ['🙂','😅','🤓','😴','😩','🧐'];
+  const best = () => +load('examBest') || 0, bestLv = () => +load('examBestLvl') || 0;
+  const P = {x:380, y:345}, ROWS = [90, 170, 250], XS = [100, 200, 300, 460, 560, 660], AIS = [130, 210, 295], AI2 = [130, 210, 295, 375], FACE = ['🙂','😅','🤓','😴','😩','🧐'];
   const KEYS = {' ':0, z:1, x:2, c:3}, CH = [1, 16, 10, 9], RISK = [0, 1, 1.7, 1.2];
-  let G = null, raf = 0, last = 0, TB = [], OB = [];
 
-  const mk = (n, e, spd, wp) => ({n, e, spd, x:wp[0][0], y:wp[0][1], wp, i:1, d:0, f:0, look:0, cat:0, tgt:null});
-  function fresh() {
-    const sh = [0,1,2,3,4,5].sort(() => Math.random() - .5);
-    return {run:false, t:110, sus:0, cur:0, held:-1, ch:CH.slice(), meowCd:0, catT:rnd(6, 10), cat:null, msg:'', mT:0, watch:false, T:0,
-      tk:[0,1,2,3,4,5].map(i => ({p:0, done:false, bad:false, nb:false, sl:sh.slice(0, 4).includes(i), pe:sh.slice(3, 6).includes(i)})),
-      pr:[mk('Kováčová','👩‍🏫',46,[[50,295],[710,295],[710,130],[50,130]]), mk('Novák','🧑‍🏫',58,[[50,210],[710,210]]), mk('Horváth','👨‍💼',40,[[60,378],[700,378]])]};
+  /* ---------- učitelia (zoradení podľa levelu, v ktorom pribúdajú) ---------- */
+  const ORDER = ['K', 'O', 'H', 'D', 'M'];
+  const TD = {
+    K:{n:'Kováčová', e:'👩‍🏫', spd:46, range:200, ang:.5, fav:'cat', wp:[[50,295],[710,295],[710,130],[50,130]]},
+    O:{n:'Omachelová', e:'👱‍♀️', spd:150, range:175, ang:.55, roam:true},
+    H:{n:'Hutirová', e:'😭', spd:34, range:190, ang:.5, wp:[[60,170],[700,170],[700,250],[60,250]]},
+    D:{n:'Desiatko', e:'😋', spd:30, range:200, ang:.5, fav:'food', wp:[[60,378],[700,378]]},
+    M:{n:'Mastiľák', e:'🤢', spd:38, range:190, ang:.5, smell:150, wp:[[90,300],[670,300],[670,378],[90,378]]}
+  };
+  let S = null, G = null, raf = 0, last = 0, TB = [], OB = [], AB = [];
+
+  const mk = (k, lv) => {
+    const d = TD[k];
+    return {k, n:d.n, e:d.e, spd:d.spd * (1 + .03 * (lv - 1)), range:d.range + (lv - 1) * 3, ang:d.ang, fav:d.fav || null, roam:!!d.roam, smell:d.smell || 0, wp:d.wp || null,
+      x:d.wp ? d.wp[0][0] : rnd(60, 700), y:d.wp ? d.wp[0][1] : AI2[1], i:1, d:0, f:0, look:0, busy:0, tgt:null,
+      rt:[rnd(40, 720), AI2[Math.floor(Math.random() * 4)]], bt:rnd(2, 4), blind:0, bellT:rnd(2, 5)};
+  };
+  function fresh(lv) {
+    const N = Math.max(2, lv), sh = [...Array(N).keys()].sort(() => Math.random() - .5), nS = Math.ceil(N * .6), nP = Math.ceil(N * .5);
+    const tmax = 40 + N * 22 + (lv >= 5 ? 20 : 0), k = .6 + .15 * N;
+    return {lv, N, run:false, paused:false, t:tmax, tmax, sus:0, cur:0, held:-1, ch:CH.map((v, i) => i ? Math.round(v * k) : 1),
+      cdM:0, cdF:0, cdV:0, spray:0, catT:rnd(6, 10), lure:{cat:null, food:null}, msg:'', mT:0, watch:false, prevW:false, T:0, stink:0, stT:0, wt:0, ct:0, mt:0,
+      tk:sh.length ? [...Array(N).keys()].map(i => ({p:0, done:false, bad:false, nb:false, sl:sh.slice(0, nS).includes(i), pe:sh.slice(N - nP).includes(i)})) : [],
+      pr:ORDER.slice(0, Math.min(5, lv)).map(k => mk(k, lv))};
   }
-  function flash(m, ms) { G.msg = m; G.mT = ms || 2.2; }
+  function flash(m, ms) { if(G) { G.msg = m; G.mT = ms || 2.2; } }
+
+  /* ---------- zvuk (využíva gTone / gNoise z Night Shift) ---------- */
+  function sfx(n) {
+    switch(n) {
+      case 'write': gNoise(.05, .022, 0, 3800); break;
+      case 'cheat': gTone(1200, .03, 'square', .015); break;
+      case 'warn': gTone(330, .08, 'square', .03); gTone(330, .08, 'square', .03, .12); break;
+      case 'ok': gTone(784, .1, 'triangle', .05); gTone(1175, .16, 'triangle', .05, .08); break;
+      case 'badtask': gTone(200, .25, 'sawtooth', .05, 0, 100); break;
+      case 'meow': gTone(700, .18, 'sine', .05, 0, 1000); gTone(1000, .25, 'sine', .05, .18, 550); break;
+      case 'food': gNoise(.08, .04, 0, 1500); gTone(500, .1, 'triangle', .04, .05); break;
+      case 'munch': gNoise(.07, .04, 0, 900); break;
+      case 'spray': gNoise(.5, .05, 0, 6000); break;
+      case 'cough': gTone(180, .1, 'sawtooth', .04, 0, 120); gTone(170, .1, 'sawtooth', .04, .14, 110); break;
+      case 'sob': gTone(480, .18, 'sine', .04, 0, 380); gTone(450, .2, 'sine', .04, .22, 330); break;
+      case 'bell': gTone(2000, .08, 'triangle', .03); gTone(2400, .12, 'triangle', .03, .09); break;
+      case 'catch': gTone(620, .2, 'square', .045, 0, 980); gTone(980, .2, 'square', .04, .22, 620); gNoise(.15, .05, 0, 700); break;
+      case 'lose': gTone(150, .3, 'square', .06, 0, 70); gNoise(.15, .05, 0, 500); break;
+      case 'clear': [523, 659, 784, 1047].forEach((f, i) => gTone(f, .16, 'triangle', .05, i * .1)); break;
+      case 'win': [523, 659, 784, 1047, 1319, 1568].forEach((f, i) => gTone(f, .3, 'sine', .05, i * .14)); break;
+      case 'over': [440, 392, 330, 262].forEach((f, i) => gTone(f, .28, 'triangle', .06, i * .2)); break;
+      case 'start': gTone(523, .12, 'triangle', .05); gTone(784, .22, 'triangle', .05, .1); break;
+      case 'pause': gTone(660, .06, 'triangle', .04); gTone(440, .08, 'triangle', .04, .07); break;
+      case 'record': [523, 659, 784, 1047, 1319].forEach((f, i) => gTone(f, .18, 'triangle', .055, .8 + i * .1)); break;
+    }
+  }
+  const exSnd = document.createElement('button'), exPause = document.createElement('button');
+  (() => {
+    const close = $('#ex-close'), wrap = document.createElement('div'); wrap.className = 'g-btns';
+    [exPause, exSnd].forEach(b => { b.type = 'button'; b.className = 'g-close'; wrap.appendChild(b); });
+    close.parentNode.insertBefore(wrap, close); wrap.appendChild(close);
+  })();
+  function sndUi() {
+    exSnd.textContent = gSnd.on ? '🔊' : '🔇'; exSnd.title = exSnd.ariaLabel = tr('snd');
+    exPause.textContent = G && G.paused ? '▶' : '⏸'; exPause.title = exPause.ariaLabel = tr('pause_btn');
+  }
+  function toggleSnd() { gSnd.on = !gSnd.on; save('nightShiftSnd', gSnd.on ? '1' : '0'); sndUi(); if(typeof gSndUi === 'function') gSndUi(); if(gSnd.on) sfx('start'); }
+  exSnd.onclick = toggleSnd; exPause.onclick = () => pause();
+
+  /* ---------- UI ---------- */
+  function hudUpd() {
+    $('#ex-hud').textContent = S ? tr('lv') + ' ' + S.lv + '/' + MAXLV + ' · ' + '❤'.repeat(Math.max(0, S.lives)) + ' · ' + S.score + ' · ' + tr('best') + ' ' + best() : tr('best') + ' ' + best();
+  }
   function build() {
-    $('#ex-tasks').innerHTML = G.tk.map((t, i) => '<button class="ex-task" type="button" data-i="' + i + '">' + (i + 1) + '. ' + x('tasks')[i] + ' ' + (t.sl ? '📄' : '') + (t.pe ? '👦' : '') + '<small></small><i></i></button>').join('');
-    $('#ex-tools').innerHTML = [0,1,2,3].map(i => '<button class="ex-tool" type="button" data-i="' + i + '"><b>' + ['␣ ','Z ','X ','C '][i] + x('tools')[i] + '</b><small>' + x('subs')[i] + '</small><i></i></button>').join('');
-    TB = $$('.ex-task'); OB = $$('.ex-tool');
-    $('#ex-title').textContent = x('title'); $('#ex-hud').textContent = x('best') + ' ' + best();
+    $('#ex-tasks').innerHTML = G.tk.map((t, i) => '<button class="ex-task" type="button" data-i="' + i + '">' + (i + 1 === 10 ? 0 : i + 1) + '. ' + tr('tasks')[i] + ' ' + (t.sl ? '📄' : '') + (t.pe ? '👦' : '') + '<small></small><i></i></button>').join('');
+    $('#ex-tools').innerHTML = [0, 1, 2, 3].map(i => '<button class="ex-tool" type="button" data-i="' + i + '"><b>' + ['␣ ', 'Z ', 'X ', 'C '][i] + tr('tools')[i] + '</b><small>' + tr('subs')[i] + '</small><i></i></button>').join('');
+    let ac = $('#ex-acts');
+    if(!ac) { ac = document.createElement('div'); ac.id = 'ex-acts'; ac.className = 'ex-row'; $('.ex-ui').appendChild(ac); ac.addEventListener('click', e => { const b = e.target.closest('.ex-act'); if(b) act(b.dataset.a); }); }
+    const acts = [['meow', '🐈 ' + tr('a_meow') + ' (M)']];
+    if(G.pr.some(p => p.fav === 'food')) acts.push(['food', '🍔 ' + tr('a_food') + ' (F)']);
+    if(G.pr.some(p => p.smell)) acts.push(['spray', '🧴 ' + tr('a_spray') + ' (V)']);
+    ac.innerHTML = acts.map(a => '<button class="ex-act" type="button" data-a="' + a[0] + '">' + a[1] + '<i></i></button>').join('');
+    TB = $$('.ex-task'); OB = $$('.ex-tool'); AB = $$('.ex-act');
+    $('#ex-title').textContent = tr('title'); hudUpd(); sndUi();
   }
   function sync() {
-    G.tk.forEach((t, i) => { const b = TB[i]; b.classList.toggle('sel', i === G.cur); b.classList.toggle('done', t.done); b.querySelector('i').style.width = t.p * 100 + '%'; b.querySelector('small').textContent = t.done ? (t.bad ? '✗' : '✓') : Math.round(t.p * 100) + ' %'; });
-    OB.forEach((b, i) => { b.classList.toggle('on', G.held === i); b.classList.toggle('empty', i > 0 && G.ch[i] <= 0); if(i) b.querySelector('i').style.width = G.ch[i] / CH[i] * 100 + '%'; });
+    G.tk.forEach((t, i) => { const b = TB[i]; if(!b) return; b.classList.toggle('sel', i === G.cur); b.classList.toggle('done', t.done); b.querySelector('i').style.width = t.p * 100 + '%'; b.querySelector('small').textContent = t.done ? (t.bad ? '✗' : '✓') : Math.round(t.p * 100) + ' %'; });
+    OB.forEach((b, i) => { b.classList.toggle('on', G.held === i); b.classList.toggle('empty', i > 0 && G.ch[i] <= 0); if(i) b.querySelector('i').style.width = G.ch[i] / CH[i] / (.6 + .15 * G.N) * 100 + '%'; });
+    AB.forEach(b => {
+      const n = b.dataset.a, cd = n === 'meow' ? G.cdM : n === 'food' ? G.cdF : G.cdV, mx = n === 'meow' ? 24 : n === 'food' ? 28 : 22;
+      b.classList.toggle('cd', cd > 0); b.querySelector('i').style.width = (cd > 0 ? cd / mx * 100 : 0) + '%';
+    });
+  }
+  function show(html) {
+    over.innerHTML = html; over.style.display = 'flex';
+    over.querySelectorAll('button[data-go]').forEach(b => {
+      b.onclick = () => {
+        const g2 = b.dataset.go;
+        if(g2 === 'play') beginLevel();
+        else if(g2 === 'retry') { G = fresh(S.lv); build(); sync(); beginLevel(); }
+        else if(g2 === 'next') { S.lv++; showIntro(); }
+        else if(g2 === 'new') startRun();
+        else if(g2 === 'resume') resume();
+      };
+    });
+    const b = over.querySelector('button'); if(b) b.focus();
   }
 
-  /* ---------- proctors ---------- */
-  function mv(p, tx, ty, dt) {
-    const dx = tx - p.x, dy = ty - p.y, d = Math.hypot(dx, dy);
+  /* ---------- tok hry ---------- */
+  function startRun() {
+    cancelAnimationFrame(raf);
+    S = {lv:1, lives:3, score:0, good:0, tasks:0};
+    showIntro();
+  }
+  function showIntro() {
+    cancelAnimationFrame(raf);
+    G = fresh(S.lv); build(); sync(); draw();
+    const k = ORDER[S.lv - 1];
+    let h = '<h3>' + tr('lv') + ' ' + S.lv + ' / ' + MAXLV + '</h3>';
+    if(S.lv === 1) h += '<p>' + tr('how') + '</p>';
+    h += '<p>' + tr('tasksN') + ': <b>' + G.N + '</b> · ' + tr('time') + ': <b>' + G.tmax + ' s</b> · ' + tr('lives') + ': <b>' + '❤'.repeat(S.lives) + '</b></p>';
+    h += '<p>' + G.pr.map(p => p.e + ' ' + p.n).join(' · ') + '</p>';
+    if(k) h += '<div class="tcard"><span class="em">' + TD[k].e + '</span><div><b>' + (S.lv > 1 ? tr('newT') + ': ' : '') + TD[k].n + '</b><br>' + tr('d_' + k) + '</div></div>';
+    else h += '<p>' + tr('hard') + '</p>';
+    h += '<div class="row"><button class="btn" type="button" data-go="play">' + tr('start') + '</button></div><span class="g-hint">' + tr('hint') + '</span>';
+    show(h);
+  }
+  function beginLevel() {
+    over.style.display = 'none'; G.run = true; G.paused = false; sfx('start');
+    flash(tr('tasks')[0] + ' →', 1.2); sync(); sndUi();
+    last = performance.now(); raf = requestAnimationFrame(loop); cv.focus({preventScroll:true});
+  }
+  function clearLevel() {
+    G.run = false; cancelAnimationFrame(raf);
+    let pts = 0, good = 0;
+    G.tk.forEach(t => { pts += t.bad ? 50 : 100; good += t.bad ? .5 : 1; });
+    pts += Math.round(G.t * 2);
+    S.score += pts; S.good += good; S.tasks += G.N;
+    hudUpd();
+    if(S.lv >= MAXLV) { win(); return; }
+    sfx('clear');
+    show('<h3>' + tr('cleared') + '</h3><p>' + tr('pts') + ': <b>+' + pts + '</b> · ' + tr('total') + ': <b>' + S.score + '</b></p><div class="row"><button class="btn" type="button" data-go="next">' + tr('next') + '</button></div><span class="g-hint">' + tr('hint') + '</span>');
+  }
+  function fail(kind) {
+    G.run = false; cancelAnimationFrame(raf); G.held = -1;
+    S.lives--; hudUpd(); sfx(kind === 'caught' ? 'catch' : 'lose');
+    if(S.lives > 0) {
+      show('<h3>' + tr(kind) + '</h3><p>' + tr('lives') + ': <b>' + '❤'.repeat(S.lives) + '</b> · ' + tr('lv') + ' ' + S.lv + '</p><div class="row"><button class="btn" type="button" data-go="retry">' + tr('retry') + '</button></div><span class="g-hint">' + tr('hint') + '</span>');
+    } else gameOver(kind);
+  }
+  function saveBests() {
+    const isNew = S.score > best();
+    if(isNew) save('examBest', String(S.score));
+    if(S.lv > bestLv()) save('examBestLvl', String(S.lv));
+    hudUpd(); return isNew;
+  }
+  function gameOver(kind) {
+    const isNew = saveBests(), tip = tr('tips')[Math.floor(Math.random() * tr('tips').length)];
+    setTimeout(() => sfx('over'), 350); if(isNew) sfx('record');
+    show('<h3>' + tr('gameover') + '</h3><p>' + tr(kind) + '</p><div class="big">' + S.score + '</div><p>' + tr('reached') + ': <b>' + S.lv + ' / ' + MAXLV + '</b>' + (isNew ? ' 🏆 ' + tr('newrec') : '') + '</p><p class="g-tip">💡 ' + tip + '</p><div class="row"><button class="btn" type="button" data-go="new">' + tr('again') + '</button></div><span class="g-hint">' + tr('hint') + '</span>');
+  }
+  function win() {
+    const q = S.good / Math.max(1, S.tasks), grade = q >= .95 ? 'A' : q >= .88 ? 'B' : q >= .8 ? 'C' : q >= .7 ? 'D' : q >= .6 ? 'E' : 'FX';
+    S.score += S.lives * 300; const isNew = saveBests();
+    sfx('win'); if(isNew) sfx('record');
+    show('<h3>' + tr('win') + '</h3><div class="big">' + S.score + '</div><p>' + tr('grade') + ': <b style="color:#D9A84F;font-size:1.8rem">' + grade + '</b>' + (isNew ? ' 🏆 ' + tr('newrec') : '') + '</p><p>' + tr('lives') + ': ' + '❤'.repeat(S.lives) + ' (+' + S.lives * 300 + ')</p><div class="row"><button class="btn" type="button" data-go="new">' + tr('again') + '</button></div><span class="g-hint">' + tr('hint') + '</span>');
+  }
+  function pause() {
+    if(!G || !G.run) return;
+    if(G.paused) { resume(); return; }
+    G.paused = true; G.held = -1; cancelAnimationFrame(raf); sfx('pause');
+    show('<h3>⏸ ' + tr('paused') + '</h3><p>' + tr('pause_hint') + '</p><div class="row"><button class="btn" type="button" data-go="resume">' + tr('resume') + '</button></div>');
+    sndUi();
+  }
+  function resume() {
+    if(!G || !G.run || !G.paused) return;
+    G.paused = false; over.style.display = 'none'; sfx('pause'); sndUi();
+    last = performance.now(); raf = requestAnimationFrame(loop); cv.focus({preventScroll:true});
+  }
+
+  /* ---------- učitelia ---------- */
+  function mv(p, tx_, ty_, dt) {
+    const dx = tx_ - p.x, dy = ty_ - p.y, d = Math.hypot(dx, dy);
     if(d < 4) return true;
     const s = Math.min(d, p.spd * dt); p.x += dx / d * s; p.y += dy / d * s; p.f += angD(Math.atan2(dy, dx), p.f) * Math.min(1, dt * 8);
     return false;
   }
   function stepP(p, dt) {
-    if(p.cat > 0) {
-      if(!G.cat) { p.cat = 0; return; }
-      p.cat -= dt; p.f += angD(Math.atan2(G.cat.y - p.y, G.cat.x - p.x), p.f) * Math.min(1, dt * 6);
-      if(p.cat <= 0) { G.cat = null; }
+    if(p.k === 'H') {
+      p.bt -= dt; if(p.blind > 0) p.blind -= dt;
+      if(p.bt <= 0 && p.blind <= 0) { p.blind = 1.9; p.bt = rnd(4, 7); if(Math.hypot(P.x - p.x, P.y - p.y) < 330) sfx('sob'); }
+    }
+    if(p.k === 'O') {
+      p.bellT -= dt;
+      if(p.bellT <= 0) { p.bellT = rnd(3.5, 6); if(Math.hypot(P.x - p.x, P.y - p.y) < 280) sfx('bell'); }
+    }
+    const l = p.fav && G.lure[p.fav];
+    if(p.busy > 0) {
+      if(!l) { p.busy = 0; return; }
+      p.busy -= dt; p.f += angD(Math.atan2(l.y - p.y, l.x - p.x), p.f) * Math.min(1, dt * 6);
+      if(p.busy <= 0) { G.lure[p.fav] = null; G.pr.forEach(q => { if(q.fav === p.fav) { q.tgt = null; q.busy = 0; } }); }
       return;
     }
-    if(p.tgt) { if(!G.cat) { p.tgt = null; return; } if(mv(p, p.tgt.x, p.tgt.y, dt)) { p.cat = 5; p.tgt = null; } return; }
+    if(p.tgt) {
+      if(!l) { p.tgt = null; return; }
+      if(mv(p, l.x, l.y, dt)) { p.busy = p.fav === 'cat' ? 5 : 9; p.tgt = null; }
+      return;
+    }
     if(p.d > 0) { p.d -= dt; p.f += angD(p.look, p.f) * Math.min(1, dt * 5); return; }
-    const w = p.wp[p.i];
-    if(mv(p, w[0], w[1], dt)) { p.i = (p.i + 1) % p.wp.length; p.d = rnd(.5, 1.6); p.look = Math.random() < .35 ? Math.atan2(P.y - p.y, P.x - p.x) : p.f + rnd(-1.2, 1.2); }
+    const w = p.roam ? p.rt : p.wp[p.i];
+    if(mv(p, w[0], w[1], dt)) {
+      if(p.roam) { p.rt = [rnd(40, 720), AI2[Math.floor(Math.random() * 4)]]; p.d = rnd(.05, .35); p.look = p.f; }
+      else { p.i = (p.i + 1) % p.wp.length; p.d = rnd(.5, 1.6); p.look = Math.random() < .35 ? Math.atan2(P.y - p.y, P.x - p.x) : p.f + rnd(-1.2, 1.2); }
+    }
   }
   function sees(p) {
-    if(p.cat > 0) return 0;
+    if(p.busy > 0 || p.blind > 0) return 0;
     const dx = P.x - p.x, dy = P.y - p.y, d = Math.hypot(dx, dy);
-    if(d > 200) return 0;
-    return Math.abs(angD(Math.atan2(dy, dx), p.f)) < .5 ? 1 : (d < 80 ? .5 : 0);
+    if(d > p.range) return 0;
+    return Math.abs(angD(Math.atan2(dy, dx), p.f)) < p.ang ? 1 : (d < 80 ? .5 : 0);
   }
-  function spawnCat() {
-    G.cat = {x:rnd(90, 670), y:AIS[Math.floor(Math.random() * 3)], life:11}; G.catT = rnd(14, 22);
-    const k = G.pr[0]; k.tgt = G.cat; k.cat = 0; k.d = 0; flash(x('cat'));
+  function spawnLure(kind, rand) {
+    const l = {x:rnd(90, 670), y:AIS[Math.floor(Math.random() * 3)], life:kind === 'cat' ? 11 : 15};
+    G.lure[kind] = l; if(kind === 'cat') G.catT = rnd(14, 22);
+    G.pr.forEach(p => { if(p.fav === kind) { p.tgt = l; p.busy = 0; p.d = 0; } });
+    if(kind === 'cat' && rand) { flash(tr('cat')); sfx('meow'); }
   }
-  function meow() {
-    if(!G || !G.run) return;
-    if(G.meowCd > 0) { flash(x('cd'), 1.2); return; }
-    if(G.cat) return;
-    spawnCat(); G.meowCd = 24; flash(x('meow'));
+  function act(n) {
+    if(!G || !G.run || G.paused) return;
+    if(n === 'meow') {
+      if(G.cdM > 0) { flash(tr('cd'), 1.2); return; }
+      if(G.lure.cat) return;
+      spawnLure('cat'); G.cdM = 24; flash(tr('meow')); sfx('meow');
+    } else if(n === 'food') {
+      if(!G.pr.some(p => p.fav === 'food')) return;
+      if(G.cdF > 0) { flash(tr('cd'), 1.2); return; }
+      if(G.lure.food) return;
+      spawnLure('food'); G.cdF = 28; flash(tr('fd')); sfx('food');
+    } else if(n === 'spray') {
+      if(!G.pr.some(p => p.smell)) return;
+      if(G.cdV > 0) { flash(tr('cd'), 1.2); return; }
+      G.spray = 6; G.cdV = 22; flash(tr('sp')); sfx('spray');
+    }
   }
 
-  /* ---------- game loop ---------- */
+  /* ---------- herná slučka ---------- */
   function step(dt) {
-    G.T += dt; G.t -= dt; G.mT -= dt; G.meowCd -= dt; G.catT -= dt;
-    if(G.cat) { G.cat.life -= dt; if(G.cat.life <= 0) { G.cat = null; G.pr.forEach(p => { p.tgt = null; p.cat = 0; }); } }
-    else if(G.catT <= 0) spawnCat();
+    G.T += dt; G.t -= dt; G.mT -= dt; G.cdM -= dt; G.cdF -= dt; G.cdV -= dt; G.catT -= dt; G.spray -= dt; G.stT -= dt; G.wt -= dt; G.ct -= dt; G.mt -= dt;
+    ['cat', 'food'].forEach(k => {
+      const l = G.lure[k];
+      if(l) { l.life -= dt; if(l.life <= 0) { G.lure[k] = null; G.pr.forEach(p => { if(p.fav === k) { p.tgt = null; p.busy = 0; } }); } }
+    });
+    if(!G.lure.cat && G.catT <= 0) spawnLure('cat', true);
     G.pr.forEach(p => stepP(p, dt));
-    let w = 0; G.pr.forEach(p => w += sees(p)); G.watch = w > 0;
+    if(G.mt <= 0 && G.pr.some(p => p.fav === 'food' && p.busy > 0)) { G.mt = .45; sfx('munch'); }
+    let w = 0; G.pr.forEach(p => w += sees(p)); w = Math.min(w, 2.2); G.watch = w > 0;
+    // zápach Mastiľáka
+    let st = 0;
+    G.pr.forEach(p => { if(p.smell) { const d = Math.hypot(P.x - p.x, P.y - p.y); if(d < p.smell) st = Math.max(st, 1 - d / p.smell); } });
+    G.stink = G.spray > 0 ? 0 : st;
+    if(G.stink > .3 && G.stT <= 0) { G.stT = 4.5; flash(tr('stink'), 1.6); sfx('cough'); }
     const h = G.held, t = G.tk[G.cur], live = t && !t.done;
     const cheating = h > 0 && G.ch[h] > 0 && live;
-    if(h > 0 && G.ch[h] <= 0 && live && G.mT < 1.5) flash(x('empty'), 1);
+    if(h > 0 && G.ch[h] <= 0 && live && G.mT < 1.5) flash(tr('empty'), 1);
     if(cheating) {
       G.ch[h] -= dt; G.sus += w * 45 * RISK[h] * dt;
-      if(h === 2) G.pr.forEach(p => { if(p.cat <= 0 && Math.hypot(P.x - p.x, P.y - p.y) < 170) G.sus += 22 * dt; });
-      if(h === 1 && !t.sl && G.mT < 1.5) flash(x('nope'), 1);
+      if(h === 2) G.pr.forEach(p => { if(p.busy <= 0 && Math.hypot(P.x - p.x, P.y - p.y) < 170) G.sus += 22 * dt; });
+      if(h === 1 && !t.sl && G.mT < 1.5) flash(tr('nope'), 1);
+      if(G.ct <= 0) { G.ct = .4; sfx('cheat'); }
+      if(w > 0 && !G.prevW) sfx('warn');
     } else G.sus = Math.max(0, G.sus - (h === 0 ? 16 : 9) * dt);
+    G.prevW = cheating && w > 0;
+    if(live && h === 0 && G.wt <= 0) { G.wt = .28; sfx('write'); }
     if(live && (h === 0 || cheating)) {
       let r = .034;
       if(h === 1) r = t.sl ? .24 : .05;
       if(h === 2) r = .3;
       if(h === 3) { r = t.pe ? .2 : .04; t.nb = true; }
+      r *= 1 - .65 * G.stink;
       t.p += r * dt;
       if(t.p >= 1) {
         t.p = 1; t.done = true;
-        if(t.nb && t.pe && Math.random() < .35) { t.bad = true; flash(x('bad')); } else flash(x('ok'), 1.2);
+        if(t.nb && t.pe && Math.random() < .35) { t.bad = true; flash(tr('bad')); sfx('badtask'); } else { flash(tr('ok'), 1.2); sfx('ok'); }
         const n = G.tk.findIndex(q => !q.done);
-        if(n >= 0) G.cur = n; else { draw(); end('done'); return; }
+        if(n >= 0) G.cur = n; else { draw(); clearLevel(); return; }
       }
     }
-    if(G.sus >= 100) { G.sus = 100; draw(); end('caught'); return; }
-    if(G.t <= 0) { G.t = 0; draw(); end('up'); }
-  }
-  function end(kind) {
-    G.run = false; cancelAnimationFrame(raf);
-    let pts = 0, grade = 'FX';
-    if(kind !== 'caught') {
-      G.tk.forEach(t => pts += t.done ? (t.bad ? 50 : 100) : Math.round(t.p * 40));
-      if(G.tk.every(t => t.done)) pts += Math.round(G.t);
-      grade = pts >= 560 ? 'A' : pts >= 500 ? 'B' : pts >= 440 ? 'C' : pts >= 380 ? 'D' : pts >= 330 ? 'E' : 'FX';
-    }
-    const isNew = pts > best(); if(isNew) save('examBest', String(pts));
-    $('#ex-hud').textContent = x('best') + ' ' + best();
-    over.innerHTML = '<h3>' + x(kind) + '</h3><div class="big">' + pts + '</div><p>' + x('grade') + ': <b style="color:#D9A84F;font-size:1.6rem">' + grade + '</b>' + (isNew ? ' 🏆' : '') + '</p><button class="btn" type="button">' + x('again') + '</button><span class="g-hint">' + x('hint') + '</span>';
-    over.style.display = 'flex'; const b = over.querySelector('button'); b.onclick = start; b.focus();
-  }
-  function start() {
-    cancelAnimationFrame(raf); G = fresh(); build(); G.run = true; over.style.display = 'none';
-    flash(x('tasks')[0] + ' →', 1.2); sync(); last = performance.now(); raf = requestAnimationFrame(loop); cv.focus({preventScroll:true});
+    if(G.sus >= 100) { G.sus = 100; draw(); fail('caught'); return; }
+    if(G.t <= 0) { G.t = 0; draw(); fail('up'); }
   }
   function loop(t) {
-    if(!G || !G.run || !modal.classList.contains('open')) return;
+    if(!G || !G.run || G.paused || !modal.classList.contains('open')) return;
     const dt = Math.min(.05, (t - last) / 1000); last = t;
     step(dt); if(!G.run) return;
     draw(); sync(); raf = requestAnimationFrame(loop);
   }
 
-  /* ---------- drawing ---------- */
+  /* ---------- kreslenie ---------- */
   function em(s, px, py, size) { c.font = size + 'px serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#fff'; c.fillText(s, px, py); }
   function tx(s, px, py, size, col, al, wt) { c.font = (wt || 700) + ' ' + size + "px 'Bricolage Grotesque',system-ui,sans-serif"; c.textAlign = al || 'left'; c.textBaseline = 'alphabetic'; c.fillStyle = col; c.fillText(s, px, py); }
   function desk(sx, y) { c.fillStyle = '#000'; c.globalAlpha = .25; c.fillRect(sx - 34, y + 4, 72, 30); c.globalAlpha = 1; c.fillStyle = '#6b4a2b'; c.fillRect(sx - 36, y, 72, 30); c.fillStyle = '#85603a'; c.fillRect(sx - 36, y, 72, 4); }
@@ -2463,49 +2693,76 @@ const EX = (() => {
     c.fillStyle = '#202a33'; c.fillRect(0, 0, W, H);
     c.fillStyle = 'rgba(255,255,255,.03)'; for(let i = 0; i < W; i += 40) c.fillRect(i, 0, 20, H);
     c.fillStyle = '#14352b'; c.fillRect(200, 8, 360, 30); c.strokeStyle = '#8a6a3a'; c.lineWidth = 2; c.strokeRect(200, 8, 360, 30);
-    tx(x('board'), 380, 29, 14, '#E4EEE9', 'center');
+    tx(tr('board'), 380, 29, 14, '#E4EEE9', 'center');
     ROWS.forEach((y, r) => XS.forEach((sx, i) => { desk(sx, y); em(FACE[(r * 7 + i * 3) % 6], sx, y - 8, 19); }));
     [140, 260, 380, 500, 620].forEach(sx => desk(sx, 340));
     em('👦', 260, 332, 21); tx('Peter', 260, 392, 11, '#93A8A0', 'center', 500);
     [140, 500, 620].forEach((sx, i) => em(FACE[(i * 2 + 1) % 6], sx, 332, 19));
     if(G.held === 3 && G.ch[3] > 0) { c.save(); c.setLineDash([5, 5]); c.strokeStyle = '#D9A84F'; c.lineWidth = 2; c.beginPath(); c.moveTo(270, 340); c.lineTo(375, 340); c.stroke(); c.restore(); }
     c.fillStyle = '#f4f1e6'; c.fillRect(362, 344, 36, 22); c.fillStyle = '#9aa'; for(let i = 0; i < 3; i++) c.fillRect(366, 349 + i * 5, 28 - i * 6, 1.5);
-    em('🧑‍💻', 380, 330, 26);
+    em(G.stink > .4 ? '🤢' : '🧑‍💻', 380, 330, 26);
     if(G.held > 0 && G.ch[G.held] > 0) em(['', '📄', '📱', '👀'][G.held], 380, 302, 22);
+    if(G.spray > 0) { c.beginPath(); c.arc(P.x, P.y - 10, 62, 0, TAU); c.fillStyle = 'rgba(100,200,255,' + (.12 + .08 * Math.sin(G.T * 6)).toFixed(2) + ')'; c.fill(); em('🧴', 412, 318, 18); }
+    // zápach (aura)
     G.pr.forEach(p => {
-      if(p.cat > 0) return;
+      if(!p.smell) return;
+      const R = p.smell * (1 + Math.sin(G.T * 3) * .05), gr = c.createRadialGradient(p.x, p.y, 10, p.x, p.y, R);
+      gr.addColorStop(0, 'rgba(140,200,50,.34)'); gr.addColorStop(1, 'rgba(140,200,50,0)');
+      c.fillStyle = gr; c.beginPath(); c.arc(p.x, p.y, R, 0, TAU); c.fill();
+      for(let i = 0; i < 4; i++) { const a = G.T * 1.4 + i * 1.6; em('💨', p.x + Math.cos(a) * (50 + i * 12), p.y + Math.sin(a * 1.2) * 38, 15); }
+    });
+    // kužele dozoru
+    G.pr.forEach(p => {
+      if(p.busy > 0) return;
       const s = sees(p) > 0 && G.held > 0;
-      c.beginPath(); c.moveTo(p.x, p.y); c.arc(p.x, p.y, 200, p.f - .5, p.f + .5); c.closePath();
-      c.fillStyle = s ? 'rgba(255,80,70,.28)' : 'rgba(255,214,90,.14)'; c.fill();
+      c.beginPath(); c.moveTo(p.x, p.y); c.arc(p.x, p.y, p.range, p.f - p.ang, p.f + p.ang); c.closePath();
+      c.fillStyle = p.blind > 0 ? 'rgba(120,120,140,.07)' : s ? 'rgba(255,80,70,.28)' : 'rgba(255,214,90,.14)'; c.fill();
     });
+    // učitelia
     G.pr.forEach(p => {
-      c.beginPath(); c.arc(p.x, p.y, 17, 0, TAU); c.fillStyle = '#183029'; c.fill(); c.strokeStyle = p.cat > 0 ? '#ff9ec4' : '#D9A84F'; c.lineWidth = 2; c.stroke();
-      em(p.e, p.x, p.y + 1, 20); tx(p.n, p.x, p.y + 32, 11, '#E4EEE9', 'center', 600);
-      if(p.cat > 0) em('💕', p.x, p.y - 28 + Math.sin(G.T * 6) * 3, 16);
+      if(p.k === 'O') { em('🛴', p.x, p.y + 16, 22); }
+      c.beginPath(); c.arc(p.x, p.y, 17, 0, TAU); c.fillStyle = '#183029'; c.fill(); c.strokeStyle = p.busy > 0 ? '#ff9ec4' : '#D9A84F'; c.lineWidth = 2; c.stroke();
+      em(p.e, p.x, p.y + 1, 20); tx(p.n, p.x, p.y + 34, 11, '#E4EEE9', 'center', 600);
+      if(p.busy > 0) em(p.fav === 'food' ? '🍔' : '💕', p.x, p.y - 28 + Math.sin(G.T * 6) * 3, 16);
+      else if(p.blind > 0) em('🙈', p.x, p.y - 28, 16);
       else if(sees(p) > 0 && G.held > 0) tx('!', p.x, p.y - 22, 24, '#ff7b72', 'center', 800);
+      if(p.k === 'H' && p.blind <= 0) em('💧', p.x + 14, p.y + 6 + Math.sin(G.T * 5) * 3, 11);
     });
-    if(G.cat) { const cy = G.cat.y + Math.sin(G.T * 5) * 2; em('🐈', G.cat.x, cy, 28); tx('mňau', G.cat.x, cy - 24, 12, '#ff9ec4', 'center', 600); }
-    tx(x('susp'), 14, 22, 11, '#93A8A0', 'left', 600);
+    if(G.lure.cat) { const l = G.lure.cat, cy = l.y + Math.sin(G.T * 5) * 2; em('🐈', l.x, cy, 28); tx('mňau', l.x, cy - 24, 12, '#ff9ec4', 'center', 600); }
+    if(G.lure.food) { const l = G.lure.food, cy = l.y + Math.sin(G.T * 6) * 3; em('🍔', l.x, cy, 28); }
+    if(G.stink > 0) { c.fillStyle = 'rgba(120,200,60,' + (G.stink * .2).toFixed(3) + ')'; c.fillRect(0, 0, W, H); }
+    // HUD v canvase
+    tx(tr('susp'), 14, 22, 11, '#93A8A0', 'left', 600);
     c.fillStyle = 'rgba(0,0,0,.45)'; c.fillRect(14, 28, 170, 10);
     c.fillStyle = G.sus > 66 ? '#ff7b72' : G.sus > 33 ? '#F2B84B' : '#10B981'; c.fillRect(14, 28, 170 * G.sus / 100, 10);
-    tx(x('time') + ' ' + Math.ceil(G.t) + ' s', W - 14, 22, 14, G.t < 20 ? '#ff7b72' : '#E4EEE9', 'right');
+    if(G.pr.some(p => p.smell)) {
+      tx(tr('stinkL'), 14, 56, 11, '#93A8A0', 'left', 600);
+      c.fillStyle = 'rgba(0,0,0,.45)'; c.fillRect(14, 62, 170, 8);
+      c.fillStyle = '#9acd32'; c.fillRect(14, 62, 170 * G.stink, 8);
+    }
+    tx(tr('time') + ' ' + Math.ceil(G.t) + ' s', W - 14, 22, 14, G.t < 20 ? '#ff7b72' : '#E4EEE9', 'right');
+    tx(tr('lv') + ' ' + G.lv + '/' + MAXLV, W - 14, 42, 12, '#D9A84F', 'right', 600);
     if(G.sus > 55) { c.strokeStyle = 'rgba(255,80,70,' + ((G.sus - 55) / 90).toFixed(2) + ')'; c.lineWidth = 8; c.strokeRect(0, 0, W, H); }
     if(G.mT > 0) { c.globalAlpha = Math.min(1, G.mT); tx(G.msg, W / 2, 66, 16, '#F2B84B', 'center'); c.globalAlpha = 1; }
   }
 
-  /* ---------- input ---------- */
-  $('#ex-tasks').addEventListener('click', e => { const b = e.target.closest('.ex-task'); if(b && G && G.run && !G.tk[+b.dataset.i].done) G.cur = +b.dataset.i; });
+  /* ---------- vstupy ---------- */
+  $('#ex-tasks').addEventListener('click', e => { const b = e.target.closest('.ex-task'); if(b && G && G.run && !G.paused && !G.tk[+b.dataset.i].done) G.cur = +b.dataset.i; });
   const tl = $('#ex-tools');
-  tl.addEventListener('pointerdown', e => { const b = e.target.closest('.ex-tool'); if(b && G && G.run) { G.held = +b.dataset.i; e.preventDefault(); } });
+  tl.addEventListener('pointerdown', e => { const b = e.target.closest('.ex-tool'); if(b && G && G.run && !G.paused) { G.held = +b.dataset.i; e.preventDefault(); } });
   ['pointerup', 'pointercancel', 'pointerleave'].forEach(n => tl.addEventListener(n, () => { if(G) G.held = -1; }));
   addEventListener('keydown', e => {
     if(!modal.classList.contains('open')) return;
     const k = e.key.toLowerCase();
     if(k === 'escape') { close(); return; }
-    if(!G || !G.run) return;
+    if(k === 's') { toggleSnd(); return; }
+    if(k === 'p') { pause(); return; }
+    if(!G || !G.run || G.paused) return;
     if(k in KEYS) { e.preventDefault(); G.held = KEYS[k]; return; }
-    if(/^[1-6]$/.test(k) && !G.tk[k - 1].done) G.cur = k - 1;
-    if(k === 'm') meow();
+    if(/^[0-9]$/.test(k)) { const i = k === '0' ? 9 : +k - 1; if(i < G.N && !G.tk[i].done) G.cur = i; return; }
+    if(k === 'm') act('meow');
+    if(k === 'f') act('food');
+    if(k === 'v') act('spray');
   });
   addEventListener('keyup', e => { const k = e.key.toLowerCase(); if(G && k in KEYS && G.held === KEYS[k]) G.held = -1; });
 
@@ -2514,10 +2771,7 @@ const EX = (() => {
     if(gOpen()) closeGame(true);
     if(typeof WS !== 'undefined' && WS.isOpen()) WS.close(true);
     termModal.classList.remove('open'); termInput.blur();
-    G = fresh(); build(); sync(); draw();
-    modal.classList.add('open');
-    over.innerHTML = '<h3>' + x('title') + '</h3><p>' + x('how') + '</p><button class="btn" type="button">' + x('start') + '</button><span class="g-hint">' + x('hint') + '</span>';
-    over.style.display = 'flex'; const b = over.querySelector('button'); b.onclick = start; b.focus();
+    modal.classList.add('open'); gAudio(); startRun();
   }
   function close(silent) {
     if(G) G.run = false; cancelAnimationFrame(raf);
@@ -2526,7 +2780,10 @@ const EX = (() => {
   }
   $('#ex-close').onclick = () => close();
   modal.addEventListener('mousedown', e => { if(e.target === modal) close(); });
-  document.addEventListener('visibilitychange', () => { last = performance.now(); });
+  document.addEventListener('visibilitychange', () => {
+    if(G && G.run && document.hidden && !G.paused && modal.classList.contains('open')) pause();
+    else last = performance.now();
+  });
   return {open, close, isOpen: () => modal.classList.contains('open')};
 })();
   
