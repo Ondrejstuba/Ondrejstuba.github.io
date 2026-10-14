@@ -1226,7 +1226,7 @@ termInput.onkeydown = (e) => {
       setTimeout(() => openGame(), 650);
     } else if(val === 'play 2') {
       appendTermLine(T[lang].term_play2, '#D9A84F');
-      setTimeout(() => WS.open(), 650);
+      setTimeout(() => WS.open(), 650); 
     } else if(val === 'play 3') {
       appendTermLine(lang === 'sk' ? 'Beriem si ťaháčiky a idem na písomku k Kováčovej...' : 'Packing my cheat sheets and heading to Kováčová’s exam...', '#D9A84F');
       setTimeout(() => EX.open(), 650);
