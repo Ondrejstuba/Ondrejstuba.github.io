@@ -277,7 +277,6 @@ h3{font-family:var(--head);font-weight:700;font-size:1.25rem;color:var(--accent)
 
 /* Hidden minigame #3: EXAM */
 #ex-modal{position:fixed;inset:0;background:rgba(4,9,7,.78);backdrop-filter:blur(6px);z-index:110;display:flex;align-items:center;justify-content:center;padding:14px;opacity:0;pointer-events:none;transition:opacity .3s}
-<div id="st-modal" role="dialog" aria-modal="true" aria-label="Striptease minigame"></div>
 #ex-modal.open{opacity:1;pointer-events:auto}
 .ex-window{position:relative;width:100%;max-width:820px;max-height:96vh;overflow:auto;background:#10161c;color:#E4EEE9;border:1px solid #3a4a5a;border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.6)}
 .ex-window .game-head{background:#18222c;border-bottom-color:#3a4a5a}
@@ -2333,10 +2332,13 @@ const WS = (() => {
    HIDDEN MINIGAME #3: EXAM v2  (terminal: play 3)
    10 levelov, 5 učiteľov, rastúci počet príkladov, zvuky, pauza, životy.
    ===================================================================== */
+  
 const EX = (() => {
   const W = 760, H = 400, TAU = Math.PI * 2, MAXLV = 10;
-  const modal = $('#st-modal');
+  const modal = $('#ex-modal');                       // bolo #st-modal
+  const cv = $('#ex-canvas'), c = cv.getContext('2d'), over = $('#ex-over');
   const dpr = Math.min(2, window.devicePixelRatio || 1);
+  cv.width = W * dpr; cv.height = H * dpr;
   
   /* ---------- štýly vložené z JS ---------- */
   (() => {
