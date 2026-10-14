@@ -1230,7 +1230,10 @@ termInput.onkeydown = (e) => {
     } else if(val === 'play 3') {
       appendTermLine(lang === 'sk' ? 'Beriem si ťaháčiky a idem na písomku k Kováčovej...' : 'Packing my cheat sheets and heading to Kováčová’s exam...', '#D9A84F');
       setTimeout(() => EX.open(), 650);
-    } else if(val !== '') appendTermLine(T[lang].term_unknown.replace('{cmd}', val), '#ff7b72');
+    } else if(val === 'play 4') {
+      appendTermLine(lang === 'sk' ? 'Beriem ruksak a idem na lov plechoviek...' : 'Grabbing my backpack and going can hunting...', '#D9A84F');
+      setTimeout(() => CN.open(), 650);
+    else if(val !== '') appendTermLine(T[lang].term_unknown.replace('{cmd}', val), '#ff7b72');
     termBody.scrollTop = termBody.scrollHeight;
   }
 };
@@ -2779,6 +2782,726 @@ const EX = (() => {
     if(!silent) backToTerminal();
   }
   $('#ex-close').onclick = () => close();
+  modal.addEventListener('mousedown', e => { if(e.target === modal) close(); });
+  document.addEventListener('visibilitychange', () => {
+    if(G && G.run && document.hidden && !G.paused && modal.classList.contains('open')) pause();
+    else last = performance.now();
+  });
+  return {open, close, isOpen: () => modal.classList.contains('open')};
+})();
+
+/* =====================================================================
+   HIDDEN MINIGAME #4: CAN HUNT  (terminal: play 4)
+   8 levelov, 6 typov ľudí, kužele pohľadu s krytím za stĺpmi, trápnosť,
+   ruksak, zálohomat, obchodík s vylepšeniami, zvuky, pauza, životy.
+   ===================================================================== */
+const CN = (() => {
+  const W = 760, H = 400, TAU = Math.PI * 2, MAXLV = 8, AX0 = 14, AX1 = 746, AY0 = 58, AY1 = 388, CAN = 15, GOLD = 45;
+
+  /* ---------- štýly vložené z JS ---------- */
+  (() => {
+    const s = document.createElement('style');
+    s.textContent = `
+#cn-modal{position:fixed;inset:0;background:rgba(4,9,7,.78);backdrop-filter:blur(6px);z-index:110;display:flex;align-items:center;justify-content:center;padding:14px;opacity:0;pointer-events:none;transition:opacity .3s}
+#cn-modal.open{opacity:1;pointer-events:auto}
+.cn-window{position:relative;width:100%;max-width:820px;max-height:96vh;overflow:auto;background:#101a16;color:#E4EEE9;border:1px solid #3d6b4f;border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.6)}
+.cn-window .game-head{background:#16281f;border-bottom-color:#3d6b4f}
+.cn-window .g-close{border-color:#3d6b4f}
+#cn-canvas{display:block;margin:0 auto;width:100%;height:auto;aspect-ratio:760/400;touch-action:none;outline:none}
+.cn-ui{padding:10px 14px 14px;display:flex;gap:8px;flex-wrap:wrap}
+.cn-btn{position:relative;overflow:hidden;flex:1 1 130px;min-height:52px;border-radius:10px;border:1.5px solid #3d6b4f;background:#16281f;color:#E4EEE9;font:700 .9rem var(--body);cursor:pointer;padding:8px;-webkit-user-select:none;user-select:none;touch-action:none}
+.cn-btn.on{background:#2C5248;border-color:#D9A84F}
+.cn-btn i{position:absolute;left:0;bottom:0;height:4px;width:0;background:#58a6ff}
+.cn-btn small{display:block;font-weight:400;font-size:.72rem;color:#93A8A0}
+#cn-over{display:none;padding:16px;gap:10px;overflow:auto;justify-content:flex-start}
+#cn-over>*:first-child{margin-top:auto}
+#cn-over>*:last-child{margin-bottom:auto}
+#cn-over .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+#cn-over .big{font-size:2.6rem}
+#cn-over .tcard{display:flex;align-items:center;gap:14px;background:#183029;border:1px solid #D9A84F;border-radius:12px;padding:10px 16px;max-width:56ch;text-align:left;font-size:.9rem}
+#cn-over .tcard .em{font-size:2.4rem;line-height:1}
+#cn-over .shopt{font-size:.9rem;color:#B9CBC4}
+#cn-over .shop{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;max-width:600px;width:100%}
+#cn-over .si{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;background:#16281f;border:1.5px solid #3d6b4f;border-radius:10px;color:#E4EEE9;padding:8px 10px;cursor:pointer;font:600 .82rem var(--body)}
+#cn-over .si small{font-weight:400;font-size:.72rem;color:#93A8A0}
+#cn-over .si em{font-style:normal;color:#D9A84F;font-family:var(--code)}
+#cn-over .si:disabled{opacity:.4;cursor:not-allowed}
+#cn-over .si:not(:disabled):hover{border-color:#D9A84F}
+@media (max-width:620px){#cn-over .shop{grid-template-columns:1fr}}
+`;
+    document.head.appendChild(s);
+  })();
+
+  /* ---------- DOM (vytvorí sa samo) ---------- */
+  const modal = document.createElement('div');
+  modal.id = 'cn-modal'; modal.setAttribute('role', 'dialog'); modal.setAttribute('aria-modal', 'true');
+  modal.innerHTML = '<div class="cn-window"><div class="game-head"><span class="game-title" id="cn-title"></span><div class="g-hud"><span id="cn-hud"></span></div><div class="g-btns" id="cn-btns"></div></div>' +
+    '<canvas id="cn-canvas" width="760" height="400" tabindex="0"></canvas>' +
+    '<div class="cn-ui"><button class="cn-btn" id="cn-act" type="button"></button><button class="cn-btn" id="cn-phone" type="button"></button><button class="cn-btn" id="cn-run" type="button"></button></div>' +
+    '<div class="g-over" id="cn-over"></div></div>';
+  document.body.appendChild(modal);
+  const cv = $('#cn-canvas'), c = cv.getContext('2d'), over = $('#cn-over'), hudEl = $('#cn-hud'), btns = $('#cn-btns'),
+        bAct = $('#cn-act'), bPh = $('#cn-phone'), bRun = $('#cn-run');
+  const dpr = Math.min(2, window.devicePixelRatio || 1); cv.width = W * dpr; cv.height = H * dpr;
+  const cnSnd = document.createElement('button'), cnPause = document.createElement('button'), cnClose = document.createElement('button');
+  [cnPause, cnSnd, cnClose].forEach(b => { b.type = 'button'; b.className = 'g-close'; btns.appendChild(b); });
+  cnClose.textContent = '✕';
+  let phI = null;
+
+  /* ---------- texty ---------- */
+  const L = {
+    sk: {title:'CAN HUNT · Zber plechoviek',
+      how:'Plechovky v košoch sú zadarmo peniaze: každá je 15 centov záloha. Lenže nikto ťa pri hrabaní nesmie vidieť, to je trápne! Hýb sa šípkami alebo WASD (Shift = šprint), pri koši drž E alebo MEDZERNÍK a hrab. Plechovky skladáš do ruksaka. Potom bež k zálohomatu ♻️ a drž E, aby si ich zmenil na eurá. Ľudia majú kužele pohľadu, stĺpy a rastliny ich blokujú. Keď ťa pri hrabaní niekto vidí, rastie Trápnosť. Pri 100 ťa odhalia: stratíš život a vysypú sa plechovky. Q = predstieraj telefón. Plechovky v ruksaku štrngajú a ľudia sa otáčajú. P = pauza, M = zvuk.',
+      lv:'Level', goal:'Cieľ', time:'Čas', bag:'Ruksak', lives:'Životy', start:'Ísť na lov', next:'Ďalší level', retry:'Skúsiť level znova', again:'Nový pokus',
+      shame:'Trápnosť', wallet:'Peňaženka', shop:'Vybavenie',
+      cleared:'Level splnený!', gameover:'Koniec lovu', win:'Zbieral si cez celé mesto! 🏆',
+      caught:'Všetci sa na teba pozerali. Trápnosti bolo dosť.', up:'Čas vypršal, nestihol si vyzbierať cieľ.',
+      reached:'Dosiahnutý level', rank:'Hodnosť', ranks:['Nováčik','Zberač','Profík','Majster záloh','Legenda záloh'], total:'Zárobok spolu', best:'Rekord', newrec:'Nový rekord!', hint:'Esc = späť do terminálu',
+      bank:'Zálohované', bonusT:'Bonus za čas', bonusS:'Bonus za nenápadnosť', bonusL:'Bonus za životy',
+      paused:'Pauza', pause_hint:'P = pokračovať', resume:'Pokračovať', snd:'Zvuk zap./vyp. (M)', pause_btn:'Pauza (P)',
+      b_act:'🥫 Hrabať / Zálohovať', b_ph:'📱 Predstieraj telefón', b_run:'💨 Šprint',
+      full:'Ruksak je plný! Bež k zálohomatu.', nothing:'Prázdne...', gold:'Zlatá plechovka! +0,45 €', kid:'Mami, ten pán hrabe v koši!',
+      busted:'Odhalili ťa! 😳', busted2:'Odhalili ťa a plechovky sa vysypali! 😳', stole:'Konkurent ti zobral plechovky!', swept:'Kôš vyprázdnený!',
+      hurry:'Zostáva 10 s! Zálohuj plechovky!', phoneOn:'Predstieraš telefón...', cdPhone:'Telefón sa ešte nabíja', startHint:'Choď ku košu a drž E',
+      u_bag:'Väčší ruksak', ud_bag:'+2 miesta na plechovky', u_glove:'Rukavice', ud_glove:'Rýchlejšie hrabanie', u_hood:'Kapucňa', ud_hood:'Menší dosah pohľadov',
+      u_pad:'Penové vložky', ud_pad:'Tichší ruksak',
+      n_l1:'Nákupné centrum · WC chodba', n_l2:'Železničná stanica', n_l3:'Park pri fontáne', n_l4:'Autobusová stanica', n_l5:'Hudobný festival', n_l6:'Futbalový štadión', n_l7:'Black Friday · nákupná zóna', n_l8:'Letisko · terminál',
+      nt_walker:'Okoloidúci', nt_phone:'Mobilomil', nt_kid:'Dieťa', nt_guard:'Ochrankár', nt_janitor:'Upratovač', nt_rival:'Konkurent', nt_crowd:'Black Friday', nt_final:'Letisko',
+      d_walker:'Obyčajný okoloidúci. Vidí pred seba a otočí sa na hluk. Využi stĺpy a rastliny ako kryt.',
+      d_phone:'Pozerá do mobilu a vidí len zblízka. Keď ale zaštrngáš, zdvihne hlavu.',
+      d_kid:'Malé dieťa s veľkým zorným poľom. Keď ťa uvidí hrabať, zakričí a trápnosť skočí.',
+      d_guard:'Ochrankár má dlhý dosah a pri ňom trápnosť rastie najrýchlejšie.',
+      d_janitor:'Obchádza koše a vyprázdňuje ich aj s plechovkami. Pri koši, v ktorom hrabeš, počká.',
+      d_rival:'Konkurent v zbere plechoviek. Rýchlo beží k plným košom a berie všetko. Pri koši, v ktorom hrabeš, počká.',
+      d_crowd:'Black Friday: plno ľudí! Hľadaj kúty za stĺpmi.',
+      d_final:'Letisko: všetci naraz, dvaja ochrankári aj dvaja konkurenti. Veľa šťastia!',
+      tips:['Stĺpy a rastliny blokujú pohľady, hrab za nimi.','Telefón zníži trápnosť, ale spomalí hrabanie.','Štrngot ruksaka priláka pohľady. Nešprintuj s plným ruksakom.','Upratovač a konkurent počkajú, ak pri koši práve hrabeš.','Zlatá plechovka (od levelu 5) má hodnotu 0,45 €.','Penové vložky stíšia ruksak, kapucňa zmenší dosah pohľadov.']},
+    en: {title:'CAN HUNT · Can collecting',
+      how:'Cans in the bins are free money: each is a 15 cent deposit. But nobody may see you digging, that is embarrassing! Move with arrows or WASD (Shift = sprint), hold E or SPACE at a bin to dig. Cans go into your backpack. Then run to the return machine ♻️ and hold E to turn them into euros. People have vision cones, pillars and plants block them. If someone sees you digging, Embarrassment rises. At 100 you are exposed: you lose a life and cans spill. Q = pretend to use your phone. Cans clink in your backpack and people turn around. P = pause, M = sound.',
+      lv:'Level', goal:'Goal', time:'Time', bag:'Backpack', lives:'Lives', start:'Go hunting', next:'Next level', retry:'Retry level', again:'New attempt',
+      shame:'Embarrassment', wallet:'Wallet', shop:'Gear',
+      cleared:'Level cleared!', gameover:'Hunt over', win:'You collected across the whole city! 🏆',
+      caught:'Everybody was staring at you. Enough embarrassment.', up:'Time is up, you missed the goal.',
+      reached:'Level reached', rank:'Rank', ranks:['Rookie','Collector','Pro','Deposit Master','Deposit Legend'], total:'Total earned', best:'Best', newrec:'New record!', hint:'Esc = back to terminal',
+      bank:'Deposited', bonusT:'Time bonus', bonusS:'Stealth bonus', bonusL:'Lives bonus',
+      paused:'Paused', pause_hint:'P = resume', resume:'Resume', snd:'Sound on/off (M)', pause_btn:'Pause (P)',
+      b_act:'🥫 Dig / Deposit', b_ph:'📱 Fake phone call', b_run:'💨 Sprint',
+      full:'Backpack is full! Run to the machine.', nothing:'Empty...', gold:'Golden can! +€0.45', kid:'Mommy, that man is digging in the bin!',
+      busted:'You are exposed! 😳', busted2:'You are exposed and cans spilled! 😳', stole:'A rival took the cans!', swept:'Bin emptied!',
+      hurry:'10 s left! Deposit your cans!', phoneOn:'Pretending to use your phone...', cdPhone:'Phone is still recharging', startHint:'Walk to a bin and hold E',
+      u_bag:'Bigger backpack', ud_bag:'+2 can slots', u_glove:'Gloves', ud_glove:'Faster digging', u_hood:'Hoodie', ud_hood:'Shorter sight range',
+      u_pad:'Foam padding', ud_pad:'Quieter backpack',
+      n_l1:'Mall · Restroom corridor', n_l2:'Train station', n_l3:'Park by the fountain', n_l4:'Bus station', n_l5:'Music festival', n_l6:'Football stadium', n_l7:'Black Friday · shopping zone', n_l8:'Airport · terminal',
+      nt_walker:'Passer-by', nt_phone:'Phone zombie', nt_kid:'Kid', nt_guard:'Security guard', nt_janitor:'Janitor', nt_rival:'Rival', nt_crowd:'Black Friday', nt_final:'Airport',
+      d_walker:'An ordinary passer-by. Sees ahead and turns toward noise. Use pillars and plants as cover.',
+      d_phone:'Stares at the phone and only sees you up close. If you clink, the head comes up.',
+      d_kid:'A small kid with a wide field of view. If it sees you digging, it shouts and embarrassment spikes.',
+      d_guard:'Long range, and embarrassment grows fastest around him.',
+      d_janitor:'Walks around emptying bins with their cans. Waits if you are digging in that bin.',
+      d_rival:'A fellow can collector. Rushes to full bins and takes everything. Waits if you are digging in that bin.',
+      d_crowd:'Black Friday: crowds! Look for corners behind pillars.',
+      d_final:'Airport: everyone at once, two guards and two rivals. Good luck!',
+      tips:['Pillars and plants block sight, dig behind them.','The phone lowers embarrassment but slows digging.','A clinking backpack attracts looks. Do not sprint with a full bag.','Janitors and rivals wait if you are digging in that bin.','The golden can (from level 5) is worth €0.45.','Foam padding quiets the bag, the hoodie shortens sight ranges.']}
+  };
+  const tr = k => { const d = L[lang] || L.sk; return d[k] !== undefined ? d[k] : (L.sk[k] !== undefined ? L.sk[k] : k); };
+  const fmt = v => { const s = (v / 100).toFixed(2); return (lang === 'sk' ? s.replace('.', ',') : s) + ' €'; };
+  const rnd = (a, b) => a + Math.random() * (b - a), clamp = (v, a, b) => Math.max(a, Math.min(b, v)), pick = a => a[Math.floor(Math.random() * a.length)];
+  const angD = (a, b) => { let d = a - b; while(d > Math.PI) d -= TAU; while(d < -Math.PI) d += TAU; return d; };
+  const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+  const best = () => +load('canBest') || 0, bestLv = () => +load('canBestLvl') || 0;
+
+  /* ---------- dáta ---------- */
+  const PAL = [['#cfd8dc', '#c0cad0', '#37474f'], ['#cdc6b8', '#c0b9aa', '#4a4337'], ['#6fa05a', '#659653', '#2f4a2a'], ['#b9c0c7', '#adb5bd', '#2f3a46'],
+               ['#5a4a7a', '#51426f', '#241a3a'], ['#9aa88a', '#8e9c7e', '#2d3a2a'], ['#ece4d4', '#e0d7c4', '#5a1f1f'], ['#e3eaf2', '#d6dfe9', '#1f3347']];
+  const BINC = ['#3f7d5c', '#4a6fa5', '#8a6d3b', '#6b5b95', '#5a7f8a'];
+  const LAYS = [
+    {obs:[[210,146,28,28,'pil'],[550,146,28,28,'pil'],[210,296,28,28,'pil'],[550,296,28,28,'pil'],[380,215,110,22,'ben'],[50,92,30,30,'plt'],[700,350,30,30,'plt']],
+     bins:[[176,146],[582,146],[176,296],[582,296],[380,100],[380,350],[100,215],[650,215],[300,160],[460,270]], mach:[722,215,36,56], spawn:[380,372]},
+    {obs:[[170,120,140,20,'ben'],[590,120,140,20,'ben'],[170,290,140,20,'ben'],[590,290,140,20,'ben'],[380,205,34,34,'pil'],[60,215,60,80,'kio']],
+     bins:[[110,150],[640,150],[110,330],[640,330],[260,200],[500,200],[380,330],[250,90],[510,90],[700,230]], mach:[380,78,64,30], spawn:[700,372]},
+    {obs:[[150,110,28,28,'pil'],[380,140,28,28,'pil'],[610,110,28,28,'pil'],[250,250,28,28,'pil'],[510,250,28,28,'pil'],[120,320,28,28,'pil'],[640,320,28,28,'pil'],[380,330,36,36,'plt'],[56,200,28,90,'kio']],
+     bins:[[180,110],[410,140],[580,110],[220,250],[540,250],[150,320],[610,320],[380,290],[100,150],[660,150]], mach:[722,230,36,56], spawn:[380,372]}
+  ];
+  const LV = [
+    {k:'l1', lay:0, pal:0, n:6,  bins:4,  cap:6,  ppl:{walker:2}, nw:'walker'},
+    {k:'l2', lay:1, pal:1, n:9,  bins:5,  cap:6,  ppl:{walker:2, phone:1}, nw:'phone'},
+    {k:'l3', lay:2, pal:2, n:12, bins:6,  cap:8,  ppl:{walker:2, phone:1, kid:1}, nw:'kid'},
+    {k:'l4', lay:1, pal:3, n:15, bins:7,  cap:8,  ppl:{walker:2, phone:1, kid:1, guard:1}, nw:'guard'},
+    {k:'l5', lay:2, pal:4, n:18, bins:8,  cap:10, ppl:{walker:3, phone:2, kid:1, guard:1, janitor:1}, nw:'janitor'},
+    {k:'l6', lay:0, pal:5, n:21, bins:8,  cap:10, ppl:{walker:3, phone:2, kid:1, guard:1, janitor:1, rival:1}, nw:'rival'},
+    {k:'l7', lay:1, pal:6, n:24, bins:9,  cap:12, ppl:{walker:4, phone:2, kid:2, guard:1, janitor:1, rival:1}, nw:'crowd'},
+    {k:'l8', lay:2, pal:7, n:28, bins:10, cap:12, ppl:{walker:4, phone:2, kid:2, guard:2, janitor:1, rival:2}, nw:'final'}
+  ];
+  const NWE = {walker:'🧑', phone:'📱', kid:'🧒', guard:'💂', janitor:'🧹', rival:'🧔', crowd:'🛍️', final:'✈️'};
+  const WE = ['🧑', '👩', '👨', '🧓', '👱‍♀️', '👩‍🦰'];
+  const TY = {
+    walker: {e:'🧑', spd:42, range:140, ang:.6,  mult:1,   per:42},
+    phone:  {e:'🧑', spd:30, range:75,  ang:.5,  mult:.8,  per:28},
+    kid:    {e:'🧒', spd:58, range:125, ang:.85, mult:1.5, per:42},
+    guard:  {e:'💂', spd:30, range:180, ang:.55, mult:1.8, per:42},
+    janitor:{e:'🧑‍🔧', spd:34, range:100, ang:.5,  mult:.8,  per:42},
+    rival:  {e:'🧔', spd:72, range:0,   ang:0,   mult:0,   per:0}
+  };
+  const UP = {bag:{max:3, cost:[60, 90, 120], ic:'🎒'}, glove:{max:3, cost:[75, 110, 150], ic:'🧤'}, hood:{max:3, cost:[90, 130, 180], ic:'🧢'}, pad:{max:2, cost:[45, 80], ic:'🧦'}};
+
+  let S = null, G = null, raf = 0, last = 0;
+  const K = {l:0, r:0, u:0, d:0, sh:0, act:0}, ptr = {x:0, y:0, down:false};
+  let bActHeld = false, bRunHeld = false;
+
+  /* ---------- geometria ---------- */
+  function segT(x1, y1, x2, y2, o, pad) {
+    pad = pad || 0;
+    const l = o.x - o.w / 2 - pad, r = o.x + o.w / 2 + pad, t = o.y - o.h / 2 - pad, b = o.y + o.h / 2 + pad;
+    const dx = x2 - x1, dy = y2 - y1, P_ = [-dx, dx, -dy, dy], Q = [x1 - l, r - x1, y1 - t, b - y1];
+    let t0 = 0, t1 = 1;
+    for(let i = 0; i < 4; i++) {
+      const p = P_[i], q = Q[i];
+      if(p === 0) { if(q < 0) return -1; }
+      else {
+        const u = q / p;
+        if(p < 0) { if(u > t1) return -1; if(u > t0) t0 = u; }
+        else { if(u < t0) return -1; if(u < t1) t1 = u; }
+      }
+    }
+    return t0;
+  }
+  function collide(x, y, r) {
+    for(const o of G.obs) if(x > o.x - o.w / 2 - r && x < o.x + o.w / 2 + r && y > o.y - o.h / 2 - r && y < o.y + o.h / 2 + r) return true;
+    return false;
+  }
+  function moveEnt(e, dx, dy, r) {
+    if(!collide(e.x + dx, e.y, r)) e.x += dx;
+    if(!collide(e.x, e.y + dy, r)) e.y += dy;
+    e.x = clamp(e.x, AX0 + r, AX1 - r); e.y = clamp(e.y, AY0 + r, AY1 - r);
+  }
+  function rndFree(pad) {
+    for(let i = 0; i < 60; i++) { const x = rnd(AX0 + 20, AX1 - 20), y = rnd(AY0 + 20, AY1 - 20); if(!collide(x, y, pad || 12)) return [x, y]; }
+    return [380, 215];
+  }
+  const losBlocked = (x1, y1, x2, y2) => G.vis.some(o => segT(x1, y1, x2, y2, o, 0) >= 0);
+  const walkBlocked = (x1, y1, x2, y2) => G.obs.some(o => segT(x1, y1, x2, y2, o, 10) >= 0);
+  function distRect(p, m) { const dx = Math.max(Math.abs(p.x - m.x) - m.w / 2, 0), dy = Math.max(Math.abs(p.y - m.y) - m.h / 2, 0); return Math.hypot(dx, dy); }
+
+  /* ---------- zvuk (využíva gTone / gNoise z Night Shift) ---------- */
+  function sfx(n, a) {
+    switch(n) {
+      case 'clink': { const f = 2200 + Math.min(a || 0, 12) * 90; gNoise(.04, .03, 0, 6500); gTone(f, .07, 'triangle', .05); gTone(f * 1.5, .12, 'sine', .03, .05); break; }
+      case 'gold': [1568, 1976, 2349, 3136].forEach((f, i) => gTone(f, .12, 'triangle', .045, i * .06)); break;
+      case 'rustle': gNoise(.08, .03, 0, 1200 + Math.random() * 900); break;
+      case 'empty': gTone(260, .14, 'sine', .04, 0, 200); break;
+      case 'full': gTone(220, .1, 'square', .04); gTone(170, .16, 'square', .04, .1); break;
+      case 'bagclink': gNoise(.035, .025, 0, 5200); gTone(3100, .03, 'triangle', .012); gTone(2700, .04, 'triangle', .01, .05); break;
+      case 'dep': { const f = 1319 * Math.pow(2, Math.min(a || 0, 8) / 12); gTone(f, .05, 'square', .03); gTone(f * 1.5, .16, 'square', .03, .05); gNoise(.05, .03, 0, 3500); break; }
+      case 'notice': gTone(900, .06, 'square', .03); gTone(600, .1, 'square', .03, .07); break;
+      case 'heart': gTone(62, .1, 'sine', .09); gTone(55, .1, 'sine', .08, .18); break;
+      case 'bust': gTone(420, .45, 'sawtooth', .06, 0, 90); gNoise(.25, .05, 0, 700); break;
+      case 'kid': gTone(900, .12, 'square', .04, 0, 1300); gTone(1300, .2, 'square', .04, .12, 900); break;
+      case 'steal': gNoise(.25, .05, 0, 900); gTone(300, .2, 'sawtooth', .03, 0, 120); break;
+      case 'mop': gNoise(.18, .03, 0, 500); break;
+      case 'phone': gTone(1000, .05, 'square', .03); gTone(1400, .07, 'square', .03, .07); break;
+      case 'drop': gTone(1800, .05, 'triangle', .018); break;
+      case 'tick': gTone(1000, .04, 'square', .025); break;
+      case 'buy': gTone(1319, .06, 'square', .035); gTone(1760, .18, 'square', .035, .07); break;
+      case 'lose': gTone(150, .3, 'square', .06, 0, 70); gNoise(.15, .05, 0, 500); break;
+      case 'clear': [523, 659, 784, 1047].forEach((f, i) => gTone(f, .16, 'triangle', .05, i * .1)); gNoise(.2, .03, .45, 6000); break;
+      case 'win': [523, 659, 784, 1047, 1319, 1568].forEach((f, i) => gTone(f, .3, 'sine', .05, i * .14)); break;
+      case 'over': [440, 392, 330, 262].forEach((f, i) => gTone(f, .28, 'triangle', .06, i * .2)); break;
+      case 'start': gTone(523, .12, 'triangle', .05); gTone(784, .22, 'triangle', .05, .1); break;
+      case 'pause': gTone(660, .06, 'triangle', .04); gTone(440, .08, 'triangle', .04, .07); break;
+      case 'record': [523, 659, 784, 1047, 1319].forEach((f, i) => gTone(f, .18, 'triangle', .055, .8 + i * .1)); break;
+    }
+  }
+  function sndUi() {
+    cnSnd.textContent = gSnd.on ? '🔊' : '🔇'; cnSnd.title = cnSnd.ariaLabel = tr('snd');
+    cnPause.textContent = G && G.paused ? '▶' : '⏸'; cnPause.title = cnPause.ariaLabel = tr('pause_btn');
+  }
+  function toggleSnd() { gSnd.on = !gSnd.on; save('nightShiftSnd', gSnd.on ? '1' : '0'); sndUi(); if(typeof gSndUi === 'function') gSndUi(); if(gSnd.on) sfx('start'); }
+  cnSnd.onclick = toggleSnd; cnPause.onclick = () => pause(); cnClose.onclick = () => close();
+
+  /* ---------- vytvorenie levelu ---------- */
+  const canVal = () => (S.lv >= 5 && Math.random() < .12) ? GOLD : CAN;
+  function mkP(t) {
+    let pos = [0, 0];
+    for(let i = 0; i < 25; i++) { pos = rndFree(14); if(Math.hypot(pos[0] - G.p.x, pos[1] - G.p.y) > 150) break; }
+    const p = {t, e:t === 'walker' ? pick(WE) : TY[t].e, x:pos[0], y:pos[1], f:rnd(0, TAU), look:0, lookT:0, tgt:null, w:rnd(0, 1), alert:0, red:false, sees:0,
+      mode:'wander', bin:null, work:0, pickT:rnd(4, 9), goT:0, shout:0, mt:0};
+    pickTgt(p); return p;
+  }
+  function fresh(lv) {
+    const d = LV[lv - 1], lay = LAYS[d.lay], u = S.up, tmax = Math.round(60 + d.n * 3.5);
+    const g0 = {lv, d, run:false, paused:false, t:tmax, tmax, T:0,
+      obs:lay.obs.map(a => ({x:a[0], y:a[1], w:a[2], h:a[3], t:a[4], low:a[4] === 'ben'})).concat([{x:lay.mach[0], y:lay.mach[1], w:lay.mach[2], h:lay.mach[3], t:'mach', low:false}]),
+      mach:{x:lay.mach[0], y:lay.mach[1], w:lay.mach[2], h:lay.mach[3]},
+      bins:lay.bins.slice(0, d.bins).map((b, i) => ({x:b[0], y:b[1], items:[], empty:false, glint:0, id:i, col:BINC[i % BINC.length]})),
+      p:{x:lay.spawn[0], y:lay.spawn[1]}, bag:[], cap:d.cap + 2 * u.bag, target:d.n * CAN, banked:0, sh:0, maxSh:0, stun:0, phone:0, phoneCd:0, phCd:14,
+      digK:Math.pow(.82, u.glove), hoodK:1 - .14 * u.hood, padK:Math.pow(.7, u.pad), spdK:1 + .025 * (lv - 1),
+      dig:null, digT:0, depT:0, dc:0, clT:0, hbT:0, rsT:0, spT:rnd(2, 4), spInt:tmax / d.n * .9, tickT:0, hurry:false, seenNow:false,
+      pops:[], rings:[], parts:[], msg:'', mT:0, pp:[]};
+    g0.vis = g0.obs.filter(o => !o.low);
+    G = g0;
+    let n0 = Math.round(d.n * .55), guard = 0;
+    while(n0 > 0 && guard++ < 300) { const b = pick(G.bins); if(b.items.length < 4) { b.items.push(canVal()); n0--; } }
+    Object.keys(d.ppl).forEach(t => { for(let i = 0; i < d.ppl[t]; i++) G.pp.push(mkP(t)); });
+    return g0;
+  }
+  function flash(m, ms) { if(G) { G.msg = m; G.mT = ms || 2.2; } }
+  function pop(x, y, s, col) { G.pops.push({x, y, t:0, s, c:col || '#F2B84B'}); }
+  function resetInput() { K.l = K.r = K.u = K.d = K.sh = K.act = 0; ptr.down = false; bActHeld = bRunHeld = false; bAct.classList.remove('on'); bRun.classList.remove('on'); }
+
+  /* ---------- UI ---------- */
+  function build() {
+    $('#cn-title').textContent = tr('title');
+    bAct.innerHTML = tr('b_act') + '<small>E / ␣</small>';
+    bPh.innerHTML = tr('b_ph') + '<small>Q</small><i></i>';
+    bRun.innerHTML = tr('b_run') + '<small>Shift</small>';
+    phI = bPh.querySelector('i'); hudUpd(); sndUi();
+  }
+  function hudUpd() {
+    hudEl.textContent = S ? tr('lv') + ' ' + S.lv + '/' + MAXLV + ' · ' + '❤'.repeat(Math.max(0, S.lives)) + ' · ' + fmt(S.earned) + ' · ' + tr('best') + ' ' + fmt(best()) : tr('best') + ' ' + fmt(best());
+  }
+  function sync() { phI.style.width = (G.phoneCd > 0 ? Math.min(100, G.phoneCd / G.phCd * 100) : 0) + '%'; bPh.classList.toggle('on', G.phone > 0); }
+  function show(html) {
+    over.innerHTML = html; over.style.display = 'flex'; resetInput();
+    over.querySelectorAll('button[data-go]').forEach(b => {
+      b.onclick = () => {
+        const go = b.dataset.go;
+        if(go === 'play') beginLevel();
+        else if(go === 'retry') { G = fresh(S.lv); build(); beginLevel(); }
+        else if(go === 'next') { S.lv++; showIntro(); }
+        else if(go === 'new') startRun();
+        else if(go === 'resume') resume();
+        else if(go === 'buy') buy(b.dataset.up);
+      };
+    });
+    const f = over.querySelector('.row button'); if(f) f.focus();
+  }
+  function shopHtml() {
+    let h = '<div class="shopt">' + tr('shop') + ' · ' + tr('wallet') + ': <b>' + fmt(S.wallet) + '</b></div><div class="shop">';
+    Object.keys(UP).forEach(k => {
+      const u = UP[k], lvl = S.up[k], max = lvl >= u.max, cost = u.cost[lvl], can = !max && S.wallet >= cost;
+      h += '<button class="si" type="button" data-go="buy" data-up="' + k + '"' + (can ? '' : ' disabled') + '><span>' + u.ic + ' <b>' + tr('u_' + k) + '</b> ' + lvl + '/' + u.max + '</span><small>' + tr('ud_' + k) + '</small><em>' + (max ? 'MAX' : fmt(cost)) + '</em></button>';
+    });
+    return h + '</div>';
+  }
+  function buy(k) {
+    const u = UP[k], lvl = S.up[k]; if(lvl >= u.max) return;
+    const cost = u.cost[lvl]; if(S.wallet < cost) return;
+    S.wallet -= cost; S.up[k]++; sfx('buy'); showIntro();
+  }
+
+  /* ---------- tok hry ---------- */
+  function startRun() { cancelAnimationFrame(raf); S = {lv:1, lives:3, earned:0, wallet:0, up:{bag:0, glove:0, hood:0, pad:0}}; showIntro(); }
+  function showIntro() {
+    cancelAnimationFrame(raf);
+    G = fresh(S.lv); build(); draw();
+    const d = LV[S.lv - 1];
+    let h = '<h3>' + tr('lv') + ' ' + S.lv + ' / ' + MAXLV + '</h3><p><b>' + tr('n_' + d.k) + '</b></p>';
+    if(S.lv === 1) h += '<p>' + tr('how') + '</p>';
+    h += '<p>' + tr('goal') + ': <b>' + fmt(G.target) + '</b> (' + d.n + ' 🥫) · ' + tr('time') + ': <b>' + G.tmax + ' s</b> · ' + tr('bag') + ': <b>' + G.cap + '</b> · ' + tr('lives') + ': <b>' + '❤'.repeat(S.lives) + '</b></p>';
+    h += '<p>' + Object.keys(d.ppl).map(k => (k === 'walker' ? '🧑' : NWE[k]) + '×' + d.ppl[k]).join(' · ') + '</p>';
+    h += '<div class="tcard"><span class="em">' + NWE[d.nw] + '</span><div><b>' + tr('nt_' + d.nw) + '</b><br>' + tr('d_' + d.nw) + '</div></div>';
+    if(S.lv > 1) h += shopHtml();
+    h += '<div class="row"><button class="btn" type="button" data-go="play">' + tr('start') + '</button></div><span class="g-hint">' + tr('hint') + '</span>';
+    show(h);
+  }
+  function beginLevel() {
+    over.style.display = 'none'; resetInput(); G.run = true; G.paused = false; sfx('start');
+    flash(tr('startHint'), 2.4); sndUi();
+    last = performance.now(); raf = requestAnimationFrame(loop); cv.focus({preventScroll:true});
+  }
+  function rankOf() { const t = S.earned, r = tr('ranks'); return t >= 2200 ? r[4] : t >= 1500 ? r[3] : t >= 800 ? r[2] : t >= 300 ? r[1] : r[0]; }
+  function saveBests() {
+    const isNew = S.earned > best();
+    if(isNew) save('canBest', String(S.earned));
+    if(S.lv > bestLv()) save('canBestLvl', String(S.lv));
+    hudUpd(); return isNew;
+  }
+  function clearLevel() {
+    G.run = false; cancelAnimationFrame(raf); resetInput();
+    G.banked += G.bag.reduce((a, b) => a + b, 0); G.bag = [];
+    const tb = Math.floor(G.t / 4), sb = G.maxSh < 40 ? 20 : G.maxSh < 70 ? 10 : 0, got = G.banked + tb + sb;
+    S.earned += got; S.wallet += got; hudUpd();
+    if(S.lv >= MAXLV) { win(tb, sb); return; }
+    sfx('clear');
+    show('<h3>' + tr('cleared') + '</h3><p>' + tr('bank') + ': <b>' + fmt(G.banked) + '</b> · ' + tr('bonusT') + ': <b>+' + fmt(tb) + '</b> · ' + tr('bonusS') + ': <b>+' + fmt(sb) + '</b></p><p>' + tr('wallet') + ': <b>' + fmt(S.wallet) + '</b></p><div class="row"><button class="btn" type="button" data-go="next">' + tr('next') + '</button></div><span class="g-hint">' + tr('hint') + '</span>');
+  }
+  function fail(kind) {
+    G.run = false; cancelAnimationFrame(raf); resetInput(); S.lives--; hudUpd(); sfx('lose');
+    if(S.lives > 0) show('<h3>' + tr('gameover').replace(tr('gameover'), tr(kind)) + '</h3><p>' + tr('lives') + ': <b>' + '❤'.repeat(S.lives) + '</b> · ' + tr('lv') + ' ' + S.lv + '</p><div class="row"><button class="btn" type="button" data-go="retry">' + tr('retry') + '</button></div><span class="g-hint">' + tr('hint') + '</span>');
+    else gameOver(kind);
+  }
+  function gameOver(kind) {
+    const isNew = saveBests(), tip = pick(tr('tips'));
+    setTimeout(() => sfx('over'), 300); if(isNew) sfx('record');
+    show('<h3>' + tr('gameover') + '</h3><p>' + tr(kind) + '</p><div class="big">' + fmt(S.earned) + '</div><p>' + tr('rank') + ': <b style="color:#D9A84F">' + rankOf() + '</b> · ' + tr('reached') + ': <b>' + S.lv + ' / ' + MAXLV + '</b>' + (isNew ? ' 🏆 ' + tr('newrec') : '') + '</p><p class="g-tip">💡 ' + tip + '</p><div class="row"><button class="btn" type="button" data-go="new">' + tr('again') + '</button></div><span class="g-hint">' + tr('hint') + '</span>');
+  }
+  function win(tb, sb) {
+    const lb = S.lives * 50; S.earned += lb; const isNew = saveBests();
+    sfx('win'); if(isNew) sfx('record');
+    show('<h3>' + tr('win') + '</h3><div class="big">' + fmt(S.earned) + '</div><p>' + tr('rank') + ': <b style="color:#D9A84F;font-size:1.4rem">' + rankOf() + '</b>' + (isNew ? ' 🏆 ' + tr('newrec') : '') + '</p><p>' + tr('bonusL') + ': ' + '❤'.repeat(S.lives) + ' (+' + fmt(lb) + ')</p><div class="row"><button class="btn" type="button" data-go="new">' + tr('again') + '</button></div><span class="g-hint">' + tr('hint') + '</span>');
+  }
+  function pause() {
+    if(!G || !G.run) return;
+    if(G.paused) { resume(); return; }
+    G.paused = true; cancelAnimationFrame(raf); sfx('pause');
+    show('<h3>⏸ ' + tr('paused') + '</h3><p>' + tr('pause_hint') + '</p><div class="row"><button class="btn" type="button" data-go="resume">' + tr('resume') + '</button></div>');
+    sndUi();
+  }
+  function resume() {
+    if(!G || !G.run || !G.paused) return;
+    G.paused = false; over.style.display = 'none'; sfx('pause'); sndUi();
+    last = performance.now(); raf = requestAnimationFrame(loop); cv.focus({preventScroll:true});
+  }
+
+  /* ---------- ľudia ---------- */
+  function pickTgt(p) {
+    let q = [p.x, p.y];
+    for(let i = 0; i < 12; i++) { q = rndFree(14); if(!walkBlocked(p.x, p.y, q[0], q[1])) break; }
+    p.tgt = q;
+  }
+  function stepWalk(p, dt) {
+    const T = TY[p.t], spd = T.spd * G.spdK;
+    if(p.w > 0) {
+      p.w -= dt; p.lookT -= dt;
+      if(p.lookT <= 0) { p.lookT = rnd(.6, 1.6); p.look = p.f + rnd(-1.6, 1.6); }
+      p.f += angD(p.look, p.f) * Math.min(1, dt * 4); return;
+    }
+    const dx = p.tgt[0] - p.x, dy = p.tgt[1] - p.y, d = Math.hypot(dx, dy);
+    if(d < 6) { p.w = rnd(.4, 1.8); pickTgt(p); return; }
+    const a = Math.atan2(dy, dx); p.f += angD(a, p.f) * Math.min(1, dt * 7);
+    const s = Math.min(d, spd * dt), nx = Math.cos(a) * s, ny = Math.sin(a) * s;
+    if(collide(p.x + nx, p.y + ny, 10)) { pickTgt(p); p.w = .15; return; }
+    p.x += nx; p.y += ny;
+  }
+  function stepBinNPC(p, dt) {
+    const T = TY[p.t];
+    if(p.mode === 'work') {
+      const b = p.bin;
+      if(G.dig && G.dig.b === b) return;
+      p.work -= dt;
+      if(p.t === 'janitor') { p.mt -= dt; if(p.mt <= 0) { p.mt = .5; if(dist(p, G.p) < 260) sfx('mop'); } }
+      if(p.work <= 0) {
+        if(b.items.length) {
+          b.items.length = 0; b.empty = false;
+          if(dist(b, G.p) < 320) { sfx(p.t === 'rival' ? 'steal' : 'mop'); pop(b.x, b.y - 26, tr(p.t === 'rival' ? 'stole' : 'swept'), '#ff9d95'); }
+        }
+        p.mode = 'wander'; p.bin = null; p.w = rnd(1, 2.5); p.pickT = p.t === 'rival' ? rnd(3, 7) : rnd(7, 12); pickTgt(p);
+      }
+      return;
+    }
+    if(p.mode === 'go') {
+      const b = p.bin;
+      if(p.t === 'rival' && !b.items.length) { p.mode = 'wander'; p.bin = null; pickTgt(p); return; }
+      p.goT -= dt; if(p.goT <= 0) { p.mode = 'wander'; p.bin = null; pickTgt(p); return; }
+      if(Math.hypot(b.x - p.x, b.y - p.y) < 24) { p.mode = 'work'; p.work = p.t === 'rival' ? 1.8 : 2.8; p.mt = 0; return; }
+      const a = Math.atan2(b.y - p.y, b.x - p.x); p.f += angD(a, p.f) * Math.min(1, dt * 8);
+      const s = T.spd * G.spdK * dt; moveEnt(p, Math.cos(a) * s, Math.sin(a) * s, 9);
+      return;
+    }
+    stepWalk(p, dt);
+    p.pickT -= dt;
+    if(p.pickT <= 0) {
+      const cand = p.t === 'rival' ? G.bins.filter(b => b.items.length) : G.bins;
+      if(cand.length) {
+        let b;
+        if(p.t === 'rival') { b = cand.slice().sort((u, v) => dist(p, u) - dist(p, v))[0]; }
+        else { const wi = cand.filter(x => x.items.length); b = pick(wi.length && Math.random() < .6 ? wi : cand); }
+        p.bin = b; p.mode = 'go'; p.goT = 14;
+      }
+      p.pickT = p.t === 'rival' ? rnd(3, 6) : rnd(7, 12);
+    }
+  }
+  function stepNPC(p, dt) {
+    if(p.alert > 0) { p.alert -= dt; p.f += angD(p.look, p.f) * Math.min(1, dt * 7); return; }
+    if(p.t === 'janitor' || p.t === 'rival') stepBinNPC(p, dt); else stepWalk(p, dt);
+  }
+  function seen(p) {
+    const T = TY[p.t]; if(!T.range) return 0;
+    const P = G.p, dx = P.x - p.x, dy = P.y - p.y, d = Math.hypot(dx, dy), rg = T.range * G.hoodK;
+    if(d > rg) return 0;
+    if(Math.abs(angD(Math.atan2(dy, dx), p.f)) > T.ang && d > T.per) return 0;
+    if(losBlocked(p.x, p.y, P.x, P.y)) return 0;
+    return clamp(1.15 - d / rg * .7, .35, 1);
+  }
+  function noise(x, y, R) {
+    G.rings.push({x, y, r:6, R, t:0});
+    G.pp.forEach(p => {
+      if(!TY[p.t].range) return;
+      if(Math.hypot(p.x - x, p.y - y) < R && p.alert <= 0) { p.alert = .9; p.look = Math.atan2(y - p.y, x - p.x); }
+    });
+  }
+
+  /* ---------- akcie hráča ---------- */
+  function usePhone() {
+    if(!G || !G.run || G.paused || G.stun > 0) return;
+    if(G.phoneCd > 0) { flash(tr('cdPhone'), 1.1); return; }
+    G.phone = 3.6; G.phoneCd = G.phCd; sfx('phone'); flash(tr('phoneOn'), 1.2);
+  }
+  function finishDig(b) {
+    if(b.items.length) {
+      if(G.bag.length >= G.cap) { flash(tr('full'), 1.5); sfx('full'); return; }
+      const v = b.items.pop(); G.bag.push(v);
+      pop(b.x, b.y - 26, '+🥫', v === GOLD ? '#ffd34d' : '#F2B84B'); sfx(v === GOLD ? 'gold' : 'clink', G.bag.length);
+      if(v === GOLD) flash(tr('gold'), 1.8);
+    } else { b.empty = true; pop(b.x, b.y - 26, tr('nothing'), '#93A8A0'); sfx('empty'); }
+  }
+  function busted() {
+    const P = G.p; G.stun = 1.7; G.sh = 35; G.dig = null; G.digT = 0;
+    const lost = Math.min(2, G.bag.length); for(let i = 0; i < lost; i++) G.bag.pop();
+    for(let i = 0; i < 8; i++) G.parts.push({e:'🥫', x:P.x, y:P.y, vx:rnd(-120, 120), vy:rnd(-220, -80), t:0, l:1.1, s:14});
+    S.lives--; sfx('bust'); flash(lost ? tr('busted2') : tr('busted'), 2.4); hudUpd();
+    G.pp.forEach(p => { if(TY[p.t].range && Math.hypot(p.x - P.x, p.y - P.y) < 260) { p.alert = 1.6; p.look = Math.atan2(P.y - p.y, P.x - p.x); } });
+    if(S.lives <= 0) { G.run = false; cancelAnimationFrame(raf); resetInput(); draw(); gameOver('caught'); }
+  }
+
+  /* ---------- herná slučka ---------- */
+  function step(dt) {
+    const P = G.p;
+    G.T += dt; G.t -= dt;
+    if(G.mT > 0) G.mT -= dt; if(G.phone > 0) G.phone -= dt; if(G.phoneCd > 0) G.phoneCd -= dt; if(G.stun > 0) G.stun -= dt;
+    if(G.t <= 10 && G.t > 0) { G.tickT -= dt; if(G.tickT <= 0) { G.tickT = 1; sfx('tick'); if(!G.hurry) { G.hurry = true; flash(tr('hurry'), 2.4); } } }
+    G.spT -= dt;
+    if(G.spT <= 0) {
+      G.spT = G.spInt * rnd(.7, 1.3);
+      const cand = G.bins.filter(b => b.items.length < 4);
+      if(cand.length) { const b = pick(cand); b.items.push(canVal()); b.empty = false; b.glint = 1.4; if(dist(P, b) < 260) sfx('drop'); }
+    }
+    G.bins.forEach(b => { if(b.glint > 0) b.glint -= dt; });
+
+    // vstup
+    let ax = (K.r ? 1 : 0) - (K.l ? 1 : 0), ay = (K.d ? 1 : 0) - (K.u ? 1 : 0);
+    if(!ax && !ay && ptr.down) { const dx = ptr.x - P.x, dy = ptr.y - P.y, dd = Math.hypot(dx, dy); if(dd > 10) { ax = dx / dd; ay = dy / dd; } }
+    const actH = K.act || bActHeld, run = K.sh || bRunHeld;
+    let nb = null, nbd = 34;
+    G.bins.forEach(b => { const d = dist(P, b); if(d < nbd) { nbd = d; nb = b; } });
+    const nm = distRect(P, G.mach) < 30;
+    let digging = false, dep = false;
+    if(G.stun <= 0 && actH) {
+      if(nm && G.bag.length) dep = true;
+      else if(nb && !nb.empty) digging = true;
+    }
+    const moving = (ax || ay) && !digging && !dep && G.stun <= 0;
+    if(moving) {
+      const n = Math.hypot(ax, ay) || 1, sp = run ? 150 : 98;
+      moveEnt(P, ax / n * sp * dt, ay / n * sp * dt, 9);
+      if(G.bag.length >= 3) {
+        G.clT -= dt;
+        if(G.clT <= 0) { G.clT = run ? .26 : .62; sfx('bagclink'); noise(P.x, P.y, (run ? 190 : 105) * G.padK); }
+      }
+    }
+
+    // hrabanie
+    if(digging) {
+      if(!G.dig || G.dig.b !== nb) { G.dig = {b:nb}; G.digT = 0; }
+      const need = (nb.items.length ? 1.1 + .03 * G.lv : .6) * G.digK;
+      G.digT += dt * (G.phone > 0 ? .5 : 1);
+      G.rsT -= dt; if(G.rsT <= 0) { G.rsT = .24; sfx('rustle'); }
+      if(G.digT >= need) { G.digT = 0; finishDig(nb); }
+    } else { G.dig = null; G.digT = 0; }
+
+    // zálohovanie
+    if(dep) {
+      G.depT -= dt;
+      if(G.depT <= 0) {
+        G.depT = .17; const v = G.bag.shift(); G.banked += v; G.dc++;
+        sfx('dep', G.dc); pop(G.mach.x, G.mach.y - 30, '+' + fmt(v), '#7ee2b0');
+        G.parts.push({e:'🪙', x:G.mach.x, y:G.mach.y, vx:rnd(-40, 40), vy:rnd(-200, -120), t:0, l:.9, s:12});
+        if(G.banked >= G.target) { clearLevel(); return; }
+      }
+    } else { G.depT = 0; G.dc = 0; }
+
+    // ľudia a pozorovanie
+    G.pp.forEach(p => stepNPC(p, dt));
+    let gain = 0;
+    G.pp.forEach(p => {
+      const T = TY[p.t]; p.red = false;
+      if(p.shout > 0) p.shout -= dt;
+      if(!T.range) return;
+      const s = seen(p); p.sees = s;
+      if(s > 0 && digging) {
+        p.red = true; gain += s * T.mult * 34;
+        if(p.t === 'kid' && p.shout <= 0) { p.shout = 7; G.sh += 18; sfx('kid'); flash(tr('kid'), 2); pop(p.x, p.y - 30, '!!', '#ff9d95'); }
+      }
+    });
+    gain *= G.hoodK * (G.phone > 0 ? .22 : 1);
+    if(gain > 0) { if(!G.seenNow) sfx('notice'); G.sh += gain * dt; }
+    else G.sh = Math.max(0, G.sh - (digging ? 5 : 12) * dt);
+    G.seenNow = gain > 0;
+    G.sh = Math.min(G.sh, 100); G.maxSh = Math.max(G.maxSh, G.sh);
+    if(G.sh > 55) { G.hbT -= dt; if(G.hbT <= 0) { G.hbT = Math.max(.35, .9 - (G.sh - 55) / 100); sfx('heart'); } }
+    if(G.sh >= 100) { busted(); if(!G.run) return; }
+
+    // efekty
+    G.pops.forEach(p => { p.t += dt; p.y -= 26 * dt; }); G.pops = G.pops.filter(p => p.t < 1.2);
+    G.rings.forEach(r => { r.t += dt; r.r = r.R * (r.t / .7); }); G.rings = G.rings.filter(r => r.t < .7);
+    G.parts.forEach(p => { p.t += dt; p.vy += 380 * dt; p.x += p.vx * dt; p.y += p.vy * dt; }); G.parts = G.parts.filter(p => p.t < p.l);
+
+    if(G.t <= 0) { G.t = 0; draw(); fail('up'); }
+  }
+  function loop(t) {
+    if(!G || !G.run || G.paused || !modal.classList.contains('open')) return;
+    const dt = Math.min(.05, (t - last) / 1000); last = t;
+    step(dt); if(!G.run) return;
+    draw(); sync(); raf = requestAnimationFrame(loop);
+  }
+
+  /* ---------- kreslenie ---------- */
+  function rr(x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath();
+  }
+  function em(s, px, py, size) { c.font = size + 'px serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#fff'; c.fillText(s, px, py); }
+  function tx(s, px, py, size, col, al, wt) { c.font = (wt || 700) + ' ' + size + "px 'Bricolage Grotesque',system-ui,sans-serif"; c.textAlign = al || 'left'; c.textBaseline = 'alphabetic'; c.fillStyle = col; c.fillText(s, px, py); }
+  function shadow(x, y, rx) { c.fillStyle = 'rgba(0,0,0,.28)'; c.beginPath(); c.ellipse(x, y, rx, 4, 0, 0, TAU); c.fill(); }
+  function draw() {
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
+    const pal = PAL[G.d.pal], P = G.p, peek = G.lv <= 4 ? 150 : 70;
+    c.fillStyle = pal[2]; c.fillRect(0, 0, W, H);
+    for(let y = AY0, j = 0; y < AY1; y += 41, j++) for(let x = AX0, i = 0; x < AX1; x += 41, i++) {
+      c.fillStyle = (i + j) % 2 ? pal[0] : pal[1]; c.fillRect(x, y, Math.min(41, AX1 - x), Math.min(41, AY1 - y));
+    }
+    c.strokeStyle = 'rgba(0,0,0,.45)'; c.lineWidth = 3; c.strokeRect(AX0, AY0, AX1 - AX0, AY1 - AY0);
+
+    // kužele pohľadu (blokované stĺpmi)
+    G.pp.forEach(p => {
+      const T = TY[p.t]; if(!T.range) return;
+      const rg = T.range * G.hoodK, n = 16;
+      c.beginPath(); c.moveTo(p.x, p.y);
+      for(let i = 0; i <= n; i++) {
+        const a = p.f - T.ang + 2 * T.ang * i / n, cx = Math.cos(a), cy = Math.sin(a); let d = rg;
+        for(const o of G.vis) { const tt = segT(p.x, p.y, p.x + cx * rg, p.y + cy * rg, o, 0); if(tt >= 0 && tt * rg < d) d = tt * rg; }
+        c.lineTo(p.x + cx * d, p.y + cy * d);
+      }
+      c.closePath(); c.fillStyle = p.red ? 'rgba(255,80,70,.32)' : p.alert > 0 ? 'rgba(255,214,90,.24)' : 'rgba(255,230,120,.14)'; c.fill();
+    });
+
+    // prekážky
+    G.obs.forEach(o => {
+      const l = o.x - o.w / 2, t = o.y - o.h / 2;
+      c.fillStyle = 'rgba(0,0,0,.25)'; rr(l + 3, t + 4, o.w, o.h, 5); c.fill();
+      if(o.t === 'pil') { c.fillStyle = '#8d949b'; rr(l, t, o.w, o.h, 4); c.fill(); c.fillStyle = '#b1b8be'; rr(l + 3, t + 3, o.w - 6, o.h - 6, 3); c.fill(); }
+      else if(o.t === 'ben') { c.fillStyle = '#7b5a35'; rr(l, t, o.w, o.h, 4); c.fill(); c.fillStyle = '#9a7448'; rr(l + 2, t + 2, o.w - 4, o.h / 2 - 2, 3); c.fill(); }
+      else if(o.t === 'plt') { c.fillStyle = '#4a2f1b'; rr(l, t, o.w, o.h, 6); c.fill(); em('🪴', o.x, o.y, Math.min(o.w, o.h) * .9); }
+      else if(o.t === 'kio') { c.fillStyle = '#5d6d7a'; rr(l, t, o.w, o.h, 6); c.fill(); c.fillStyle = '#e9c46a'; rr(l + 3, t + 3, o.w - 6, 10, 3); c.fill(); em('🛒', o.x, o.y + 4, 22); }
+      else if(o.t === 'mach') {
+        const pulse = G.bag.length ? .5 + .5 * Math.sin(G.T * 5) : 0;
+        c.fillStyle = '#1f6f54'; rr(l, t, o.w, o.h, 6); c.fill();
+        c.strokeStyle = 'rgba(126,226,176,' + (.35 + .5 * pulse).toFixed(2) + ')'; c.lineWidth = 2.5; rr(l, t, o.w, o.h, 6); c.stroke();
+        c.fillStyle = '#0f3d2e'; rr(l + 4, t + 4, o.w - 8, o.h - 8, 4); c.fill();
+        if(o.w >= o.h) { em('♻️', o.x - 14, o.y, 16); tx('ZÁLOH', o.x + 8, o.y + 4, 11, '#7ee2b0', 'center'); }
+        else { em('♻️', o.x, o.y - 9, 18); tx('€', o.x, o.y + 16, 15, '#7ee2b0', 'center'); }
+      }
+    });
+
+    // koše
+    G.bins.forEach(b => {
+      shadow(b.x + 2, b.y + 13, 12);
+      c.fillStyle = b.col; rr(b.x - 10, b.y - 8, 20, 22, 3); c.fill();
+      c.fillStyle = 'rgba(255,255,255,.18)'; c.fillRect(b.x - 10, b.y - 8, 4, 22);
+      c.fillStyle = '#4a525a'; rr(b.x - 12, b.y - 13, 24, 7, 3); c.fill();
+      const d = Math.hypot(P.x - b.x, P.y - b.y);
+      if(b.items.length && (d < peek || b.glint > 0)) {
+        const gold = b.items.includes(GOLD);
+        em(gold ? '🌟' : '🥫', b.x, b.y - 24 + Math.sin(G.T * 5 + b.id) * 2, 16);
+        if(d < peek && b.items.length > 1) tx('×' + b.items.length, b.x + 13, b.y - 20, 10, '#fff', 'left');
+      }
+      if(b.empty && d < 70) tx('∅', b.x, b.y - 18, 14, '#6b7a84', 'center');
+      if(G.dig && G.dig.b === b) {
+        const need = (b.items.length ? 1.1 + .03 * G.lv : .6) * G.digK;
+        c.fillStyle = 'rgba(0,0,0,.55)'; c.fillRect(b.x - 16, b.y - 36, 32, 6);
+        c.fillStyle = '#F2B84B'; c.fillRect(b.x - 16, b.y - 36, 32 * clamp(G.digT / need, 0, 1), 6);
+      } else if(d < 34 && G.stun <= 0 && !b.empty) tx('E', b.x, b.y - 18, 12, '#fff', 'center', 800);
+    });
+    if(distRect(P, G.mach) < 30 && G.bag.length) tx('E ♻', G.mach.x, G.mach.y + (G.mach.h / 2) + 14, 12, '#7ee2b0', 'center', 800);
+
+    // ľudia
+    G.pp.forEach(p => {
+      shadow(p.x, p.y + 11, 9);
+      em(p.e, p.x, p.y, 22);
+      if(p.t === 'phone') em('📱', p.x + 8, p.y + 8, 11);
+      if(p.t === 'janitor') em('🧹', p.x + 11, p.y + 6, 13);
+      if(p.t === 'rival') em('🎒', p.x - 9, p.y + 7, 12);
+      if(p.red) tx('!', p.x, p.y - 20, 22, '#ff7b72', 'center', 800);
+      else if(p.alert > 0) tx('?', p.x, p.y - 20, 18, '#F2B84B', 'center', 800);
+      if(p.mode === 'work') { c.fillStyle = 'rgba(0,0,0,.5)'; c.fillRect(p.x - 12, p.y - 22, 24, 4); c.fillStyle = p.t === 'rival' ? '#ff7b72' : '#58a6ff'; c.fillRect(p.x - 12, p.y - 22, 24 * clamp(1 - p.work / (p.t === 'rival' ? 1.8 : 2.8), 0, 1), 4); }
+    });
+
+    // hráč
+    const bob = G.dig ? Math.sin(G.T * 18) * 1.5 : 0, face = G.stun > 0 ? '😵' : G.sh > 66 ? '😰' : G.sh > 33 ? '😬' : '🙂';
+    shadow(P.x, P.y + 12, 10);
+    em('🎒', P.x, P.y + 9, 15); em(face, P.x, P.y - 2 + bob, 22);
+    if(S.up.hood > 0) em('🧢', P.x, P.y - 14 + bob, 12);
+    if(G.phone > 0) em('📱', P.x + 13, P.y - 12, 14);
+
+    // efekty
+    G.rings.forEach(r => { c.strokeStyle = 'rgba(255,255,255,' + (.4 * (1 - r.t / .7)).toFixed(2) + ')'; c.lineWidth = 2; c.beginPath(); c.arc(r.x, r.y, r.r, 0, TAU); c.stroke(); });
+    G.parts.forEach(p => { c.globalAlpha = clamp(1 - p.t / p.l, 0, 1); em(p.e, p.x, p.y, p.s); }); c.globalAlpha = 1;
+    G.pops.forEach(p => { c.globalAlpha = clamp(1 - p.t / 1.2, 0, 1); tx(p.s, p.x, p.y, 14, p.c, 'center', 800); }); c.globalAlpha = 1;
+    if(G.sh > 50) { c.strokeStyle = 'rgba(255,80,70,' + ((G.sh - 50) / 80).toFixed(2) + ')'; c.lineWidth = 8; c.strokeRect(0, 0, W, H); }
+    if(G.stun > 0) { c.fillStyle = 'rgba(255,60,60,.12)'; c.fillRect(0, 0, W, H); }
+
+    // HUD v canvase
+    tx(tr('shame'), 14, 18, 11, '#93A8A0', 'left', 600);
+    c.fillStyle = 'rgba(0,0,0,.45)'; c.fillRect(14, 24, 150, 10);
+    c.fillStyle = G.sh > 66 ? '#ff7b72' : G.sh > 33 ? '#F2B84B' : '#10B981'; c.fillRect(14, 24, 150 * G.sh / 100, 10);
+    tx('🎒 ' + G.bag.length + '/' + G.cap, 184, 34, 15, G.bag.length >= G.cap ? '#ff9d95' : '#E4EEE9', 'left');
+    tx('💶 ' + fmt(G.banked) + ' / ' + fmt(G.target), 284, 34, 15, '#7ee2b0', 'left');
+    tx('🚻 WC', 540, 34, 14, '#8aa0ad', 'left', 600);
+    tx(Math.ceil(G.t) + ' s', W - 14, 26, 18, G.t < 15 ? '#ff7b72' : '#E4EEE9', 'right');
+    tx(tr('lv') + ' ' + G.lv + '/' + MAXLV, W - 14, 44, 11, '#D9A84F', 'right', 600);
+    if(G.mT > 0) { c.globalAlpha = Math.min(1, G.mT); tx(G.msg, W / 2, 80, 16, '#F2B84B', 'center'); c.globalAlpha = 1; }
+  }
+
+  /* ---------- vstupy ---------- */
+  const cpos = e => { const r = cv.getBoundingClientRect(); return {x:(e.clientX - r.left) * W / r.width, y:(e.clientY - r.top) * H / r.height}; };
+  cv.addEventListener('pointerdown', e => {
+    if(!G || !G.run || G.paused) return; e.preventDefault(); try { cv.setPointerCapture(e.pointerId); } catch(_) {}
+    Object.assign(ptr, cpos(e), {down:true});
+  });
+  cv.addEventListener('pointermove', e => { if(ptr.down) Object.assign(ptr, cpos(e)); });
+  ['pointerup', 'pointercancel'].forEach(n => cv.addEventListener(n, () => { ptr.down = false; }));
+  bAct.addEventListener('pointerdown', e => { e.preventDefault(); bActHeld = true; bAct.classList.add('on'); });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(n => bAct.addEventListener(n, () => { bActHeld = false; bAct.classList.remove('on'); }));
+  bRun.addEventListener('pointerdown', e => { e.preventDefault(); bRunHeld = true; bRun.classList.add('on'); });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(n => bRun.addEventListener(n, () => { bRunHeld = false; bRun.classList.remove('on'); }));
+  bPh.addEventListener('click', () => usePhone());
+  addEventListener('keydown', e => {
+    if(!modal.classList.contains('open')) return;
+    const k = e.key.toLowerCase(); K.sh = e.shiftKey ? 1 : 0;
+    if(k === 'escape') { close(); return; }
+    if(k === 'm') { toggleSnd(); return; }
+    if(k === 'p') { pause(); return; }
+    if(!G || !G.run || G.paused) return;
+    if(k === 'arrowleft' || k === 'a') { K.l = 1; e.preventDefault(); }
+    else if(k === 'arrowright' || k === 'd') { K.r = 1; e.preventDefault(); }
+    else if(k === 'arrowup' || k === 'w') { K.u = 1; e.preventDefault(); }
+    else if(k === 'arrowdown' || k === 's') { K.d = 1; e.preventDefault(); }
+    else if(k === 'e' || k === ' ') { K.act = 1; e.preventDefault(); }
+    else if(k === 'q' && !e.repeat) usePhone();
+  });
+  addEventListener('keyup', e => {
+    if(!modal.classList.contains('open')) return;
+    const k = e.key.toLowerCase(); K.sh = e.shiftKey ? 1 : 0;
+    if(k === 'arrowleft' || k === 'a') K.l = 0;
+    else if(k === 'arrowright' || k === 'd') K.r = 0;
+    else if(k === 'arrowup' || k === 'w') K.u = 0;
+    else if(k === 'arrowdown' || k === 's') K.d = 0;
+    else if(k === 'e' || k === ' ') { K.act = 0; if(k === ' ') e.preventDefault(); }
+  });
+
+  /* ---------- open / close ---------- */
+  function open() {
+    if(gOpen()) closeGame(true);
+    if(typeof WS !== 'undefined' && WS.isOpen()) WS.close(true);
+    if(typeof EX !== 'undefined' && EX.isOpen()) EX.close(true);
+    termModal.classList.remove('open'); termInput.blur();
+    modal.classList.add('open'); gAudio(); startRun();
+  }
+  function close(silent) {
+    if(G) G.run = false; cancelAnimationFrame(raf); resetInput();
+    modal.classList.remove('open'); over.style.display = 'none';
+    if(!silent) backToTerminal();
+  }
   modal.addEventListener('mousedown', e => { if(e.target === modal) close(); });
   document.addEventListener('visibilitychange', () => {
     if(G && G.run && document.hidden && !G.paused && modal.classList.contains('open')) pause();
