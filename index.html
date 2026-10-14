@@ -1233,9 +1233,13 @@ termInput.onkeydown = (e) => {
     } else if(val === 'play 4') {
       appendTermLine(lang === 'sk' ? 'Beriem ruksak a idem na lov plechoviek...' : 'Grabbing my backpack and going can hunting...', '#D9A84F');
       setTimeout(() => CN.open(), 650);
+    } else if(val === 'play 5') {
+      appendTermLine(lang === 'sk' ? 'Otváram VIP salónik... nechaj telefón v šatni.' : 'Opening the VIP lounge... leave your phone at the cloakroom.', '#ff6bb5');
+      setTimeout(() => ST.open(), 650);
     } else if(val !== '') appendTermLine(T[lang].term_unknown.replace('{cmd}', val), '#ff7b72');
     termBody.scrollTop = termBody.scrollHeight;
   }
+};
 };
 
 function appendTermLine(text, color = '#c9d1d9') {
@@ -3507,6 +3511,530 @@ const CN = (() => {
     if(G && G.run && document.hidden && !G.paused && modal.classList.contains('open')) pause();
     else last = performance.now();
   });
+  return {open, close, isOpen: () => modal.classList.contains('open')};
+})();
+
+/* =====================================================================
+   HIDDEN MINIGAME #5: STRIPTEASE  (terminal: play 5)
+   Tanečnica sa postupne vyzlieka podľa toho, ako plníš úlohy.
+   5 levelov, každý level = jedna vrstva oblečenia dole.
+   Timing, pozornosť, combo, zvuky, pauza, životy.
+   ===================================================================== */
+const ST = (() => {
+  const W = 760, H = 460, TAU = Math.PI * 2, MAXLV = 5;
+  const modal = $('#st-modal'), cv = $('#st-canvas'), c = cv.getContext('2d'), over = $('#st-over');
+  const dpr = Math.min(2, window.devicePixelRatio || 1); cv.width = W * dpr; cv.height = H * dpr;
+
+  /* ---------- štýly vložené z JS ---------- */
+  (() => {
+    const s = document.createElement('style');
+    s.textContent = `
+#st-modal{position:fixed;inset:0;background:rgba(12,6,14,.86);backdrop-filter:blur(8px);z-index:120;display:flex;align-items:center;justify-content:center;padding:14px;opacity:0;pointer-events:none;transition:opacity .3s}
+#st-modal.open{opacity:1;pointer-events:auto}
+.st-window{position:relative;width:100%;max-width:820px;max-height:96vh;overflow:auto;background:#160d18;color:#F3E3F0;border:1px solid #6b2a5a;border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.7),0 0 60px rgba(180,60,160,.15)}
+.st-window .game-head{background:#241028;border-bottom-color:#6b2a5a}
+.st-window .g-close{border-color:#6b2a5a}
+.st-window .g-hud{color:#F3E3F0}
+#st-canvas{display:block;margin:0 auto;width:100%;height:auto;aspect-ratio:760/460;touch-action:none;outline:none}
+.st-ui{padding:10px 14px 14px;display:flex;gap:8px;flex-wrap:wrap}
+.st-btn{position:relative;overflow:hidden;flex:1 1 130px;min-height:52px;border-radius:10px;border:1.5px solid #6b2a5a;background:#241028;color:#F3E3F0;font:700 .9rem var(--body);cursor:pointer;padding:8px;-webkit-user-select:none;user-select:none;touch-action:none}
+.st-btn.on{background:#4a1f47;border-color:#D9A84F;box-shadow:0 0 14px rgba(217,168,79,.4)}
+.st-btn i{position:absolute;left:0;bottom:0;height:4px;width:0;background:#ff6bb5}
+.st-btn small{display:block;font-weight:400;font-size:.72rem;color:#c9a8c4}
+#st-over{display:none;padding:16px;gap:10px;overflow:auto;justify-content:flex-start}
+#st-over>*:first-child{margin-top:auto}
+#st-over>*:last-child{margin-bottom:auto}
+#st-over .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+#st-over .big{font-size:2.6rem}
+#st-over .tcard{display:flex;align-items:center;gap:14px;background:#2a1430;border:1px solid #D9A84F;border-radius:12px;padding:10px 16px;max-width:56ch;text-align:left;font-size:.9rem}
+#st-over .tcard .em{font-size:2.4rem;line-height:1}
+.st-heart{color:#ff6bb5;font-size:1.1rem}
+`;
+    document.head.appendChild(s);
+  })();
+
+  /* ---------- DOM ---------- */
+  modal.innerHTML = '<div class="st-window"><div class="game-head"><span class="game-title" id="st-title"></span><div class="g-hud"><span id="st-hud"></span></div><div class="g-btns" id="st-btns"></div></div>' +
+    '<canvas id="st-canvas" width="760" height="460" tabindex="0"></canvas>' +
+    '<div class="st-ui"><button class="st-btn" id="st-act" type="button"></button><button class="st-btn" id="st-tease" type="button"></button><button class="st-btn" id="st-wink" type="button"></button></div>' +
+    '<div class="g-over" id="st-over"></div></div>';
+  const cvEl = $('#st-canvas'), ctx2 = cvEl.getContext('2d'), overEl = $('#st-over'), hudEl = $('#st-hud'), btnsEl = $('#st-btns'),
+        bAct = $('#st-act'), bTease = $('#st-tease'), bWink = $('#st-wink');
+  const stSnd = document.createElement('button'), stPause = document.createElement('button'), stClose = document.createElement('button');
+  [stPause, stSnd, stClose].forEach(b => { b.type = 'button'; b.className = 'g-close'; btnsEl.appendChild(b); });
+  stClose.textContent = '✕';
+
+  /* ---------- texty ---------- */
+  const L = {
+    sk: {
+      title:'STRIPTEASE · Tanečný klub',
+      how:'Si v súkromnom VIP salóniku. Pred tebou tancuje žena a ty musíš plniť jej priania: sleduj jej pokyny v bubline, klikaj na správne tlačidlo v správnom rytme a udržuj combo. Každý splnený level = jedna vrstva oblečenia dole. Pozor: ak pokazíš príliš veľa pokynov, stratíš život a ona sa oblečie späť. MEDZERNÍK = tlieskať/akcia, T = flirt (tease), W = mrknutie (wink). P = pauza, M = zvuk. 3 životy, 5 levelov.',
+      lv:'Level', layer:'Vrstva', time:'Čas', combo:'Combo', lives:'Životy', score:'Skóre',
+      start:'Začať tanec', next:'Ďalšia vrstva', retry:'Skúsiť znova', again:'Nový tanec',
+      cleared:'Vrstva dole! 💃', gameover:'Tanec skončil', win:'Ostala len v iskričkách... 🎉',
+      caught:'Pokazil si príliš veľa pokynov. Oblečie sa späť.', up:'Nestihol si to včas.',
+      reached:'Dosiahnutý level', best:'Rekord', newrec:'Nový rekord!', hint:'Esc = späť do terminálu',
+      rank:'Hodnosť', ranks:['Divák','Zvedavec','Obdivovateľ','Mecenáš','Legenda klubu'],
+      paused:'Pauza', pause_hint:'P = pokračovať', resume:'Pokračovať', snd:'Zvuk zap./vyp. (M)', pause_btn:'Pauza (P)',
+      b_act:'👏 Tlieskať / Akcia', b_tease:'💋 Flirt', b_wink:'😉 Mrknúť',
+      perfect:'PERFEKTNÉ!', good:'Dobré', miss:'Vedľa!', comboX:'Combo x',
+      prompt_act:'Tlieskaj! 👏', prompt_tease:'Flirtuj! 💋', prompt_wink:'Mrkni! 😉', prompt_wait:'Čakaj...',
+      layer_names:['Kabát','Šaty','Blúzka','Sukňa','Spodná bielizeň'],
+      tips:['Sleduj farbu bubliny: ružová = flirt, modrá = tlieskať, žltá = mrknúť.','Combo ti dáva bonusové body, nepokaz rytmus.','Čím vyšší level, tým rýchlejšie pokyny.','Mrknutie dočasne spomalí čas, využi to.','Flirt pridá body, ale ak ho dáš mimo pokynu, stratíš combo.'],
+      d_l1:'Ešte je zahalená, ale už sa usmieva. Zvládni prvé pokyny.',
+      d_l2:'Kabát padá. Tancuje bližšie a pokyny sú rýchlejšie.',
+      d_l3:'Zostáva len tenká blúzka. Sleduj každý pohyb.',
+      d_l4:'Sukňa ide dole. Combo je teraz kritické.',
+      d_l5:'Posledná vrstva. Buď dokonalý a ona zostane len v iskrách.'
+    },
+    en: {
+      title:'STRIPTEASE · Dance Club',
+      how:'You are in a private VIP lounge. A woman dances for you and you must fulfil her wishes: watch her prompts in the bubble, press the right button in the right rhythm and keep the combo. Each cleared level = one layer of clothing down. Careful: too many missed prompts and you lose a life and she dresses back up. SPACE = clap/action, T = flirt (tease), W = wink. P = pause, M = sound. 3 lives, 5 levels.',
+      lv:'Level', layer:'Layer', time:'Time', combo:'Combo', lives:'Lives', score:'Score',
+      start:'Start the dance', next:'Next layer', retry:'Retry', again:'New dance',
+      cleared:'Layer down! 💃', gameover:'Dance over', win:'Only sparks left... 🎉',
+      caught:'Too many missed prompts. She dresses back up.', up:'You did not make it in time.',
+      reached:'Level reached', best:'Best', newrec:'New record!', hint:'Esc = back to terminal',
+      rank:'Rank', ranks:['Spectator','Curious','Admirer','Patron','Club Legend'],
+      paused:'Paused', pause_hint:'P = resume', resume:'Resume', snd:'Sound on/off (M)', pause_btn:'Pause (P)',
+      b_act:'👏 Clap / Action', b_tease:'💋 Flirt', b_wink:'😉 Wink',
+      perfect:'PERFECT!', good:'Good', miss:'Missed!', comboX:'Combo x',
+      prompt_act:'Clap! 👏', prompt_tease:'Flirt! 💋', prompt_wink:'Wink! 😉', prompt_wait:'Wait...',
+      layer_names:['Coat','Dress','Blouse','Skirt','Lingerie'],
+      tips:['Watch the bubble colour: pink = flirt, blue = clap, yellow = wink.','Combo gives bonus points, do not break the rhythm.','The higher the level, the faster the prompts.','A wink slows time for a moment, use it.','Flirting adds points, but if you do it outside a prompt you lose the combo.'],
+      d_l1:'Still covered, but already smiling. Handle the first prompts.',
+      d_l2:'The coat drops. She dances closer and the prompts speed up.',
+      d_l3:'Only a thin blouse left. Watch every move.',
+      d_l4:'The skirt comes off. Combo is critical now.',
+      d_l5:'The last layer. Be perfect and she stays only in sparks.'
+    }
+  };
+  const tr = k => { const d = L[lang] || L.sk; return d[k] !== undefined ? d[k] : (L.sk[k] !== undefined ? L.sk[k] : k); };
+  const rnd = (a, b) => a + Math.random() * (b - a), clamp = (v, a, b) => Math.max(a, Math.min(b, v)), pick = a => a[Math.floor(Math.random() * a.length)];
+  const best = () => +load('stripteaseBest') || 0, bestLv = () => +load('stripteaseBestLvl') || 0;
+
+  /* ---------- zvuk (využíva gTone / gNoise) ---------- */
+  function sfx(n, a) {
+    switch(n) {
+      case 'beat': gTone(120, .08, 'sine', .05, 0, 90); gTone(90, .1, 'sine', .04, .06); break;
+      case 'act': gNoise(.06, .05, 0, 3200); gTone(180, .1, 'triangle', .04); break;
+      case 'tease': gTone(880, .1, 'sine', .04, 0, 1200); gTone(1200, .16, 'sine', .035, .1, 900); break;
+      case 'wink': gTone(1500, .06, 'sine', .035); gTone(2000, .1, 'sine', .03, .07); break;
+      case 'perfect': [1047, 1319, 1568, 2093].forEach((f, i) => gTone(f, .12, 'triangle', .05, i * .06)); break;
+      case 'good': gTone(784, .1, 'triangle', .04); gTone(1047, .14, 'triangle', .04, .08); break;
+      case 'miss': gTone(220, .16, 'sawtooth', .05); gTone(160, .2, 'sawtooth', .04, .12); break;
+      case 'layer': [523, 659, 784, 1047, 1319].forEach((f, i) => gTone(f, .2, 'sine', .05, i * .1)); gNoise(.3, .04, .5, 5000); break;
+      case 'win': [523, 659, 784, 1047, 1319, 1568, 2093].forEach((f, i) => gTone(f, .3, 'sine', .05, i * .13)); break;
+      case 'over': [440, 392, 330, 262].forEach((f, i) => gTone(f, .28, 'triangle', .06, i * .2)); break;
+      case 'start': gTone(523, .12, 'triangle', .05); gTone(784, .22, 'triangle', .05, .1); break;
+      case 'pause': gTone(660, .06, 'triangle', .04); gTone(440, .08, 'triangle', .04, .07); break;
+      case 'record': [523, 659, 784, 1047, 1319].forEach((f, i) => gTone(f, .18, 'triangle', .055, .8 + i * .1)); break;
+    }
+  }
+  function sndUi() {
+    stSnd.textContent = gSnd.on ? '🔊' : '🔇'; stSnd.title = stSnd.ariaLabel = tr('snd');
+    stPause.textContent = G && G.paused ? '▶' : '⏸'; stPause.title = stPause.ariaLabel = tr('pause_btn');
+  }
+  function toggleSnd() { gSnd.on = !gSnd.on; save('nightShiftSnd', gSnd.on ? '1' : '0'); sndUi(); if(typeof gSndUi === 'function') gSndUi(); if(gSnd.on) sfx('start'); }
+  stSnd.onclick = toggleSnd; stPause.onclick = () => pause(); stClose.onclick = () => close();
+
+  /* ---------- herný stav ---------- */
+  let S = null, G = null, raf = 0, last = 0;
+  const K = {act:0, tease:0, wink:0};
+  let bActHeld = false;
+
+  /* ---------- level dáta ---------- */
+  const LV = [
+    {layer:0, prompts:8,  speed:1.0,  window:1.4,  mult:1.0},
+    {layer:1, prompts:10, speed:1.25, window:1.2,  mult:1.3},
+    {layer:2, prompts:12, speed:1.55, window:1.0,  mult:1.6},
+    {layer:3, prompts:14, speed:1.9,  window:0.85, mult:2.0},
+    {layer:4, prompts:16, speed:2.3,  window:0.7,  mult:2.6}
+  ];
+  const PROMPTS = ['act', 'tease', 'wink'];
+  const PROMPT_COL = {act:'#58a6ff', tease:'#ff6bb5', wink:'#F2B84B'};
+
+  function fresh(lv) {
+    const d = LV[lv - 1];
+    return {
+      lv, d, run:false, paused:false,
+      score:0, combo:0, maxCombo:0, lives:3,
+      promptN:0, promptTotal:d.prompts,
+      cur:null, curT:0, curMax:0, curKind:null, curResult:'',
+      resultT:0, resultKind:'',
+      beat:0, beatT:0,
+      layer:0, layerT:0, layerAnim:0,
+      shake:0, win:false, msg:'', mT:0,
+      particles:[], pops:[],
+      time:0, tmax: 40 + d.prompts * 3,
+      slow:0
+    };
+  }
+
+  /* ---------- UI ---------- */
+  function build() {
+    $('#st-title').textContent = tr('title');
+    bAct.innerHTML = tr('b_act') + '<small>␣</small>';
+    bTease.innerHTML = tr('b_tease') + '<small>T</small>';
+    bWink.innerHTML = tr('b_wink') + '<small>W</small>';
+    hudUpd(); sndUi();
+  }
+  function hudUpd() {
+    if(!S) { hudEl.textContent = tr('best') + ' ' + best(); return; }
+    hudEl.textContent = tr('lv') + ' ' + S.lv + '/' + MAXLV + ' · ' + '❤'.repeat(Math.max(0, S.lives)) + ' · ' + tr('score') + ' ' + S.score + ' · ' + tr('best') + ' ' + best();
+  }
+  function show(html) {
+    overEl.innerHTML = html; overEl.style.display = 'flex';
+    overEl.querySelectorAll('button[data-go]').forEach(b => {
+      b.onclick = () => {
+        const go = b.dataset.go;
+        if(go === 'play') beginLevel();
+        else if(go === 'retry') { G = fresh(S.lv); build(); beginLevel(); }
+        else if(go === 'next') { S.lv++; showIntro(); }
+        else if(go === 'new') startRun();
+        else if(go === 'resume') resume();
+      };
+    });
+    const f = overEl.querySelector('.row button'); if(f) f.focus();
+  }
+
+  /* ---------- tok hry ---------- */
+  function startRun() { cancelAnimationFrame(raf); S = {lv:1, lives:3, score:0, maxCombo:0, layers:0}; showIntro(); }
+  function showIntro() {
+    cancelAnimationFrame(raf);
+    G = fresh(S.lv); build(); draw();
+    const d = LV[S.lv - 1];
+    let h = '<h3>' + tr('lv') + ' ' + S.lv + ' / ' + MAXLV + ' · ' + tr('layer') + ': ' + tr('layer_names')[d.layer] + '</h3>';
+    if(S.lv === 1) h += '<p>' + tr('how') + '</p>';
+    h += '<p>' + tr('time') + ': <b>' + G.tmax + ' s</b> · ' + tr('prompts') + ': <b>' + d.prompts + '</b> · ' + tr('lives') + ': <b>' + '❤'.repeat(S.lives) + '</b></p>';
+    h += '<div class="tcard"><span class="em">💃</span><div><b>' + tr('layer_names')[d.layer] + '</b><br>' + tr('d_l' + (S.lv)) + '</div></div>';
+    h += '<div class="row"><button class="btn" type="button" data-go="play">' + tr('start') + '</button></div><span class="g-hint">' + tr('hint') + '</span>';
+    show(h);
+  }
+  function beginLevel() {
+    overEl.style.display = 'none'; G.run = true; G.paused = false; sfx('start');
+    nextPrompt(); sndUi();
+    last = performance.now(); raf = requestAnimationFrame(loop); cvEl.focus({preventScroll:true});
+  }
+  function nextPrompt() {
+    if(!G) return;
+    G.promptN++;
+    if(G.promptN > G.promptTotal) { clearLevel(); return; }
+    G.curKind = pick(PROMPTS);
+    G.curMax = G.d.window / G.d.speed;
+    G.curT = 0; G.curResult = ''; G.resultT = 0;
+    G.beatT = 0;
+  }
+  function resolvePrompt(kind) {
+    if(!G || !G.run || G.paused || !G.curKind) return;
+    const ok = kind === G.curKind;
+    const fast = G.curT < G.curMax * 0.4;
+    let pts = 0;
+    if(ok) {
+      G.combo++; G.maxCombo = Math.max(G.maxCombo, G.combo);
+      const mult = 1 + Math.floor(G.combo / 4) * 0.5;
+      pts = Math.round((fast ? 120 : 80) * G.d.mult * mult);
+      G.curResult = fast ? 'perfect' : 'good';
+      sfx(fast ? 'perfect' : 'good');
+      pop(W / 2, 150, '+' + pts, fast ? '#F2B84B' : '#7ee2b0');
+    } else {
+      G.combo = 0;
+      G.curResult = 'miss';
+      sfx('miss');
+      pop(W / 2, 150, tr('miss'), '#ff7b72');
+      G.shake = .2;
+      S.lives--; hudUpd();
+      if(S.lives <= 0) { G.run = false; cancelAnimationFrame(raf); draw(); gameOver('caught'); return; }
+    }
+    S.score += pts; hudUpd();
+    G.curKind = null; G.resultT = 0.5; G.resultKind = G.curResult;
+    setTimeout(() => { if(G && G.run) nextPrompt(); }, 420);
+  }
+  function clearLevel() {
+    G.run = false; cancelAnimationFrame(raf);
+    G.layerAnim = 1;
+    sfx('layer');
+    S.layers++;
+    S.lv++;
+    if(S.lv > MAXLV) { win(); return; }
+    show('<h3>' + tr('cleared') + '</h3><p>' + tr('score') + ': <b>' + S.score + '</b> · ' + tr('combo') + ': <b>' + G.maxCombo + '</b></p><div class="row"><button class="btn" type="button" data-go="next">' + tr('next') + '</button></div><span class="g-hint">' + tr('hint') + '</span>');
+  }
+  function gameOver(kind) {
+    const isNew = S.score > best();
+    if(isNew) save('stripteaseBest', String(S.score));
+    if(S.lv > bestLv()) save('stripteaseBestLvl', String(S.lv));
+    sfx('over'); if(isNew) sfx('record');
+    const tip = pick(tr('tips'));
+    show('<h3>' + tr('gameover') + '</h3><p>' + tr(kind) + '</p><div class="big">' + S.score + '</div><p>' + tr('reached') + ': <b>' + S.lv + ' / ' + MAXLV + '</b>' + (isNew ? ' 🏆 ' + tr('newrec') : '') + '</p><p class="g-tip">💡 ' + tip + '</p><div class="row"><button class="btn" type="button" data-go="new">' + tr('again') + '</button></div><span class="g-hint">' + tr('hint') + '</span>');
+  }
+  function win() {
+    S.score += S.lives * 500; const isNew = S.score > best();
+    if(isNew) save('stripteaseBest', String(S.score));
+    save('stripteaseBestLvl', String(MAXLV));
+    sfx('win'); if(isNew) sfx('record');
+    show('<h3>' + tr('win') + '</h3><div class="big">' + S.score + '</div><p>' + tr('rank') + ': <b style="color:#D9A84F">' + rankOf() + '</b>' + (isNew ? ' 🏆 ' + tr('newrec') : '') + '</p><p>' + tr('lives') + ': ' + '❤'.repeat(S.lives) + ' (+' + S.lives * 500 + ')</p><div class="row"><button class="btn" type="button" data-go="new">' + tr('again') + '</button></div><span class="g-hint">' + tr('hint') + '</span>');
+  }
+  function rankOf() {
+    const t = S.score, r = tr('ranks');
+    return t >= 8000 ? r[4] : t >= 5000 ? r[3] : t >= 2500 ? r[2] : t >= 1000 ? r[1] : r[0];
+  }
+  function pause() {
+    if(!G || !G.run) return;
+    if(G.paused) { resume(); return; }
+    G.paused = true; cancelAnimationFrame(raf); sfx('pause');
+    show('<h3>⏸ ' + tr('paused') + '</h3><p>' + tr('pause_hint') + '</p><div class="row"><button class="btn" type="button" data-go="resume">' + tr('resume') + '</button></div>');
+    sndUi();
+  }
+  function resume() {
+    if(!G || !G.run || !G.paused) return;
+    G.paused = false; overEl.style.display = 'none'; sfx('pause'); sndUi();
+    last = performance.now(); raf = requestAnimationFrame(loop); cvEl.focus({preventScroll:true});
+  }
+
+  /* ---------- efekty ---------- */
+  function pop(x, y, s, col) { if(G) G.pops.push({x, y, t:0, s, c:col || '#F2B84B'}); }
+  function spark(x, y, n, col) {
+    for(let i = 0; i < n; i++) G.particles.push({x, y, vx:rnd(-90, 90), vy:rnd(-160, -40), t:0, l:rnd(.5, 1.1), c:col || '#ff6bb5', s:rnd(2, 4)});
+  }
+
+  /* ---------- update ---------- */
+  function step(dt) {
+    const d = G.d;
+    G.time += dt;
+    if(G.mT > 0) G.mT -= dt;
+    if(G.shake > 0) G.shake -= dt;
+    if(G.resultT > 0) G.resultT -= dt;
+    if(G.layerAnim > 0) G.layerAnim = Math.max(0, G.layerAnim - dt * .8);
+    G.beatT += dt;
+    if(G.beatT >= .5) { G.beatT = 0; sfx('beat'); }
+    if(G.slow > 0) G.slow -= dt;
+
+    // časový limit
+    G.tmax -= dt;
+    if(G.tmax <= 0 && G.run) { G.tmax = 0; G.run = false; cancelAnimationFrame(raf); draw(); fail('up'); return; }
+
+    if(G.curKind) {
+      G.curT += dt * (G.slow > 0 ? .5 : 1);
+      if(G.curT >= G.curMax) {
+        // nestihol
+        G.combo = 0; G.curResult = 'miss'; sfx('miss'); G.shake = .2;
+        S.lives--; hudUpd();
+        pop(W / 2, 150, tr('miss'), '#ff7b72');
+        G.curKind = null; G.resultT = .5; G.resultKind = 'miss';
+        if(S.lives <= 0) { G.run = false; cancelAnimationFrame(raf); draw(); gameOver('caught'); return; }
+        setTimeout(() => { if(G && G.run) nextPrompt(); }, 420);
+      }
+    }
+
+    G.particles.forEach(p => { p.t += dt; p.vy += 320 * dt; p.x += p.vx * dt; p.y += p.vy * dt; });
+    G.particles = G.particles.filter(p => p.t < p.l);
+    G.pops.forEach(p => { p.t += dt; p.y -= 30 * dt; });
+    G.pops = G.pops.filter(p => p.t < 1.1);
+  }
+  function loop(t) {
+    if(!G || !G.run || G.paused || !modal.classList.contains('open')) return;
+    const dt = Math.min(.05, (t - last) / 1000); last = t;
+    step(dt); if(!G.run) return;
+    draw(); raf = requestAnimationFrame(loop);
+  }
+  function fail(kind) {
+    G.run = false; cancelAnimationFrame(raf);
+    S.lives--; hudUpd(); sfx('over');
+    if(S.lives > 0) show('<h3>' + tr(kind) + '</h3><p>' + tr('lives') + ': <b>' + '❤'.repeat(S.lives) + '</b></p><div class="row"><button class="btn" type="button" data-go="retry">' + tr('retry') + '</button></div><span class="g-hint">' + tr('hint') + '</span>');
+    else gameOver(kind);
+  }
+
+  /* ---------- kreslenie ---------- */
+  function rr(x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r);
+    c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath();
+  }
+  function tx(s, x, y, size, col, al, wt) {
+    c.font = (wt || 700) + ' ' + size + "px 'Bricolage Grotesque',system-ui,sans-serif";
+    c.textAlign = al || 'left'; c.textBaseline = 'alphabetic'; c.fillStyle = col; c.fillText(s, x, y);
+  }
+  function em(s, x, y, size) { c.font = size + 'px serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#fff'; c.fillText(s, x, y); }
+
+  function drawDancer() {
+    const cx = 380, cy = 250;
+    const layer = G.d.layer - (G.layerAnim > 0 ? 1 : 0);
+    const t = G.time;
+    const sway = Math.sin(t * 2) * 6;
+    const bob = Math.sin(t * 4) * 3;
+
+    // podlaha / pódium
+    c.fillStyle = 'rgba(0,0,0,.4)';
+    c.beginPath(); c.ellipse(cx, cy + 130, 150, 30, 0, 0, TAU); c.fill();
+    c.fillStyle = 'rgba(255,107,181,.08)';
+    c.beginPath(); c.ellipse(cx, cy + 130, 130, 22, 0, 0, TAU); c.fill();
+
+    // nohy
+    c.strokeStyle = '#e8b89a'; c.lineWidth = 10; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(cx - 18 + sway, cy + 40); c.lineTo(cx - 22 + sway, cy + 110); c.stroke();
+    c.beginPath(); c.moveTo(cx + 18 + sway, cy + 40); c.lineTo(cx + 22 + sway, cy + 110); c.stroke();
+
+    // telo
+    c.fillStyle = '#f0c8a8';
+    c.beginPath(); c.ellipse(cx + sway, cy + 10 + bob, 32, 48, 0, 0, TAU); c.fill();
+
+    // oblečenie podľa vrstvy
+    const layers = [
+      // 0 kabát
+      () => { c.fillStyle = '#8b1a4a'; c.beginPath(); c.ellipse(cx + sway, cy + 5 + bob, 38, 58, 0, 0, TAU); c.fill();
+              c.fillStyle = '#6b0f38'; c.fillRect(cx + sway - 38, cy + 5 + bob, 76, 60); },
+      // 1 šaty
+      () => { c.fillStyle = '#c2185b'; c.beginPath(); c.moveTo(cx + sway - 40, cy - 10 + bob); c.lineTo(cx + sway + 40, cy - 10 + bob);
+              c.lineTo(cx + sway + 30, cy + 70 + bob); c.lineTo(cx + sway - 30, cy + 70 + bob); c.closePath(); c.fill(); },
+      // 2 blúzka
+      () => { c.fillStyle = '#e91e8c'; c.beginPath(); c.ellipse(cx + sway, cy - 10 + bob, 34, 38, 0, 0, TAU); c.fill(); },
+      // 3 sukňa
+      () => { c.fillStyle = '#ad1457'; c.beginPath(); c.moveTo(cx + sway - 36, cy + 10 + bob); c.lineTo(cx + sway + 36, cy + 10 + bob);
+              c.lineTo(cx + sway + 28, cy + 60 + bob); c.lineTo(cx + sway - 28, cy + 60 + bob); c.closePath(); c.fill(); },
+      // 4 spodná bielizeň
+      () => { c.fillStyle = '#ff4081'; c.fillRect(cx + sway - 30, cy - 20 + bob, 60, 20);
+              c.fillStyle = '#d81b60'; c.fillRect(cx + sway - 26, cy + 30 + bob, 52, 14); }
+    ];
+    if(layer >= 0 && layer < layers.length) layers[layer]();
+
+    // hlava
+    c.fillStyle = '#f0c8a8'; c.beginPath(); c.arc(cx + sway, cy - 58 + bob, 28, 0, TAU); c.fill();
+    // vlasy
+    c.fillStyle = '#2a1a1a'; c.beginPath(); c.arc(cx + sway, cy - 64 + bob, 30, Math.PI, TAU); c.fill();
+    c.fillRect(cx + sway - 30, cy - 64 + bob, 60, 20);
+    // oči
+    c.fillStyle = '#1a1a1a'; c.beginPath(); c.arc(cx + sway - 9, cy - 58 + bob, 3, 0, TAU); c.fill();
+    c.beginPath(); c.arc(cx + sway + 9, cy - 58 + bob, 3, 0, TAU); c.fill();
+    // úsmev
+    c.strokeStyle = '#c05050'; c.lineWidth = 2; c.beginPath(); c.arc(cx + sway, cy - 50 + bob, 8, .2, Math.PI - .2); c.stroke();
+
+    // ruky
+    const armSwing = Math.sin(t * 3) * 20;
+    c.strokeStyle = '#e8b89a'; c.lineWidth = 9; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(cx + sway - 32, cy - 10 + bob); c.lineTo(cx + sway - 60 + armSwing, cy + 30 + bob); c.stroke();
+    c.beginPath(); c.moveTo(cx + sway + 32, cy - 10 + bob); c.lineTo(cx + sway + 60 - armSwing, cy + 30 + bob); c.stroke();
+
+    // efekt iskier pri poslednom leveli
+    if(G.d.layer === 4) {
+      for(let i = 0; i < 6; i++) {
+        const a = t * 2 + i * TAU / 6;
+        em('✨', cx + Math.cos(a) * 100, cy + Math.sin(a * 1.3) * 60, 14);
+      }
+    }
+  }
+
+  function drawPrompt() {
+    if(!G.curKind) return;
+    const col = PROMPT_COL[G.curKind];
+    const labels = {act:tr('prompt_act'), tease:tr('prompt_tease'), wink:tr('prompt_wink')};
+    const frac = 1 - G.curT / G.curMax;
+
+    // bublina nad tanečnicou
+    const bx = 380, by = 80;
+    c.fillStyle = 'rgba(0,0,0,.7)';
+    rr(bx - 130, by - 26, 260, 52, 14); c.fill();
+    c.strokeStyle = col; c.lineWidth = 2.5;
+    rr(bx - 130, by - 26, 260, 52, 14); c.stroke();
+
+    // progress bar v bubline
+    c.fillStyle = 'rgba(255,255,255,.1)';
+    rr(bx - 110, by + 12, 220, 6, 3); c.fill();
+    c.fillStyle = col;
+    rr(bx - 110, by + 12, 220 * frac, 6, 3); c.fill();
+
+    tx(labels[G.curKind], bx, by + 2, 22, col, 'center', 800);
+  }
+
+  function draw() {
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
+    // pozadie klubu
+    const bg = c.createRadialGradient(380, 200, 50, 380, 250, 500);
+    bg.addColorStop(0, '#2a1030'); bg.addColorStop(1, '#0a050e');
+    c.fillStyle = bg; c.fillRect(0, 0, W, H);
+    // svetlá
+    for(let i = 0; i < 3; i++) {
+      const a = G.time * .8 + i * TAU / 3;
+      const lx = 380 + Math.cos(a) * 200, ly = 100 + Math.sin(a) * 60;
+      const lg = c.createRadialGradient(lx, ly, 5, lx, ly, 180);
+      lg.addColorStop(0, 'rgba(255,107,181,.12)'); lg.addColorStop(1, 'rgba(255,107,181,0)');
+      c.fillStyle = lg; c.beginPath(); c.arc(lx, ly, 180, 0, TAU); c.fill();
+    }
+
+    if(G.shake > 0) c.translate(rnd(-3, 3), rnd(-3, 3));
+    drawDancer();
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    drawPrompt();
+
+    // particles
+    G.particles.forEach(p => {
+      c.globalAlpha = clamp(1 - p.t / p.l, 0, 1);
+      c.fillStyle = p.c; c.fillRect(p.x, p.y, p.s, p.s);
+    });
+    c.globalAlpha = 1;
+    // popups
+    G.pops.forEach(p => {
+      c.globalAlpha = clamp(1 - p.t / 1.1, 0, 1);
+      tx(p.s, p.x, p.y, 20, p.c, 'center', 800);
+    });
+    c.globalAlpha = 1;
+
+    // HUD
+    tx(tr('lv') + ' ' + G.lv + '/' + MAXLV + ' · ' + tr('layer') + ': ' + tr('layer_names')[G.d.layer], 14, 24, 14, '#F3E3F0', 'left', 700);
+    tx('❤'.repeat(Math.max(0, S.lives)), 14, 48, 16, '#ff6bb5', 'left');
+    tx(tr('score') + ' ' + S.score, W - 14, 24, 14, '#D9A84F', 'right', 700);
+    tx(tr('combo') + ' x' + (G.combo || 0), W - 14, 46, 13, G.combo >= 4 ? '#F2B84B' : '#c9a8c4', 'right', 600);
+    // čas
+    c.fillStyle = 'rgba(0,0,0,.4)'; rr(14, H - 30, W - 28, 10, 5); c.fill();
+    c.fillStyle = G.tmax < 10 ? '#ff7b72' : '#ff6bb5';
+    rr(14, H - 30, (W - 28) * clamp(G.tmax / (40 + G.d.prompts * 3), 0, 1), 10, 5); c.fill();
+    tx(Math.ceil(G.tmax) + ' s', W - 14, H - 36, 13, '#F3E3F0', 'right', 600);
+
+    if(G.mT > 0) { c.globalAlpha = Math.min(1, G.mT); tx(G.msg, W / 2, 150, 18, '#F2B84B', 'center', 800); c.globalAlpha = 1; }
+  }
+
+  /* ---------- vstupy ---------- */
+  function act() {
+    if(!G || !G.run || G.paused) return;
+    resolvePrompt('act');
+  }
+  bAct.addEventListener('pointerdown', e => { e.preventDefault(); bActHeld = true; bAct.classList.add('on'); act(); });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(n => bAct.addEventListener(n, () => { bActHeld = false; bAct.classList.remove('on'); }));
+  bTease.addEventListener('pointerdown', e => { e.preventDefault(); resolvePrompt('tease'); });
+  bWink.addEventListener('pointerdown', e => { e.preventDefault(); resolvePrompt('wink'); });
+
+  addEventListener('keydown', e => {
+    if(!modal.classList.contains('open')) return;
+    const k = e.key.toLowerCase();
+    if(k === 'escape') { close(); return; }
+    if(k === 'm') { toggleSnd(); return; }
+    if(k === 'p') { pause(); return; }
+    if(!G || !G.run || G.paused) return;
+    if(k === ' ') { e.preventDefault(); resolvePrompt('act'); }
+    else if(k === 't') resolvePrompt('tease');
+    else if(k === 'w') resolvePrompt('wink');
+  });
+  addEventListener('keyup', e => { if(e.key === ' ' && modal.classList.contains('open')) e.preventDefault(); });
+
+  /* ---------- open / close ---------- */
+  function open() {
+    if(gOpen()) closeGame(true);
+    if(typeof WS !== 'undefined' && WS.isOpen()) WS.close(true);
+    if(typeof EX !== 'undefined' && EX.isOpen()) EX.close(true);
+    if(typeof CN !== 'undefined' && CN.isOpen()) CN.close(true);
+    termModal.classList.remove('open'); termInput.blur();
+    modal.classList.add('open'); gAudio(); startRun();
+  }
+  function close(silent) {
+    if(G) G.run = false; cancelAnimationFrame(raf); bActHeld = false; bAct.classList.remove('on');
+    modal.classList.remove('open'); overEl.style.display = 'none';
+    if(!silent) backToTerminal();
+  }
+  modal.addEventListener('mousedown', e => { if(e.target === modal) close(); });
+  document.addEventListener('visibilitychange', () => {
+    if(G && G.run && document.hidden && !G.paused && modal.classList.contains('open')) pause();
+    else last = performance.now();
+  });
+
   return {open, close, isOpen: () => modal.classList.contains('open')};
 })();
   
