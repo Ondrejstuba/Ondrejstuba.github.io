@@ -3909,48 +3909,269 @@ const ST = (() => {
   function em(s, x, y, size) { c.font = size + 'px serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#fff'; c.fillText(s, x, y); }
   const hsh = n => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
 
-  /* ---------- kreslenie: tanečnica (Realistická anatomická úprava bez cenzúry) ---------- */
+  /* ---------- kreslenie: tanečnica v kostýme (v6, prerobené od základov) ----------
+     NAHRAĎ týmto blokom pôvodné funkcie hairBack, face, hairFront a dancer
+     (všetko od komentára "kreslenie: tanečnica" po koniec funkcie dancer).
+     hsh(), rr(), em(), tx() zostávajú tak, ako sú. */
+
+  const mix = (hex, to, a) => {
+    const p = h => [1, 3, 5].map(i => parseInt(h.substr(i, 2), 16)), A = p(hex), B = p(to);
+    return 'rgb(' + A.map((v, i) => Math.round(v + (B[i] - v) * a)).join(',') + ')';
+  };
+  const lite = (h, a) => mix(h, '#ffffff', a), dark = (h, a) => mix(h, '#000000', a);
+  const lgr = (x0, y0, x1, y1, st) => { const q = c.createLinearGradient(x0, y0, x1, y1); st.forEach(s => q.addColorStop(s[0], s[1])); return q; };
+
+  // zúžená končatina (kapsula s rôznou šírkou na koncoch)
+  function limb(ax, ay, bx, by, wa, wb, fill) {
+    const a = Math.atan2(by - ay, bx - ax);
+    c.fillStyle = fill; c.beginPath();
+    c.arc(ax, ay, wa / 2, a + Math.PI / 2, a + Math.PI * 1.5);
+    c.arc(bx, by, wb / 2, a - Math.PI / 2, a + Math.PI / 2);
+    c.closePath(); c.fill();
+  }
+  // končatina s tieňom a svetlým stredom, aby nevyzerala plocho
+  function skinLimb(g, ax, ay, bx, by, wa, wb, s) {
+    limb(ax, ay, bx, by, wa, wb, dark(g.skin, .14));
+    limb(ax - s * .8, ay, bx - s * .8, by, wa * .62, wb * .62, lite(g.skin, .1));
+  }
+
   function hairBack(g) {
-    c.fillStyle = g.hair;
-    if(g.style === 'long') { c.beginPath(); c.ellipse(0, 20, 30, 48, 0, 0, TAU); c.fill(); }
-    else if(g.style === 'bob') { c.beginPath(); c.ellipse(0, 6, 32, 32, 0, 0, TAU); c.fill(); }
-    else if(g.style === 'pony') {
-      c.beginPath(); c.ellipse(0, -2, 26, 26, 0, 0, TAU); c.fill();
-      const sw = Math.sin(fx.t * 3.2) * 7;
-      c.strokeStyle = g.hair; c.lineWidth = 13; c.lineCap = 'round';
-      c.beginPath(); c.moveTo(20, -18); c.quadraticCurveTo(40 + sw, -2, 36 + sw * 1.4, 28); c.stroke();
+    const sw = Math.sin(fx.t * 2.4) * 3;
+    c.fillStyle = lgr(-30, -30, 30, 70, [[0, lite(g.hair, .12)], [.55, g.hair], [1, dark(g.hair, .4)]]);
+    if(g.style === 'long') {
+      c.beginPath(); c.moveTo(-26, -6); c.bezierCurveTo(-44, 24, -40, 62, -32 + sw, 84); c.quadraticCurveTo(sw, 94, 32 + sw, 84);
+      c.bezierCurveTo(40, 62, 44, 24, 26, -6); c.closePath(); c.fill();
+    } else if(g.style === 'bob') {
+      c.beginPath(); c.moveTo(-26, -8); c.bezierCurveTo(-42, 10, -36, 34, -28, 38); c.quadraticCurveTo(0, 44, 28, 38);
+      c.bezierCurveTo(36, 34, 42, 10, 26, -8); c.closePath(); c.fill();
+    } else if(g.style === 'pony') {
+      c.beginPath(); c.ellipse(0, -2, 26, 27, 0, 0, TAU); c.fill();
+      const sp = Math.sin(fx.t * 3.2) * 7;
+      c.lineCap = 'round'; c.strokeStyle = g.hair; c.lineWidth = 13;
+      c.beginPath(); c.moveTo(20, -18); c.quadraticCurveTo(42 + sp, -2, 36 + sp * 1.4, 34); c.stroke();
+      c.strokeStyle = lite(g.hair, .25); c.lineWidth = 3;
+      c.beginPath(); c.moveTo(22, -16); c.quadraticCurveTo(40 + sp, -2, 35 + sp * 1.4, 28); c.stroke();
       c.fillStyle = g.accent; c.beginPath(); c.arc(22, -17, 4, 0, TAU); c.fill();
-    }
-    else if(g.style === 'puff') {
-      c.beginPath(); c.arc(0, -28, 32, 0, TAU); c.fill();
-      c.beginPath(); c.ellipse(0, 0, 28, 28, 0, 0, TAU); c.fill();
+    } else if(g.style === 'puff') {
+      c.beginPath(); c.arc(0, -22, 34, 0, TAU); c.fill();
+      c.beginPath(); c.ellipse(0, 2, 30, 30, 0, 0, TAU); c.fill();
+    } else {
+      c.beginPath(); c.ellipse(0, -4, 25, 26, 0, 0, TAU); c.fill();
     }
   }
+
   function face(g, ex) {
-    c.fillStyle = g.skin; c.beginPath(); c.arc(0, 0, 24, 0, TAU); c.fill();
-    c.fillStyle = 'rgba(255,90,120,.45)'; c.beginPath(); c.arc(-14, 7, 6, 0, TAU); c.fill(); c.beginPath(); c.arc(14, 7, 6, 0, TAU); c.fill();
-    c.fillStyle = '#1a1214';
-    c.beginPath(); c.ellipse(-8, -2, 3.2, 4.5, 0, 0, TAU); c.fill();
-    if(ex === 2) { c.strokeStyle = '#1a1214'; c.lineWidth = 2.2; c.beginPath(); c.arc(8, -2, 4.2, .15 * Math.PI, .85 * Math.PI); c.stroke(); }
-    else { c.beginPath(); c.ellipse(8, -2, 3.2, 4.5, 0, 0, TAU); c.fill(); }
-    c.strokeStyle = '#1a1214'; c.lineWidth = 1.4; c.beginPath(); c.moveTo(-11, -6); c.lineTo(-15, -10); c.moveTo(11, -6); c.lineTo(15, -10); c.stroke();
-    c.fillStyle = '#d63a52'; c.beginPath();
-    if(ex === 1) { c.arc(0, 10, 5, 0, TAU); c.fill(); }
-    else { c.moveTo(-8, 9); c.quadraticCurveTo(0, ex ? 22 : 18, 8, 9); c.quadraticCurveTo(0, 13, -8, 9); c.fill(); }
+    // tvár
+    c.fillStyle = lgr(-22, -20, 22, 26, [[0, lite(g.skin, .14)], [1, dark(g.skin, .12)]]);
+    c.beginPath(); c.moveTo(-21, -6); c.bezierCurveTo(-23, 14, -12, 27, 0, 27); c.bezierCurveTo(12, 27, 23, 14, 21, -6);
+    c.bezierCurveTo(20, -24, -20, -24, -21, -6); c.closePath(); c.fill();
+    // ruměnec
+    [-1, 1].forEach(s => {
+      const q = c.createRadialGradient(s * 13, 9, 0, s * 13, 9, 8);
+      q.addColorStop(0, 'rgba(255,90,110,.4)'); q.addColorStop(1, 'rgba(255,90,110,0)');
+      c.fillStyle = q; c.beginPath(); c.arc(s * 13, 9, 8, 0, TAU); c.fill();
+    });
+    // oči
+    const eye = (x, closed, s) => {
+      if(closed) {
+        c.strokeStyle = '#2a1a1a'; c.lineWidth = 2; c.lineCap = 'round';
+        c.beginPath(); c.arc(x, 2, 4.6, Math.PI * 1.2, Math.PI * 1.8); c.stroke(); return;
+      }
+      c.fillStyle = '#fff'; c.beginPath(); c.ellipse(x, -1, 5.4, 3.5, 0, 0, TAU); c.fill();
+      c.fillStyle = '#4a2f22'; c.beginPath(); c.arc(x, -1, 2.9, 0, TAU); c.fill();
+      c.fillStyle = '#120a0a'; c.beginPath(); c.arc(x, -1, 1.5, 0, TAU); c.fill();
+      c.fillStyle = '#fff'; c.beginPath(); c.arc(x - 1, -2.1, .9, 0, TAU); c.fill();
+      c.strokeStyle = '#1a1214'; c.lineWidth = 1.6; c.lineCap = 'round';
+      c.beginPath(); c.ellipse(x, -1, 5.6, 3.7, 0, Math.PI * 1.05, Math.PI * 1.95); c.stroke();
+      c.lineWidth = 1.2; c.beginPath(); c.moveTo(x + s * 5.2, -2.2); c.lineTo(x + s * 8, -4.2); c.stroke();
+    };
+    eye(-8.5, false, -1); eye(8.5, ex === 2, 1);
+    // obočie
+    c.strokeStyle = dark(g.hair, .25); c.lineWidth = 1.8; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(-13, -8); c.quadraticCurveTo(-8, -12, -3, -9); c.stroke();
+    c.beginPath(); c.moveTo(13, -8); c.quadraticCurveTo(8, -12, 3, -9); c.stroke();
+    // nos
+    c.strokeStyle = 'rgba(0,0,0,.18)'; c.lineWidth = 1.3;
+    c.beginPath(); c.moveTo(0, 2); c.quadraticCurveTo(-1.8, 8, -0.5, 9.5); c.stroke();
+    // pery
+    if(ex === 1) {
+      c.fillStyle = '#c93a55'; c.beginPath(); c.ellipse(0, 16, 3.6, 3.1, 0, 0, TAU); c.fill();
+      c.fillStyle = 'rgba(255,255,255,.4)'; c.beginPath(); c.ellipse(-1, 15, 1.2, .8, 0, 0, TAU); c.fill();
+    } else if(ex === 3) {
+      c.fillStyle = '#8a1f35'; c.beginPath(); c.moveTo(-8, 14); c.quadraticCurveTo(0, 26, 8, 14); c.quadraticCurveTo(0, 16.5, -8, 14); c.fill();
+      c.fillStyle = '#fff'; c.beginPath(); c.moveTo(-6.5, 14.6); c.quadraticCurveTo(0, 17.5, 6.5, 14.6); c.quadraticCurveTo(0, 16, -6.5, 14.6); c.fill();
+    } else {
+      c.fillStyle = '#c93a55'; c.beginPath(); c.moveTo(-7, 15); c.quadraticCurveTo(-3, 11.5, 0, 13.2); c.quadraticCurveTo(3, 11.5, 7, 15); c.quadraticCurveTo(0, 17, -7, 15); c.fill();
+      c.fillStyle = '#dc5870'; c.beginPath(); c.moveTo(-7, 15); c.quadraticCurveTo(0, 22, 7, 15); c.quadraticCurveTo(0, 17, -7, 15); c.fill();
+      c.fillStyle = 'rgba(255,255,255,.3)'; c.beginPath(); c.ellipse(0, 18, 2.2, .8, 0, 0, TAU); c.fill();
+    }
   }
+
   function hairFront(g) {
-    c.fillStyle = g.hair;
-    if(g.style === 'pixie') { c.beginPath(); c.arc(0, -3, 26, Math.PI * 1.02, TAU - .02); c.lineTo(23, -4); c.quadraticCurveTo(10, -16, -4, -12); c.quadraticCurveTo(-18, -8, -24, 2); c.closePath(); c.fill(); }
-    else { c.beginPath(); c.arc(0, -2, 26, Math.PI * 1.02, TAU - .02); c.closePath(); c.fill(); }
-    c.beginPath(); c.ellipse(-8, -17, 18, 8.5, -.35, 0, TAU); c.fill();
-    if(g.style === 'bob') { c.beginPath(); c.ellipse(-23, 8, 7.5, 19, .1, 0, TAU); c.fill(); c.beginPath(); c.ellipse(23, 8, 7.5, 19, -.1, 0, TAU); c.fill(); }
-    if(g.style === 'long') { c.beginPath(); c.ellipse(-24, 14, 6.5, 28, .08, 0, TAU); c.fill(); c.beginPath(); c.ellipse(24, 14, 6.5, 28, -.08, 0, TAU); c.fill(); }
+    const fy = g.style === 'puff' ? -9 : g.style === 'pixie' ? -8 : -14;
+    c.fillStyle = lgr(-26, -30, 26, 6, [[0, lite(g.hair, .2)], [.6, g.hair], [1, dark(g.hair, .3)]]);
+    c.beginPath(); c.moveTo(-25, 6); c.bezierCurveTo(-32, -34, 32, -34, 25, 6);
+    c.quadraticCurveTo(21, fy + 2, 6, fy - 2); c.quadraticCurveTo(-8, fy + 6, -25, 6); c.closePath(); c.fill();
+    if(g.style === 'bob') { c.beginPath(); c.ellipse(-23, 8, 6.5, 19, .1, 0, TAU); c.fill(); c.beginPath(); c.ellipse(23, 8, 6.5, 19, -.1, 0, TAU); c.fill(); }
+    if(g.style === 'long') { c.beginPath(); c.ellipse(-24, 14, 6, 28, .08, 0, TAU); c.fill(); c.beginPath(); c.ellipse(24, 14, 6, 28, -.08, 0, TAU); c.fill(); }
+    if(g.style === 'pixie') { c.beginPath(); c.ellipse(-23, 4, 4.5, 10, .1, 0, TAU); c.fill(); c.beginPath(); c.ellipse(23, 4, 4.5, 10, -.1, 0, TAU); c.fill(); }
+    // odlesk vo vlasoch
+    c.strokeStyle = 'rgba(255,255,255,.25)'; c.lineWidth = 2; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(-14, -20); c.quadraticCurveTo(0, -27, 14, -20); c.stroke();
   }
+
   function dancer(cx, cy, g, removed) {
-    const t = fx.t, sw = Math.sin(t * 2.4) * 10, bob = Math.abs(Math.sin(t * 4.8)) * 4, vis = i => i >= removed;
+    const t = fx.t, sw = Math.sin(t * 2.4) * 10, bob = Math.abs(Math.sin(t * 4.8)) * 4, vis = i => i >= removed, fin = removed >= 6;
     const r = fx.react, act = r.t < .45 ? r.k : -1;
-    const headT = fn => { c.save(); c.translate(0, -120); c.rotate(Math.sin(t * 2.4) * .05); fn(); c.restore(); };
+    const headT = fn => { c.save(); c.translate(0, -113); c.rotate(Math.sin(t * 2.4) * .05); c.scale(.86, .86); fn(); c.restore(); };
     c.save(); c.translate(cx, cy); c.lineCap = 'round'; c.lineJoin = 'round';
+
+    // podium a svetlo
+    const pg = c.createRadialGradient(0, 128, 10, 0, 128, 130); pg.addColorStop(0, 'rgba(255,107,181,.45)'); pg.addColorStop(1, 'rgba(255,107,181,0)');
+    c.fillStyle = pg; c.beginPath(); c.ellipse(0, 130, 130, 26, 0, 0, TAU); c.fill();
+    c.fillStyle = 'rgba(0,0,0,.55)'; c.beginPath(); c.ellipse(0, 130, 100, 16, 0, 0, TAU); c.fill();
+
+    // pelerína (vrstva 6) - za telom
+    if(vis(5)) {
+      c.save(); c.translate(sw * .35, -bob);
+      const cw = Math.sin(t * 2) * 6;
+      c.fillStyle = lgr(0, -90, 0, 115, [[0, dark(g.suit, .1)], [1, dark(g.suit, .55)]]);
+      c.beginPath(); c.moveTo(-26, -92); c.quadraticCurveTo(-62 + cw, 10, -74 + cw * 1.4, 112);
+      c.quadraticCurveTo(0, 126 + cw, 74 + cw * 1.4, 112); c.quadraticCurveTo(62 + cw, 10, 26, -92); c.closePath(); c.fill();
+      c.strokeStyle = g.accent; c.lineWidth = 2; c.stroke();
+      c.save(); c.clip();
+      for(let i = 0; i < 30; i++) {
+        c.globalAlpha = .3 + .7 * Math.abs(Math.sin(t * 4 + i * 1.3));
+        c.fillStyle = i % 3 ? g.accent : '#fff';
+        c.fillRect(-70 + hsh(i + 40) * 140, -90 + hsh(i + 70) * 215, 2.4, 2.4);
+      }
+      c.restore(); c.globalAlpha = 1; c.restore();
+    }
+
+    // nohy: stehno + lýtko, kolená, členky, lodičky na podpätku
+    [-1, 1].forEach(s => {
+      const hx = s * 11 + sw * .5, kx = s * 13 + sw * .2, ax = s * 14 - sw * .4;
+      skinLimb(g, hx, 4, kx, 62, 19, 13, s);
+      skinLimb(g, kx, 62, ax, 113, 13, 8, s);
+      c.fillStyle = g.accent; c.beginPath();
+      c.moveTo(ax - s * 6, 111); c.lineTo(ax + s * 6, 111); c.quadraticCurveTo(ax + s * 12, 117, ax + s * 17, 121);
+      c.lineTo(ax + s * 14, 124); c.lineTo(ax - s * 4, 121); c.lineTo(ax - s * 7, 129); c.lineTo(ax - s * 10, 129); c.lineTo(ax - s * 9, 115); c.closePath(); c.fill();
+      c.strokeStyle = dark(g.accent, .35); c.lineWidth = 1.2; c.stroke();
+    });
+
+    c.save(); c.translate(sw * .35, -bob);
+    headT(() => hairBack(g));
+
+    // trup: pokožka (ramená, hrudník) + flitrový kostým (bodysuit), ten ostáva vždy
+    const torso = suit => {
+      c.beginPath();
+      if(suit) { c.moveTo(-21, -73); c.quadraticCurveTo(-11, -81, 0, -70); c.quadraticCurveTo(11, -81, 21, -73); c.quadraticCurveTo(22, -64, 19, -58); }
+      else { c.moveTo(-25, -90); c.quadraticCurveTo(0, -97, 25, -90); c.quadraticCurveTo(24, -70, 19, -58); }
+      c.quadraticCurveTo(14, -50, 15, -42); c.quadraticCurveTo(16, -24, 23, 2); c.quadraticCurveTo(14, 14, 0, 10);
+      c.quadraticCurveTo(-14, 14, -23, 2); c.quadraticCurveTo(-16, -24, -15, -42); c.quadraticCurveTo(-14, -50, -19, -58);
+      if(suit) c.quadraticCurveTo(-22, -64, -21, -73); else c.quadraticCurveTo(-24, -70, -25, -90);
+      c.closePath();
+    };
+    c.fillStyle = lgr(-25, 0, 25, 0, [[0, dark(g.skin, .12)], [.5, lite(g.skin, .06)], [1, dark(g.skin, .14)]]); torso(false); c.fill();
+    c.fillStyle = lgr(-25, 0, 25, 0, [[0, dark(g.suit, .35)], [.35, g.suit], [.6, lite(g.suit, .18)], [1, dark(g.suit, .4)]]); torso(true); c.fill();
+    c.save(); torso(true); c.clip();
+    c.fillStyle = 'rgba(255,255,255,.14)';
+    c.beginPath(); c.ellipse(-8, -62, 6, 9, -.2, 0, TAU); c.fill(); c.beginPath(); c.ellipse(8, -62, 6, 9, .2, 0, TAU); c.fill();
+    c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.ellipse(0, -40, 17, 4, 0, 0, TAU); c.fill();
+    for(let i = 0; i < 26; i++) {
+      c.globalAlpha = .4 + .6 * Math.abs(Math.sin(t * 5 + i * 1.7));
+      c.fillStyle = i % 3 ? g.accent : '#fff';
+      c.fillRect(-26 + hsh(i) * 52, -80 + hsh(i + 9) * 92, 2.6, 2.6);
+    }
+    c.restore(); c.globalAlpha = 1;
+    c.strokeStyle = g.accent; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(-21, -73); c.quadraticCurveTo(-11, -81, 0, -70); c.quadraticCurveTo(11, -81, 21, -73); c.stroke();
+    c.lineWidth = 1.5; c.beginPath(); c.moveTo(-15, -42); c.quadraticCurveTo(0, -38, 15, -42); c.stroke();
+
+    // krk
+    c.fillStyle = lgr(0, -106, 0, -88, [[0, lite(g.skin, .05)], [1, dark(g.skin, .22)]]);
+    c.beginPath(); c.moveTo(-6, -106); c.lineTo(6, -106); c.lineTo(8, -90); c.lineTo(-8, -90); c.closePath(); c.fill();
+
+    // dlhá sukňa (vrstva 3)
+    if(vis(2)) {
+      const hw = Math.sin(t * 5) * 4;
+      c.fillStyle = lgr(-60, 0, 60, 0, [[0, dark(g.skirt, .3)], [.5, lite(g.skirt, .12)], [1, dark(g.skirt, .35)]]);
+      c.beginPath(); c.moveTo(-17, -42); c.lineTo(17, -42);
+      c.quadraticCurveTo(44 + sw * .5, 40, 62 + sw * .6, 104); c.quadraticCurveTo(31, 114 + hw, 0, 106);
+      c.quadraticCurveTo(-31, 114 - hw, -62 + sw * .6, 104); c.quadraticCurveTo(-44 + sw * .5, 40, -17, -42); c.closePath(); c.fill();
+      c.strokeStyle = 'rgba(255,255,255,.2)'; c.lineWidth = 1.6;
+      [-30, -12, 8, 28].forEach(x => { c.beginPath(); c.moveTo(x * .35, -38); c.quadraticCurveTo(x * 1.3, 44, x * 1.7 + sw * .4, 106); c.stroke(); });
+      c.fillStyle = g.accent; rr(-18, -46, 36, 6, 3); c.fill();
+    }
+
+    // ruky
+    const arm = (sx, h, s) => {
+      const el = [(sx + h[0]) / 2 + s * 9, (-88 + h[1]) / 2 + 14];
+      if(vis(0)) { limb(sx, -88, el[0], el[1], 17, 14, g.coat); limb(el[0], el[1], h[0], h[1], 14, 11, g.coat); }
+      else {
+        c.fillStyle = dark(g.skin, .1); c.beginPath(); c.arc(sx, -88, 7, 0, TAU); c.fill();
+        skinLimb(g, sx, -88, el[0], el[1], 12, 10, s); skinLimb(g, el[0], el[1], h[0], h[1], 10, 7.5, s);
+      }
+      if(vis(3)) {
+        limb(el[0], el[1], h[0], h[1], 11.5, 9.5, g.glove);
+        limb(el[0], el[1], h[0], h[1], 5, 4, lite(g.glove, .35));
+      }
+      c.save(); c.translate(h[0], h[1]);
+      c.fillStyle = vis(3) ? g.glove : lite(g.skin, .04);
+      c.beginPath(); c.ellipse(0, 1, 6, 7.5, 0, 0, TAU); c.fill();
+      c.beginPath(); c.ellipse(-s * 5, -1, 2.6, 5, -s * .5, 0, TAU); c.fill();
+      c.restore();
+    };
+    arm(-28, fx.armL, -1); arm(28, fx.armR, 1);
+
+    // kabát (vrstva 1)
+    if(vis(0)) {
+      [-1, 1].forEach(s => {
+        c.fillStyle = lgr(s * 4, 0, s * 54, 0, [[0, lite(g.coat, .12)], [1, dark(g.coat, .35)]]);
+        c.beginPath(); c.moveTo(s * 27, -94); c.lineTo(s * 6, -92); c.lineTo(s * 7, 100);
+        c.quadraticCurveTo(s * 30 + sw * .5, 112, s * 52 + sw * .5, 106); c.quadraticCurveTo(s * 44, 10, s * 27, -94); c.fill();
+        c.fillStyle = g.accent; c.beginPath(); c.moveTo(s * 27, -97); c.lineTo(s * 5, -97); c.lineTo(s * 14, -64); c.closePath(); c.fill();
+        c.fillStyle = lite(g.coat, .25); c.beginPath(); c.moveTo(s * 27, -94); c.lineTo(s * 17, -92); c.lineTo(s * 14, -64); c.closePath(); c.fill();
+      });
+      c.fillStyle = g.accent; [-52, -22, 10, 44].forEach(y => { c.beginPath(); c.arc(-9, y, 3, 0, TAU); c.fill(); });
+    }
+
+    // boa z peria (vrstva 2)
+    if(vis(1)) {
+      const pr = (x, y, rad, i) => {
+        c.fillStyle = i % 2 ? g.accent : '#ffffff'; c.beginPath(); c.arc(x, y, rad, 0, TAU); c.fill();
+        c.fillStyle = 'rgba(255,255,255,.35)'; c.beginPath(); c.arc(x - rad * .3, y - rad * .3, rad * .45, 0, TAU); c.fill();
+      };
+      for(let i = 0; i < 13; i++) pr(-31 + i * 5.2, -90 + Math.sin(i * .5) * 4 + 5, 8.5, i);
+      for(let i = 0; i < 9; i++) {
+        const sx = Math.sin(t * 2 + i * .5) * 3;
+        pr(-31 + sx, -84 + i * 9, 9 - i * .2, i); pr(31 - sx, -84 + i * 9, 9 - i * .2, i + 1);
+      }
+    }
+
+    // hlava + klobúk (vrstva 5) / tiara vo finále
+    headT(() => {
+      face(g, act === 2 ? 2 : act === 1 ? 1 : act === 0 ? 3 : 0);
+      hairFront(g);
+      if(vis(4)) {
+        c.fillStyle = '#120b17'; c.beginPath(); c.ellipse(0, -20, 32, 7, 0, 0, TAU); c.fill();
+        c.fillStyle = lgr(-19, 0, 19, 0, [[0, '#2a1d33'], [.5, '#3a2a46'], [1, '#17101c']]);
+        c.beginPath(); c.moveTo(-19, -20); c.lineTo(-17, -54); c.quadraticCurveTo(0, -60, 17, -54); c.lineTo(19, -20); c.closePath(); c.fill();
+        c.fillStyle = g.accent; c.fillRect(-18.5, -31, 37, 7);
+        c.strokeStyle = g.accent; c.lineWidth = 3; c.beginPath(); c.moveTo(14, -42); c.quadraticCurveTo(34, -62, 30, -30); c.stroke();
+      }
+      if(fin) {
+        c.fillStyle = '#F2B84B'; c.beginPath(); c.moveTo(-14, -20); c.lineTo(-11, -33); c.lineTo(-6, -25); c.lineTo(0, -37);
+        c.lineTo(6, -25); c.lineTo(11, -33); c.lineTo(14, -20); c.closePath(); c.fill();
+        c.fillStyle = '#fff'; [[-11, -33], [0, -37], [11, -33]].forEach(p => { c.beginPath(); c.arc(p[0], p[1], 1.8, 0, TAU); c.fill(); });
+      }
+    });
+    c.restore();
+
+    // finále: trblietky okolo tanečnice (bez ohňa a pod.)
+    if(fin) for(let i = 0; i < 10; i++) { const a = t * 2 + i * TAU / 10; em('✨', Math.cos(a) * 115, -20 + Math.sin(a * 1.3) * 90, 18); }
+    c.restore();
+  }
     
     // Podium a nasvietenie
     const pg = c.createRadialGradient(0, 128, 10, 0, 128, 130); pg.addColorStop(0, 'rgba(255,107,181,.45)'); pg.addColorStop(1, 'rgba(255,107,181,0)');
